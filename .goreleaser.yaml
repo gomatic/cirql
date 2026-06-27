@@ -1,0 +1,39 @@
+# Release configuration for cirql-core — a Go library (the language: parser,
+# evaluator, stages, pipeline). `goreleaser release` runs on a `v*` tag and
+# publishes a GitHub release with a reproducible source archive, SHA-256
+# checksums, and a changelog. The `cq` CLI binary is a separate sub-project; this
+# module exposes a library API only, so there are no cross-compiled binaries.
+version: 2
+
+project_name: cirql
+
+before:
+  hooks:
+    - go mod tidy
+    - go mod verify
+
+builds:
+  - skip: true
+
+source:
+  enabled: true
+  name_template: "{{ .ProjectName }}-{{ .Version }}-source"
+
+checksum:
+  name_template: "checksums.txt"
+  algorithm: sha256
+
+changelog:
+  sort: asc
+  use: github
+  filters:
+    exclude:
+      - "^docs:"
+      - "^test:"
+      - "^chore:"
+      - "^ci:"
+
+release:
+  github:
+    owner: gomatic
+    name: cirql
