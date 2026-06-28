@@ -4,7 +4,7 @@
 // source-normalization rules (spec §5.3).
 package pipeline
 
-import "github.com/gomatic/cirql/value"
+import value "github.com/gomatic/go-json"
 
 // ResultSet is the data flowing between pipeline stages.
 type ResultSet = []value.Value

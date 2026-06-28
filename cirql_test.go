@@ -7,7 +7,7 @@ import (
 	"github.com/gomatic/cirql"
 	dialect "github.com/gomatic/cirql/pkg/dialect/cirql"
 	"github.com/gomatic/cirql/stage"
-	"github.com/gomatic/cirql/value"
+	value "github.com/gomatic/go-json"
 )
 
 func TestEndToEnd_FilterMapSortLimit(t *testing.T) {

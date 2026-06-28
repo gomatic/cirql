@@ -1,8 +1,11 @@
 module github.com/gomatic/cirql
 
-go 1.26.3
+go 1.26.4
 
-require github.com/antlr4-go/antlr/v4 v4.13.1
+require (
+	github.com/antlr4-go/antlr/v4 v4.13.1
+	github.com/gomatic/go-json v0.0.0-20260628154927-48f6f3139b46
+)
 
 require (
 	4d63.com/gocheckcompilerdirectives v1.3.0 // indirect

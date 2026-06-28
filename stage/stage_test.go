@@ -7,7 +7,7 @@ import (
 	"github.com/gomatic/cirql/ast"
 	"github.com/gomatic/cirql/eval"
 	"github.com/gomatic/cirql/pipeline"
-	"github.com/gomatic/cirql/value"
+	value "github.com/gomatic/go-json"
 )
 
 func obj(kv ...value.Value) map[string]value.Value {

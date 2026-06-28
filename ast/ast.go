@@ -3,7 +3,7 @@
 // closed Stage and Expr sets are enforced by unexported tag methods.
 package ast
 
-import "github.com/gomatic/cirql/value"
+import value "github.com/gomatic/go-json"
 
 // Pipeline is a parsed cirql query: an ordered list of stages.
 type Pipeline struct {

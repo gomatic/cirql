@@ -6,7 +6,7 @@ import (
 	"testing"
 
 	"github.com/gomatic/cirql/ast"
-	"github.com/gomatic/cirql/value"
+	value "github.com/gomatic/go-json"
 )
 
 func call(t *testing.T, name string, args ...value.Value) (value.Value, error) {

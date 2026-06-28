@@ -5,7 +5,7 @@ import (
 	"testing"
 
 	"github.com/gomatic/cirql/ast"
-	"github.com/gomatic/cirql/value"
+	value "github.com/gomatic/go-json"
 )
 
 func lit(v value.Value) ast.Expr { return ast.Literal{V: v} }

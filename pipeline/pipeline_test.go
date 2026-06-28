@@ -4,7 +4,7 @@ import (
 	"errors"
 	"testing"
 
-	"github.com/gomatic/cirql/value"
+	value "github.com/gomatic/go-json"
 )
 
 func TestNormalize_ListOfObjects(t *testing.T) {

@@ -12,7 +12,7 @@ import (
 	"github.com/antlr4-go/antlr/v4"
 	"github.com/gomatic/cirql/ast"
 	g "github.com/gomatic/cirql/src/grammar/cirql"
-	"github.com/gomatic/cirql/value"
+	value "github.com/gomatic/go-json"
 )
 
 // Parse turns a cirql query into a Pipeline AST, or ErrParse on a syntax error.

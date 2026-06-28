@@ -4,7 +4,7 @@ import (
 	"sort"
 	"strings"
 
-	"github.com/gomatic/cirql/value"
+	value "github.com/gomatic/go-json"
 )
 
 // builtin is a cirql builtin function.

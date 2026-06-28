@@ -11,7 +11,7 @@ import (
 	"github.com/gomatic/cirql/ast"
 	"github.com/gomatic/cirql/eval"
 	"github.com/gomatic/cirql/pipeline"
-	"github.com/gomatic/cirql/value"
+	value "github.com/gomatic/go-json"
 )
 
 // Clock supplies epoch-seconds for the now() builtin; nil yields a zero clock.
