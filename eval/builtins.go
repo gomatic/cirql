@@ -10,6 +10,19 @@ import (
 // builtin is a cirql builtin function.
 type builtin func(args []value.Value, env Env) (value.Value, error)
 
+// Spec type names returned by the type() builtin (spec §5.5).
+const (
+	typeNull   = "null"
+	typeBool   = "bool"
+	typeNumber = "number"
+	typeString = "string"
+	typeList   = "list"
+	typeObject = "object"
+)
+
+// nameNow is the registry key of the now() builtin.
+const nameNow = "now"
+
 // builtins is the registry of callable builtins (spec §5.5).
 var builtins = map[string]builtin{
 	"length":     biLength,
@@ -26,7 +39,7 @@ var builtins = map[string]builtin{
 	"join":       biJoin,
 	"contains":   biContains,
 	"startsWith": biStartsWith,
-	"now":        biNow,
+	nameNow:      biNow,
 	"flatten":    biFlatten,
 	"distinct":   biDistinct,
 	"coalesce":   biCoalesce,
@@ -124,17 +137,17 @@ func biType(args []value.Value, _ Env) (value.Value, error) {
 func kindName(k value.Kind) string {
 	switch k {
 	case value.KindBool:
-		return "bool"
+		return typeBool
 	case value.KindInt, value.KindFloat:
-		return "number"
+		return typeNumber
 	case value.KindString:
-		return "string"
+		return typeString
 	case value.KindList:
-		return "list"
+		return typeList
 	case value.KindObject:
-		return "object"
+		return typeObject
 	default:
-		return "null"
+		return typeNull
 	}
 }
 

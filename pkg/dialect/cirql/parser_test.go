@@ -43,25 +43,25 @@ func TestParse_TransformPipeline(t *testing.T) {
 
 func TestParse_AllStageKinds(t *testing.T) {
 	cases := []struct {
-		q    string
 		want any
+		q    string
 	}{
-		{`map { a: .a }`, ast.MapStage{}},
-		{`flatMap { a: .a }`, ast.FlatMapStage{}},
-		{`filter .a`, ast.FilterStage{}},
-		{`reduce count`, ast.ReduceStage{}},
-		{`reduce sum(.a)`, ast.ReduceStage{}},
-		{`sort .a`, ast.SortStage{}},
-		{`sort .a asc`, ast.SortStage{}},
-		{`limit 5`, ast.LimitStage{}},
-		{`uniq`, ast.UniqStage{}},
-		{`uniq .a`, ast.UniqStage{}},
-		{`stdin`, ast.StdinStage{}},
-		{`file "x.json"`, ast.FileStage{}},
-		{`http "http://h"`, ast.HTTPStage{}},
-		{`http $u`, ast.HTTPStage{}},
-		{`query { a b }`, ast.QueryStage{}},
-		{`{ a b }`, ast.QueryStage{}},
+		{want: ast.MapStage{}, q: `map { a: .a }`},
+		{want: ast.FlatMapStage{}, q: `flatMap { a: .a }`},
+		{want: ast.FilterStage{}, q: `filter .a`},
+		{want: ast.ReduceStage{}, q: `reduce count`},
+		{want: ast.ReduceStage{}, q: `reduce sum(.a)`},
+		{want: ast.SortStage{}, q: `sort .a`},
+		{want: ast.SortStage{}, q: `sort .a asc`},
+		{want: ast.LimitStage{}, q: `limit 5`},
+		{want: ast.UniqStage{}, q: `uniq`},
+		{want: ast.UniqStage{}, q: `uniq .a`},
+		{want: ast.StdinStage{}, q: `stdin`},
+		{want: ast.FileStage{}, q: `file "x.json"`},
+		{want: ast.HTTPStage{}, q: `http "http://h"`},
+		{want: ast.HTTPStage{}, q: `http $u`},
+		{want: ast.QueryStage{}, q: `query { a b }`},
+		{want: ast.QueryStage{}, q: `{ a b }`},
 	}
 	for _, c := range cases {
 		t.Run(c.q, func(t *testing.T) {
@@ -120,27 +120,27 @@ func TestParse_ReduceOps(t *testing.T) {
 
 func TestParse_Expressions(t *testing.T) {
 	cases := []struct {
-		q    string
 		want ast.Expr
+		q    string
 	}{
-		{`filter .a == 1`, ast.BinaryExpr{Op: ast.OpEq}},
-		{`filter .a != 1`, ast.BinaryExpr{Op: ast.OpNe}},
-		{`filter .a > 1`, ast.BinaryExpr{Op: ast.OpGt}},
-		{`filter .a < 1`, ast.BinaryExpr{Op: ast.OpLt}},
-		{`filter .a >= 1`, ast.BinaryExpr{Op: ast.OpGe}},
-		{`filter .a <= 1`, ast.BinaryExpr{Op: ast.OpLe}},
-		{`filter .a + 1`, ast.BinaryExpr{Op: ast.OpAdd}},
-		{`filter .a - 1`, ast.BinaryExpr{Op: ast.OpSub}},
-		{`filter .a * 1`, ast.BinaryExpr{Op: ast.OpMul}},
-		{`filter .a / 1`, ast.BinaryExpr{Op: ast.OpDiv}},
-		{`filter .a % 1`, ast.BinaryExpr{Op: ast.OpMod}},
-		{`filter .a && .b`, ast.BinaryExpr{Op: ast.OpAnd}},
-		{`filter .a || .b`, ast.BinaryExpr{Op: ast.OpOr}},
-		{`filter !.a`, ast.UnaryExpr{Op: ast.OpNot}},
-		{`filter -.a`, ast.UnaryExpr{Op: ast.OpNeg}},
-		{`filter (.a)`, ast.FieldAccess{}},
-		{`filter $v`, ast.VarRef{}},
-		{`filter f(.a, .b)`, ast.FuncCall{}},
+		{want: ast.BinaryExpr{Op: ast.OpEq}, q: `filter .a == 1`},
+		{want: ast.BinaryExpr{Op: ast.OpNe}, q: `filter .a != 1`},
+		{want: ast.BinaryExpr{Op: ast.OpGt}, q: `filter .a > 1`},
+		{want: ast.BinaryExpr{Op: ast.OpLt}, q: `filter .a < 1`},
+		{want: ast.BinaryExpr{Op: ast.OpGe}, q: `filter .a >= 1`},
+		{want: ast.BinaryExpr{Op: ast.OpLe}, q: `filter .a <= 1`},
+		{want: ast.BinaryExpr{Op: ast.OpAdd}, q: `filter .a + 1`},
+		{want: ast.BinaryExpr{Op: ast.OpSub}, q: `filter .a - 1`},
+		{want: ast.BinaryExpr{Op: ast.OpMul}, q: `filter .a * 1`},
+		{want: ast.BinaryExpr{Op: ast.OpDiv}, q: `filter .a / 1`},
+		{want: ast.BinaryExpr{Op: ast.OpMod}, q: `filter .a % 1`},
+		{want: ast.BinaryExpr{Op: ast.OpAnd}, q: `filter .a && .b`},
+		{want: ast.BinaryExpr{Op: ast.OpOr}, q: `filter .a || .b`},
+		{want: ast.UnaryExpr{Op: ast.OpNot}, q: `filter !.a`},
+		{want: ast.UnaryExpr{Op: ast.OpNeg}, q: `filter -.a`},
+		{want: ast.FieldAccess{}, q: `filter (.a)`},
+		{want: ast.VarRef{}, q: `filter $v`},
+		{want: ast.FuncCall{}, q: `filter f(.a, .b)`},
 	}
 	for _, c := range cases {
 		t.Run(c.q, func(t *testing.T) {
@@ -200,13 +200,13 @@ func TestParse_Literals(t *testing.T) {
 		`map { v: 3.5 }`:    3.5,
 		`map { v: true }`:   true,
 		`map { v: false }`:  false,
-		`map { v: null }`:    nil,
-		`map { v: "a\nb" }`:  "a\nb",
-		`map { v: "a\tb" }`:  "a\tb",
-		`map { v: "a\rb" }`:  "a\rb",
-		`map { v: "a\"b" }`:  "a\"b",
-		`map { v: "a\\b" }`:  "a\\b",
-		`map { v: "a\zb" }`:  "azb",
+		`map { v: null }`:   nil,
+		`map { v: "a\nb" }`: "a\nb",
+		`map { v: "a\tb" }`: "a\tb",
+		`map { v: "a\rb" }`: "a\rb",
+		`map { v: "a\"b" }`: "a\"b",
+		`map { v: "a\\b" }`: "a\\b",
+		`map { v: "a\zb" }`: "azb",
 	}
 	for q, want := range cases {
 		t.Run(q, func(t *testing.T) {

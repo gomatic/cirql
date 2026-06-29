@@ -4,8 +4,9 @@ import (
 	"errors"
 	"testing"
 
-	"github.com/gomatic/cirql/ast"
 	value "github.com/gomatic/go-json"
+
+	"github.com/gomatic/cirql/ast"
 )
 
 func lit(v value.Value) ast.Expr { return ast.Literal{V: v} }
@@ -147,15 +148,16 @@ func TestEval_EqNe(t *testing.T) {
 
 func TestEval_Comparisons(t *testing.T) {
 	cases := []struct {
+		l    value.Value
+		r    value.Value
 		op   ast.BinOp
-		l, r value.Value
 		want bool
 	}{
-		{ast.OpGt, int64(3), int64(2), true},
-		{ast.OpLt, int64(1), int64(2), true},
-		{ast.OpGe, int64(2), int64(2), true},
-		{ast.OpLe, int64(2), int64(2), true},
-		{ast.OpGt, int64(1), int64(2), false},
+		{op: ast.OpGt, l: int64(3), r: int64(2), want: true},
+		{op: ast.OpLt, l: int64(1), r: int64(2), want: true},
+		{op: ast.OpGe, l: int64(2), r: int64(2), want: true},
+		{op: ast.OpLe, l: int64(2), r: int64(2), want: true},
+		{op: ast.OpGt, l: int64(1), r: int64(2), want: false},
 	}
 	for _, c := range cases {
 		got := evalOK(t, ast.BinaryExpr{Op: c.op, L: lit(c.l), R: lit(c.r)}, Env{})
@@ -174,14 +176,14 @@ func TestEval_Compare_TypeError(t *testing.T) {
 
 func TestEval_Arithmetic(t *testing.T) {
 	cases := []struct {
-		op   ast.BinOp
 		want value.Value
+		op   ast.BinOp
 	}{
-		{ast.OpAdd, int64(5)},
-		{ast.OpSub, 1.0},
-		{ast.OpMul, 6.0},
-		{ast.OpDiv, 1.5},
-		{ast.OpMod, 1.0},
+		{op: ast.OpAdd, want: int64(5)},
+		{op: ast.OpSub, want: 1.0},
+		{op: ast.OpMul, want: 6.0},
+		{op: ast.OpDiv, want: 1.5},
+		{op: ast.OpMod, want: 1.0},
 	}
 	for _, c := range cases {
 		got := evalOK(t, ast.BinaryExpr{Op: c.op, L: lit(int64(3)), R: lit(int64(2))}, Env{})

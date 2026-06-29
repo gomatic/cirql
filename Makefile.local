@@ -1,0 +1,7 @@
+# Per-repo gate overrides, -include'd last by the shared Makefile.
+#
+# The ANTLR-generated grammar lives in the committed src/grammar tree (package
+# cirqlgrammar, carrying the "Code generated ... DO NOT EDIT." marker). Per the
+# Go quality standard, generated code is excluded from the coverage gate, so the
+# 100% threshold applies only to the hand-authored packages.
+COVER_PKGS = $(shell go list ./... | grep -v /src/grammar)

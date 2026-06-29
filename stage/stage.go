@@ -8,10 +8,11 @@ import (
 	"fmt"
 	"slices"
 
+	value "github.com/gomatic/go-json"
+
 	"github.com/gomatic/cirql/ast"
 	"github.com/gomatic/cirql/eval"
 	"github.com/gomatic/cirql/pipeline"
-	value "github.com/gomatic/go-json"
 )
 
 // Clock supplies epoch-seconds for the now() builtin; nil yields a zero clock.
@@ -56,8 +57,8 @@ func (stdinExec) Execute(in pipeline.ResultSet) (pipeline.ResultSet, error) {
 
 // mapExec transforms each object 1:1.
 type mapExec struct {
-	mappings []ast.Mapping
 	now      Clock
+	mappings []ast.Mapping
 }
 
 func (s mapExec) Execute(in pipeline.ResultSet) (pipeline.ResultSet, error) {
@@ -87,14 +88,14 @@ func (s mapExec) one(item value.Value) (value.Value, error) {
 // flatMapExec transforms and flattens: list-valued mappings expand into one
 // output object per element.
 type flatMapExec struct {
-	mappings []ast.Mapping
 	now      Clock
+	mappings []ast.Mapping
 }
 
 // kv is one evaluated mapping.
 type kv struct {
-	key string
 	val value.Value
+	key string
 }
 
 func (s flatMapExec) Execute(in pipeline.ResultSet) (pipeline.ResultSet, error) {
@@ -188,9 +189,9 @@ func (s filterExec) Execute(in pipeline.ResultSet) (pipeline.ResultSet, error) {
 
 // reduceExec aggregates the result set into a single-element set.
 type reduceExec struct {
-	op  ast.ReduceOp
 	arg ast.Expr
 	now Clock
+	op  ast.ReduceOp
 }
 
 func (s reduceExec) Execute(in pipeline.ResultSet) (pipeline.ResultSet, error) {
@@ -329,8 +330,8 @@ func lastOrNil(in pipeline.ResultSet) value.Value {
 // sortExec reorders the result set by a key expression.
 type sortExec struct {
 	key  ast.Expr
-	desc bool
 	now  Clock
+	desc bool
 }
 
 // keyedItem pairs an item with its precomputed sort key.

@@ -4,9 +4,17 @@ import "testing"
 
 func TestNodesImplementInterfaces(t *testing.T) {
 	stages := []Stage{
-		MapStage{}, FlatMapStage{}, FilterStage{}, ReduceStage{},
-		SortStage{}, LimitStage{}, UniqStage{},
-		StdinStage{}, FileStage{}, HTTPStage{}, QueryStage{},
+		MapStage{},
+		FlatMapStage{},
+		FilterStage{},
+		ReduceStage{},
+		SortStage{},
+		LimitStage{},
+		UniqStage{},
+		StdinStage{},
+		FileStage{},
+		HTTPStage{},
+		QueryStage{},
 	}
 	if len(stages) != 11 {
 		t.Fatalf("expected 11 stage kinds, got %d", len(stages))

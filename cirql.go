@@ -5,10 +5,11 @@
 package cirql
 
 import (
-	dialect "github.com/gomatic/cirql/pkg/dialect/cirql"
-	"github.com/gomatic/cirql/pipeline"
-	"github.com/gomatic/cirql/stage"
 	value "github.com/gomatic/go-json"
+
+	"github.com/gomatic/cirql/pipeline"
+	dialect "github.com/gomatic/cirql/pkg/dialect/cirql"
+	"github.com/gomatic/cirql/stage"
 )
 
 // Pipeline is a compiled cirql query ready to run.

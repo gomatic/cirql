@@ -10,9 +10,10 @@ import (
 	"strings"
 
 	"github.com/antlr4-go/antlr/v4"
+	value "github.com/gomatic/go-json"
+
 	"github.com/gomatic/cirql/ast"
 	g "github.com/gomatic/cirql/src/grammar/cirql"
-	value "github.com/gomatic/go-json"
 )
 
 // Parse turns a cirql query into a Pipeline AST, or ErrParse on a syntax error.
@@ -262,10 +263,10 @@ func unquote(s string) string {
 	for i := 0; i < len(inner); i++ {
 		if inner[i] == '\\' && i+1 < len(inner) {
 			i++
-			b.WriteByte(unescape(inner[i]))
+			_ = b.WriteByte(unescape(inner[i]))
 			continue
 		}
-		b.WriteByte(inner[i])
+		_ = b.WriteByte(inner[i])
 	}
 	return b.String()
 }

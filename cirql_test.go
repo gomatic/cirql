@@ -4,10 +4,11 @@ import (
 	"errors"
 	"testing"
 
+	value "github.com/gomatic/go-json"
+
 	"github.com/gomatic/cirql"
 	dialect "github.com/gomatic/cirql/pkg/dialect/cirql"
 	"github.com/gomatic/cirql/stage"
-	value "github.com/gomatic/go-json"
 )
 
 func TestEndToEnd_FilterMapSortLimit(t *testing.T) {

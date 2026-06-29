@@ -4,10 +4,11 @@ import (
 	"errors"
 	"testing"
 
+	value "github.com/gomatic/go-json"
+
 	"github.com/gomatic/cirql/ast"
 	"github.com/gomatic/cirql/eval"
 	"github.com/gomatic/cirql/pipeline"
-	value "github.com/gomatic/go-json"
 )
 
 func obj(kv ...value.Value) map[string]value.Value {

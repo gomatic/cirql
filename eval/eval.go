@@ -7,8 +7,9 @@ package eval
 import (
 	"math"
 
-	"github.com/gomatic/cirql/ast"
 	value "github.com/gomatic/go-json"
+
+	"github.com/gomatic/cirql/ast"
 )
 
 // Env is the evaluation context for one expression.

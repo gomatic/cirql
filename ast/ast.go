@@ -18,8 +18,8 @@ type Expr interface{ isExpr() }
 
 // Mapping is a key/expression pair in a map or flatMap stage.
 type Mapping struct {
-	Key  string
 	Expr Expr
+	Key  string
 }
 
 // ReduceOp names an aggregation in a reduce stage.
@@ -102,8 +102,8 @@ type FilterStage struct{ Cond Expr }
 
 // ReduceStage aggregates the result set into a single object.
 type ReduceStage struct {
+	Arg Expr
 	Op  ReduceOp
-	Arg Expr // optional; nil for count/first/last
 }
 
 // SortStage reorders the result set by Key.
@@ -160,15 +160,15 @@ type VarRef struct{ Name string }
 
 // BinaryExpr is L Op R.
 type BinaryExpr struct {
-	Op BinOp
 	L  Expr
 	R  Expr
+	Op BinOp
 }
 
 // UnaryExpr is Op X.
 type UnaryExpr struct {
-	Op UnOp
 	X  Expr
+	Op UnOp
 }
 
 // FuncCall is name(args...).

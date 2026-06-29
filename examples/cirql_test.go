@@ -4,8 +4,9 @@ import (
 	"encoding/json"
 	"fmt"
 
-	"github.com/gomatic/cirql"
 	value "github.com/gomatic/go-json"
+
+	"github.com/gomatic/cirql"
 )
 
 // ExamplePipeline shows a cirql query that filters, projects, sorts, and limits
