@@ -16,10 +16,14 @@ import (
 	g "github.com/gomatic/cirql/src/grammar/cirql"
 )
 
+// Query is the raw text of a cirql query.
+type Query string
+
 // Parse turns a cirql query into a Pipeline AST, or ErrParse on a syntax error.
-func Parse(query string) (ast.Pipeline, error) {
-	el := &errListener{}
-	lexer := g.NewcirqlLexer(antlr.NewInputStream(query))
+func Parse(query Query) (ast.Pipeline, error) {
+	var parseErr error
+	el := errListener{err: &parseErr}
+	lexer := g.NewcirqlLexer(antlr.NewInputStream(string(query)))
 	lexer.RemoveErrorListeners()
 	lexer.AddErrorListener(el)
 	tokens := antlr.NewCommonTokenStream(lexer, antlr.TokenDefaultChannel)
@@ -27,95 +31,97 @@ func Parse(query string) (ast.Pipeline, error) {
 	parser.RemoveErrorListeners()
 	parser.AddErrorListener(el)
 	tree := parser.Pipeline()
-	if el.err != nil {
-		return ast.Pipeline{}, el.err
+	if parseErr != nil {
+		return ast.Pipeline{}, parseErr
 	}
-	return (&builder{}).pipeline(tree.(*g.PipelineContext)), nil
+	return builder{}.pipeline(tree), nil
 }
 
-// errListener converts an ANTLR syntax error into ErrParse with position.
+// errListener converts an ANTLR syntax error into ErrParse with position. It is
+// a value handle over a shared error slot (the pointer field), so it satisfies
+// antlr.ErrorListener with a value receiver.
 type errListener struct {
 	*antlr.DefaultErrorListener
-	err error
+	err *error
 }
 
 // SyntaxError records the syntax error (last one wins) as an ErrParse wrap.
-func (l *errListener) SyntaxError(_ antlr.Recognizer, _ any, line, col int, msg string, _ antlr.RecognitionException) {
-	l.err = fmt.Errorf("%w at %d:%d: %s", ErrParse, line, col, msg)
+func (l errListener) SyntaxError(_ antlr.Recognizer, _ any, line, col int, msg string, _ antlr.RecognitionException) {
+	*l.err = fmt.Errorf("%w at %d:%d: %s", ErrParse, line, col, msg)
 }
 
 // builder walks the parse tree into the AST. Every method is total: the parse
 // tree is already valid, and number/string conversions are made lenient so no
-// build step can fail.
+// build step can fail. Methods take the generated I*Context interfaces so the
+// tree is traversed by contract, not by concrete pointer.
 type builder struct{}
 
-func (b *builder) pipeline(c *g.PipelineContext) ast.Pipeline {
+func (b builder) pipeline(c g.IPipelineContext) ast.Pipeline {
 	stages := make([]ast.Stage, 0, len(c.AllStage()))
 	for _, s := range c.AllStage() {
-		stages = append(stages, b.stage(s.(*g.StageContext)))
+		stages = append(stages, b.stage(s))
 	}
 	return ast.Pipeline{Stages: stages}
 }
 
-func (b *builder) stage(c *g.StageContext) ast.Stage {
+func (b builder) stage(c g.IStageContext) ast.Stage {
 	if src := c.SourceStage(); src != nil {
-		return b.sourceStage(src.(*g.SourceStageContext))
+		return b.sourceStage(src)
 	}
-	return b.transformStage(c.TransformStage().(*g.TransformStageContext))
+	return b.transformStage(c.TransformStage())
 }
 
-func (b builder) sourceStage(c *g.SourceStageContext) ast.Stage {
+func (b builder) sourceStage(c g.ISourceStageContext) ast.Stage {
 	if c.StdinStage() != nil {
 		return ast.StdinStage{}
 	}
 	if s := c.FileStage(); s != nil {
-		return ast.FileStage{Path: unquote(tokenText(s.(*g.FileStageContext).STRING().GetText()))}
+		return ast.FileStage{Path: unquote(tokenText(s.STRING().GetText()))}
 	}
 	if s := c.HttpStage(); s != nil {
-		return b.httpStage(s.(*g.HttpStageContext))
+		return b.httpStage(s)
 	}
-	return ast.QueryStage{Body: c.QueryStage().(*g.QueryStageContext).QueryBody().GetText()}
+	return ast.QueryStage{Body: c.QueryStage().QueryBody().GetText()}
 }
 
-func (b builder) httpStage(c *g.HttpStageContext) ast.Stage {
+func (b builder) httpStage(c g.IHttpStageContext) ast.Stage {
 	if v := c.Variable(); v != nil {
-		return ast.HTTPStage{URL: b.variable(v.(*g.VariableContext))}
+		return ast.HTTPStage{URL: b.variable(v)}
 	}
 	return ast.HTTPStage{URL: ast.Literal{V: unquote(tokenText(c.STRING().GetText()))}}
 }
 
-func (b *builder) transformStage(c *g.TransformStageContext) ast.Stage {
+func (b builder) transformStage(c g.ITransformStageContext) ast.Stage {
 	if s := c.MapStage(); s != nil {
-		return ast.MapStage{Mappings: b.mappings(s.(*g.MapStageContext).AllMapping())}
+		return ast.MapStage{Mappings: b.mappings(s.AllMapping())}
 	}
 	if s := c.FlatMapStage(); s != nil {
-		return ast.FlatMapStage{Mappings: b.mappings(s.(*g.FlatMapStageContext).AllMapping())}
+		return ast.FlatMapStage{Mappings: b.mappings(s.AllMapping())}
 	}
 	if s := c.FilterStage(); s != nil {
-		return ast.FilterStage{Cond: b.expr(s.(*g.FilterStageContext).Expr())}
+		return ast.FilterStage{Cond: b.expr(s.Expr())}
 	}
 	if s := c.ReduceStage(); s != nil {
-		return b.reduceStage(s.(*g.ReduceStageContext))
+		return b.reduceStage(s)
 	}
 	if s := c.SortStage(); s != nil {
-		return b.sortStage(s.(*g.SortStageContext))
+		return b.sortStage(s)
 	}
 	if s := c.LimitStage(); s != nil {
-		return ast.LimitStage{N: atoi(tokenText(s.(*g.LimitStageContext).INT().GetText()))}
+		return ast.LimitStage{N: atoi(tokenText(s.INT().GetText()))}
 	}
-	return b.uniqStage(c.UniqStage().(*g.UniqStageContext))
+	return b.uniqStage(c.UniqStage())
 }
 
-func (b *builder) mappings(all []g.IMappingContext) []ast.Mapping {
+func (b builder) mappings(all []g.IMappingContext) []ast.Mapping {
 	out := make([]ast.Mapping, 0, len(all))
 	for _, m := range all {
-		mc := m.(*g.MappingContext)
-		out = append(out, ast.Mapping{Key: mc.NAME().GetText(), Expr: b.expr(mc.Expr())})
+		out = append(out, ast.Mapping{Key: m.NAME().GetText(), Expr: b.expr(m.Expr())})
 	}
 	return out
 }
 
-func (b *builder) reduceStage(c *g.ReduceStageContext) ast.Stage {
+func (b builder) reduceStage(c g.IReduceStageContext) ast.Stage {
 	stage := ast.ReduceStage{Op: ast.ReduceOp(c.ReduceOp().GetText())}
 	if e := c.Expr(); e != nil {
 		stage.Arg = b.expr(e)
@@ -123,11 +129,11 @@ func (b *builder) reduceStage(c *g.ReduceStageContext) ast.Stage {
 	return stage
 }
 
-func (b *builder) sortStage(c *g.SortStageContext) ast.Stage {
-	return ast.SortStage{Key: b.expr(c.Expr()), Desc: c.DESC() != nil}
+func (b builder) sortStage(c g.ISortStageContext) ast.Stage {
+	return ast.SortStage{Key: b.expr(c.Expr()), IsDesc: c.DESC() != nil}
 }
 
-func (b *builder) uniqStage(c *g.UniqStageContext) ast.Stage {
+func (b builder) uniqStage(c g.IUniqStageContext) ast.Stage {
 	stage := ast.UniqStage{}
 	if e := c.Expr(); e != nil {
 		stage.Key = b.expr(e)
@@ -135,7 +141,7 @@ func (b *builder) uniqStage(c *g.UniqStageContext) ast.Stage {
 	return stage
 }
 
-func (b *builder) expr(ctx g.IExprContext) ast.Expr {
+func (b builder) expr(ctx g.IExprContext) ast.Expr {
 	switch c := ctx.(type) {
 	case *g.UnaryExprContext:
 		return b.unary(c)
@@ -152,17 +158,17 @@ func (b *builder) expr(ctx g.IExprContext) ast.Expr {
 	case *g.ParenExprContext:
 		return b.expr(c.Expr())
 	case *g.CallExprContext:
-		return b.funcCall(c.FuncCall().(*g.FuncCallContext))
+		return b.funcCall(c.FuncCall())
 	case *g.FieldExprContext:
-		return b.fieldAccess(c.FieldAccess().(*g.FieldAccessContext))
+		return b.fieldAccess(c.FieldAccess())
 	case *g.VarExprContext:
-		return b.variable(c.Variable().(*g.VariableContext))
+		return b.variable(c.Variable())
 	default:
 		return b.literal(ctx.(*g.LitExprContext))
 	}
 }
 
-func (b *builder) unary(c *g.UnaryExprContext) ast.Expr {
+func (b builder) unary(c *g.UnaryExprContext) ast.Expr {
 	x := b.expr(c.Expr())
 	if c.NOT() != nil {
 		return ast.UnaryExpr{Op: ast.OpNot, X: x}
@@ -170,11 +176,11 @@ func (b *builder) unary(c *g.UnaryExprContext) ast.Expr {
 	return ast.UnaryExpr{Op: ast.OpNeg, X: x}
 }
 
-func (b *builder) binary(all []g.IExprContext, op ast.BinOp) ast.Expr {
+func (b builder) binary(all []g.IExprContext, op ast.BinOp) ast.Expr {
 	return ast.BinaryExpr{Op: op, L: b.expr(all[0]), R: b.expr(all[1])}
 }
 
-func (b *builder) funcCall(c *g.FuncCallContext) ast.Expr {
+func (b builder) funcCall(c g.IFuncCallContext) ast.Expr {
 	args := make([]ast.Expr, 0, len(c.AllExpr()))
 	for _, e := range c.AllExpr() {
 		args = append(args, b.expr(e))
@@ -182,25 +188,24 @@ func (b *builder) funcCall(c *g.FuncCallContext) ast.Expr {
 	return ast.FuncCall{Name: c.NAME().GetText(), Args: args}
 }
 
-func (b builder) fieldAccess(c *g.FieldAccessContext) ast.Expr {
+func (b builder) fieldAccess(c g.IFieldAccessContext) ast.Expr {
 	fa := ast.FieldAccess{}
 	for _, ps := range c.AllPathSeg() {
-		psc := ps.(*g.PathSegContext)
-		if psc.NAME() != nil {
-			fa.Path = append(fa.Path, ast.PathSegment{Name: psc.NAME().GetText()})
+		if ps.NAME() != nil {
+			fa.Path = append(fa.Path, ast.PathSegment{Name: ps.NAME().GetText()})
 			continue
 		}
-		fa.Path = append(fa.Path, ast.PathSegment{Iter: true})
+		fa.Path = append(fa.Path, ast.PathSegment{IsIter: true})
 	}
 	return fa
 }
 
-func (b builder) variable(c *g.VariableContext) ast.Expr {
+func (b builder) variable(c g.IVariableContext) ast.Expr {
 	return ast.VarRef{Name: c.NAME().GetText()}
 }
 
 func (b builder) literal(c *g.LitExprContext) ast.Expr {
-	return ast.Literal{V: literalValue(c.Literal().(*g.LiteralContext))}
+	return ast.Literal{V: literalValue(c.Literal())}
 }
 
 // childOp reads the operator token of a binary expression alternative (child 1
@@ -210,7 +215,7 @@ func childOp(ctx antlr.ParserRuleContext) ast.BinOp {
 }
 
 // literalValue converts a literal token into a value.Value.
-func literalValue(c *g.LiteralContext) value.Value {
+func literalValue(c g.ILiteralContext) value.Value {
 	if t := c.STRING(); t != nil {
 		return unquote(tokenText(t.GetText()))
 	}

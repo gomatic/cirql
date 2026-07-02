@@ -80,7 +80,7 @@ func TestEval_FieldAccess_Iter(t *testing.T) {
 	}
 	env := objEnv(map[string]value.Value{"items": list})
 	got := evalOK(t, ast.FieldAccess{Path: []ast.PathSegment{
-		{Name: "items"}, {Iter: true}, {Name: "n"},
+		{Name: "items"}, {IsIter: true}, {Name: "n"},
 	}}, env)
 	out, ok := got.([]value.Value)
 	if !ok || len(out) != 2 || out[0] != int64(1) || out[1] != int64(2) {
@@ -91,7 +91,7 @@ func TestEval_FieldAccess_Iter(t *testing.T) {
 func TestEval_FieldAccess_IterNonList(t *testing.T) {
 	env := objEnv(map[string]value.Value{"items": int64(3)})
 	got := evalOK(t, ast.FieldAccess{Path: []ast.PathSegment{
-		{Name: "items"}, {Iter: true},
+		{Name: "items"}, {IsIter: true},
 	}}, env)
 	if got != nil {
 		t.Fatalf("iter non-list = %v want nil", got)

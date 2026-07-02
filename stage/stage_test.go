@@ -106,7 +106,7 @@ func TestFlatMap_Expands(t *testing.T) {
 	item := obj("title", "p", "qtys", []value.Value{int64(1), int64(2), int64(3)})
 	stage := ast.FlatMapStage{Mappings: []ast.Mapping{
 		{Key: "title", Expr: field("title")},
-		{Key: "qty", Expr: ast.FieldAccess{Path: []ast.PathSegment{{Name: "qtys"}, {Iter: true}}}},
+		{Key: "qty", Expr: ast.FieldAccess{Path: []ast.PathSegment{{Name: "qtys"}, {IsIter: true}}}},
 	}}
 	out := run(t, stage, pipeline.ResultSet{item})
 	if len(out) != 3 {
@@ -129,8 +129,8 @@ func TestFlatMap_ScalarOnlyActsLikeMap(t *testing.T) {
 func TestFlatMap_ShorterListPadsNil(t *testing.T) {
 	item := obj("xs", []value.Value{int64(1)}, "ys", []value.Value{int64(7), int64(8)})
 	stage := ast.FlatMapStage{Mappings: []ast.Mapping{
-		{Key: "x", Expr: ast.FieldAccess{Path: []ast.PathSegment{{Name: "xs"}, {Iter: true}}}},
-		{Key: "y", Expr: ast.FieldAccess{Path: []ast.PathSegment{{Name: "ys"}, {Iter: true}}}},
+		{Key: "x", Expr: ast.FieldAccess{Path: []ast.PathSegment{{Name: "xs"}, {IsIter: true}}}},
+		{Key: "y", Expr: ast.FieldAccess{Path: []ast.PathSegment{{Name: "ys"}, {IsIter: true}}}},
 	}}
 	out := run(t, stage, pipeline.ResultSet{item})
 	if len(out) != 2 {
@@ -260,7 +260,7 @@ func TestSort_AscDesc(t *testing.T) {
 	if asc[0].(map[string]value.Value)["n"] != int64(1) {
 		t.Fatalf("asc first=%v want 1", asc[0])
 	}
-	desc := run(t, ast.SortStage{Key: field("n"), Desc: true}, in)
+	desc := run(t, ast.SortStage{Key: field("n"), IsDesc: true}, in)
 	if desc[0].(map[string]value.Value)["n"] != int64(3) {
 		t.Fatalf("desc first=%v want 3", desc[0])
 	}

@@ -17,27 +17,33 @@ type Pipeline struct {
 	stages []pipeline.Stage
 }
 
+// Query is the raw text of a cirql query.
+type Query = dialect.Query
+
 // config holds Parse options.
 type config struct {
 	now stage.Clock
 }
 
-// Option configures Parse.
-type Option func(*config)
+// Option configures Parse: it returns the config with the option applied.
+type Option func(config) config
 
 // WithClock injects the clock the now() builtin reads (epoch seconds), making
 // time-dependent queries deterministic in tests.
 func WithClock(now func() int64) Option {
-	return func(c *config) { c.now = now }
+	return func(c config) config {
+		c.now = now
+		return c
+	}
 }
 
 // Parse compiles a cirql query into a Pipeline. It returns the dialect's
 // ErrParse on a syntax error, or stage.ErrStageUnsupported when the query uses a
 // source stage this build does not execute.
-func Parse(query string, opts ...Option) (Pipeline, error) {
+func Parse(query Query, opts ...Option) (Pipeline, error) {
 	var cfg config
 	for _, o := range opts {
-		o(&cfg)
+		cfg = o(cfg)
 	}
 	tree, err := dialect.Parse(query)
 	if err != nil {

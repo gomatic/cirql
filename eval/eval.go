@@ -42,7 +42,7 @@ func evalPath(cur value.Value, segs []ast.PathSegment) value.Value {
 	if len(segs) == 0 {
 		return cur
 	}
-	if segs[0].Iter {
+	if segs[0].IsIter {
 		return evalIter(cur, segs[1:])
 	}
 	return evalField(cur, fieldName(segs[0].Name), segs[1:])
@@ -204,29 +204,32 @@ func arith(op ast.BinOp, l, r value.Value) (value.Value, error) {
 	if err != nil {
 		return nil, ErrType
 	}
-	return arithFloat(op, x, y), nil
+	return arithFloat(op, operand(x), operand(y)), nil
 }
 
-// arithFloat applies the numeric operator to two floats.
-func arithFloat(op ast.BinOp, x, y float64) value.Value {
+// operand is one numeric operand of an arithmetic operation in the double model.
+type operand float64
+
+// arithFloat applies the numeric operator to two operands.
+func arithFloat(op ast.BinOp, x, y operand) value.Value {
 	switch op {
 	case ast.OpSub:
-		return x - y
+		return float64(x - y)
 	case ast.OpMul:
-		return x * y
+		return float64(x * y)
 	case ast.OpDiv:
 		return zeroGuard(x/y, y)
 	default:
-		return zeroGuard(math.Mod(x, y), y)
+		return zeroGuard(operand(math.Mod(float64(x), float64(y))), y)
 	}
 }
 
 // zeroGuard returns null when the divisor is zero, else the computed result.
-func zeroGuard(result, divisor float64) value.Value {
+func zeroGuard(result, divisor operand) value.Value {
 	if divisor == 0 {
 		return nil
 	}
-	return result
+	return float64(result)
 }
 
 // evalCall dispatches a builtin function call.

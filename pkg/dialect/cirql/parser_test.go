@@ -9,7 +9,7 @@ import (
 
 func mustParse(t *testing.T, q string) ast.Pipeline {
 	t.Helper()
-	p, err := Parse(q)
+	p, err := Parse(Query(q))
 	if err != nil {
 		t.Fatalf("Parse(%q): %v", q, err)
 	}
@@ -33,7 +33,7 @@ func TestParse_TransformPipeline(t *testing.T) {
 	if _, ok := p.Stages[1].(ast.MapStage); !ok {
 		t.Fatalf("stage1 = %T want MapStage", p.Stages[1])
 	}
-	if s := p.Stages[2].(ast.SortStage); !s.Desc {
+	if s := p.Stages[2].(ast.SortStage); !s.IsDesc {
 		t.Fatal("sort should be desc")
 	}
 	if s := p.Stages[3].(ast.LimitStage); s.N != 10 {
@@ -238,7 +238,7 @@ func TestParse_LimitOverflowKeepsAll(t *testing.T) {
 func TestParse_FieldAccessPaths(t *testing.T) {
 	p := mustParse(t, `map { v: .a.b[] }`)
 	fa := p.Stages[0].(ast.MapStage).Mappings[0].Expr.(ast.FieldAccess)
-	if len(fa.Path) != 3 || fa.Path[0].Name != "a" || fa.Path[1].Name != "b" || !fa.Path[2].Iter {
+	if len(fa.Path) != 3 || fa.Path[0].Name != "a" || fa.Path[1].Name != "b" || !fa.Path[2].IsIter {
 		t.Fatalf("path = %#v", fa.Path)
 	}
 	id := mustParse(t, `map { v: . }`).Stages[0].(ast.MapStage).Mappings[0].Expr.(ast.FieldAccess)
@@ -284,7 +284,7 @@ func TestParse_FilePath(t *testing.T) {
 
 func TestParse_SyntaxError(t *testing.T) {
 	for _, q := range []string{`map {`, `filter`, `| | |`, `sort`} {
-		if _, err := Parse(q); !errors.Is(err, ErrParse) {
+		if _, err := Parse(Query(q)); !errors.Is(err, ErrParse) {
 			t.Fatalf("Parse(%q) err = %v want ErrParse", q, err)
 		}
 	}

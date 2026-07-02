@@ -108,8 +108,8 @@ type ReduceStage struct {
 
 // SortStage reorders the result set by Key.
 type SortStage struct {
-	Key  Expr
-	Desc bool
+	Key    Expr
+	IsDesc bool
 }
 
 // LimitStage truncates the result set to at most N objects.
@@ -148,8 +148,8 @@ func (QueryStage) isStage()   {}
 
 // PathSegment is one step of a field access: a named field, or [] iteration.
 type PathSegment struct {
-	Name string
-	Iter bool
+	Name   string
+	IsIter bool
 }
 
 // FieldAccess is .a.b[] etc.; an empty Path is the identity ".".

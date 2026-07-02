@@ -31,7 +31,7 @@ func Build(s ast.Stage, now Clock) (pipeline.Stage, error) {
 	case ast.ReduceStage:
 		return reduceExec{op: n.Op, arg: n.Arg, now: now}, nil
 	case ast.SortStage:
-		return sortExec{key: n.Key, desc: n.Desc, now: now}, nil
+		return sortExec{key: n.Key, isDesc: n.IsDesc, now: now}, nil
 	case ast.LimitStage:
 		return limitExec{n: n.N}, nil
 	case ast.UniqStage:
@@ -332,9 +332,9 @@ func lastOrNil(in pipeline.ResultSet) value.Value {
 
 // sortExec reorders the result set by a key expression.
 type sortExec struct {
-	key  ast.Expr
-	now  Clock
-	desc bool
+	key    ast.Expr
+	now    Clock
+	isDesc bool
 }
 
 // keyedItem pairs an item with its precomputed sort key.
@@ -350,7 +350,11 @@ func (s sortExec) Execute(in pipeline.ResultSet) (pipeline.ResultSet, error) {
 	}
 	var cmpErr error
 	slices.SortStableFunc(keyed, func(a, b keyedItem) int {
-		return s.compare(a, b, &cmpErr)
+		c, err := s.compare(a, b)
+		if err != nil {
+			cmpErr = err
+		}
+		return c
 	})
 	if cmpErr != nil {
 		return nil, cmpErr
@@ -370,17 +374,16 @@ func (s sortExec) keyed(in pipeline.ResultSet) ([]keyedItem, error) {
 	return out, nil
 }
 
-// compare orders two keyed items, recording the first incomparable error.
-func (s sortExec) compare(a, b keyedItem, cmpErr *error) int {
+// compare orders two keyed items, or reports that the keys are incomparable.
+func (s sortExec) compare(a, b keyedItem) (int, error) {
 	c, err := value.Compare(a.key, b.key)
 	if err != nil {
-		*cmpErr = err
-		return 0
+		return 0, err
 	}
-	if s.desc {
-		return -c
+	if s.isDesc {
+		return -c, nil
 	}
-	return c
+	return c, nil
 }
 
 // unkey drops the sort keys, returning the ordered items.
