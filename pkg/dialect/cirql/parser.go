@@ -69,7 +69,7 @@ func (b builder) sourceStage(c *g.SourceStageContext) ast.Stage {
 		return ast.StdinStage{}
 	}
 	if s := c.FileStage(); s != nil {
-		return ast.FileStage{Path: unquote(sParam(s.(*g.FileStageContext).STRING().GetText()))}
+		return ast.FileStage{Path: unquote(tokenText(s.(*g.FileStageContext).STRING().GetText()))}
 	}
 	if s := c.HttpStage(); s != nil {
 		return b.httpStage(s.(*g.HttpStageContext))
@@ -81,7 +81,7 @@ func (b builder) httpStage(c *g.HttpStageContext) ast.Stage {
 	if v := c.Variable(); v != nil {
 		return ast.HTTPStage{URL: b.variable(v.(*g.VariableContext))}
 	}
-	return ast.HTTPStage{URL: ast.Literal{V: unquote(sParam(c.STRING().GetText()))}}
+	return ast.HTTPStage{URL: ast.Literal{V: unquote(tokenText(c.STRING().GetText()))}}
 }
 
 func (b *builder) transformStage(c *g.TransformStageContext) ast.Stage {
@@ -101,7 +101,7 @@ func (b *builder) transformStage(c *g.TransformStageContext) ast.Stage {
 		return b.sortStage(s.(*g.SortStageContext))
 	}
 	if s := c.LimitStage(); s != nil {
-		return ast.LimitStage{N: atoi(sParam(s.(*g.LimitStageContext).INT().GetText()))}
+		return ast.LimitStage{N: atoi(tokenText(s.(*g.LimitStageContext).INT().GetText()))}
 	}
 	return b.uniqStage(c.UniqStage().(*g.UniqStageContext))
 }
@@ -212,13 +212,13 @@ func childOp(ctx antlr.ParserRuleContext) ast.BinOp {
 // literalValue converts a literal token into a value.Value.
 func literalValue(c *g.LiteralContext) value.Value {
 	if t := c.STRING(); t != nil {
-		return unquote(sParam(t.GetText()))
+		return unquote(tokenText(t.GetText()))
 	}
 	if t := c.FLOAT(); t != nil {
-		return parseFloat(sParam(t.GetText()))
+		return parseFloat(tokenText(t.GetText()))
 	}
 	if t := c.INT(); t != nil {
-		return parseInt(sParam(t.GetText()))
+		return parseInt(tokenText(t.GetText()))
 	}
 	if c.TRUE() != nil {
 		return true
@@ -229,11 +229,11 @@ func literalValue(c *g.LiteralContext) value.Value {
 	return nil
 }
 
-// sParam names the s parameter of parseInt; rename it to the real domain concept.
-type sParam string
+// tokenText is the raw source text of a lexer token (STRING, FLOAT, or INT).
+type tokenText string
 
 // parseInt parses a decimal integer, falling back to float on overflow.
-func parseInt(s sParam) value.Value {
+func parseInt(s tokenText) value.Value {
 	n, err := strconv.ParseInt(string(s), 10, 64)
 	if err != nil {
 		f, _ := strconv.ParseFloat(string(s), 64)
@@ -243,14 +243,14 @@ func parseInt(s sParam) value.Value {
 }
 
 // parseFloat parses a float, taking the rounded value even on range overflow.
-func parseFloat(s sParam) value.Value {
+func parseFloat(s tokenText) value.Value {
 	f, _ := strconv.ParseFloat(string(s), 64)
 	return f
 }
 
 // atoi parses a non-negative integer token (guaranteed digits by the lexer);
 // an overflowing limit clamps to the max int, i.e. "keep all".
-func atoi(s sParam) int {
+func atoi(s tokenText) int {
 	n, err := strconv.Atoi(string(s))
 	if err != nil {
 		return int(^uint(0) >> 1)
@@ -260,13 +260,13 @@ func atoi(s sParam) int {
 
 // unquote strips the surrounding quotes of a STRING token and resolves its
 // escapes leniently (an unknown escape yields the escaped character verbatim).
-func unquote(s sParam) string {
+func unquote(s tokenText) string {
 	inner := string(s)[1 : len(string(s))-1]
 	var b strings.Builder
 	for i := 0; i < len(inner); i++ {
 		if inner[i] == '\\' && i+1 < len(inner) {
 			i++
-			_ = b.WriteByte(unescape(cParam(inner[i])))
+			_ = b.WriteByte(unescape(escapedByte(inner[i])))
 			continue
 		}
 		_ = b.WriteByte(inner[i])
@@ -274,12 +274,12 @@ func unquote(s sParam) string {
 	return b.String()
 }
 
-// cParam names the c parameter of unescape; rename it to the real domain concept.
-type cParam byte
+// escapedByte is the byte following a backslash in a STRING token's escape sequence.
+type escapedByte byte
 
 // unescape maps a backslash-escaped byte to its value; unknown escapes pass the
 // byte through unchanged.
-func unescape(c cParam) byte {
+func unescape(c escapedByte) byte {
 	switch byte(c) {
 	case 'n':
 		return '\n'

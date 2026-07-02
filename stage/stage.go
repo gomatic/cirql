@@ -118,7 +118,7 @@ func (s flatMapExec) expand(item value.Value) ([]value.Value, error) {
 	n := fanout(ev)
 	rows := make([]value.Value, n)
 	for i := range rows {
-		rows[i] = rowAt(ev, iParam(i))
+		rows[i] = rowAt(ev, rowIndex(i))
 	}
 	return rows, nil
 }
@@ -146,11 +146,11 @@ func fanout(ev []kv) int {
 	return n
 }
 
-// iParam names the i parameter of rowAt; rename it to the real domain concept.
-type iParam int
+// rowIndex is the position of an expanded output row within a flatMap fanout.
+type rowIndex int
 
 // rowAt builds the i-th expanded row: list mappings take element i, scalars repeat.
-func rowAt(ev []kv, i iParam) value.Value {
+func rowAt(ev []kv, i rowIndex) value.Value {
 	row := make(map[string]value.Value, len(ev))
 	for _, e := range ev {
 		row[e.key] = elemAt(e.val, i)
@@ -159,7 +159,7 @@ func rowAt(ev []kv, i iParam) value.Value {
 }
 
 // elemAt returns the i-th element of a list (nil past the end) or a scalar as-is.
-func elemAt(v value.Value, i iParam) value.Value {
+func elemAt(v value.Value, i rowIndex) value.Value {
 	l, ok := v.([]value.Value)
 	if !ok {
 		return v
