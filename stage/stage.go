@@ -118,7 +118,7 @@ func (s flatMapExec) expand(item value.Value) ([]value.Value, error) {
 	n := fanout(ev)
 	rows := make([]value.Value, n)
 	for i := range rows {
-		rows[i] = rowAt(ev, i)
+		rows[i] = rowAt(ev, iParam(i))
 	}
 	return rows, nil
 }
@@ -146,8 +146,11 @@ func fanout(ev []kv) int {
 	return n
 }
 
+// iParam names the i parameter of rowAt; rename it to the real domain concept.
+type iParam int
+
 // rowAt builds the i-th expanded row: list mappings take element i, scalars repeat.
-func rowAt(ev []kv, i int) value.Value {
+func rowAt(ev []kv, i iParam) value.Value {
 	row := make(map[string]value.Value, len(ev))
 	for _, e := range ev {
 		row[e.key] = elemAt(e.val, i)
@@ -156,13 +159,13 @@ func rowAt(ev []kv, i int) value.Value {
 }
 
 // elemAt returns the i-th element of a list (nil past the end) or a scalar as-is.
-func elemAt(v value.Value, i int) value.Value {
+func elemAt(v value.Value, i iParam) value.Value {
 	l, ok := v.([]value.Value)
 	if !ok {
 		return v
 	}
-	if i < len(l) {
-		return l[i]
+	if int(i) < len(l) {
+		return l[int(i)]
 	}
 	return nil
 }

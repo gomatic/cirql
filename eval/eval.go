@@ -45,7 +45,7 @@ func evalPath(cur value.Value, segs []ast.PathSegment) value.Value {
 	if segs[0].Iter {
 		return evalIter(cur, segs[1:])
 	}
-	return evalField(cur, segs[0].Name, segs[1:])
+	return evalField(cur, nameParam(segs[0].Name), segs[1:])
 }
 
 // evalIter applies the remaining path to each element of a list; a non-list is
@@ -62,14 +62,17 @@ func evalIter(cur value.Value, rest []ast.PathSegment) value.Value {
 	return out
 }
 
+// nameParam names the name parameter of evalField; rename it to the real domain concept.
+type nameParam string
+
 // evalField indexes one object field (missing or non-object yields null) and
 // continues down the path.
-func evalField(cur value.Value, name string, rest []ast.PathSegment) value.Value {
+func evalField(cur value.Value, name nameParam, rest []ast.PathSegment) value.Value {
 	obj, err := value.AsObject(cur)
 	if err != nil {
 		return nil
 	}
-	return evalPath(obj[name], rest)
+	return evalPath(obj[string(name)], rest)
 }
 
 // evalUnary evaluates a logical-not or arithmetic-negation.
@@ -118,7 +121,7 @@ func evalLogical(n ast.BinaryExpr, env Env) (value.Value, error) {
 	if err != nil {
 		return nil, err
 	}
-	if short, ok := shortCircuit(n.Op, value.Truthy(l)); ok {
+	if short, ok := shortCircuit(n.Op, leftParam(value.Truthy(l))); ok {
 		return short, nil
 	}
 	r, err := Eval(n.R, env)
@@ -128,13 +131,16 @@ func evalLogical(n ast.BinaryExpr, env Env) (value.Value, error) {
 	return value.Truthy(r), nil
 }
 
-// shortCircuit reports the determined result of a logical op from its left
-// operand, or ok=false when the right operand must be evaluated.
-func shortCircuit(op ast.BinOp, left bool) (result, ok bool) {
-	if op == ast.OpAnd && !left {
+// leftParam names the left parameter of shortCircuit; rename it to the real domain concept.
+type leftParam bool
+
+// shortCircuit reports the determined isResult of a logical op from its isLeft
+// operand, or isOk=false when the right operand must be evaluated.
+func shortCircuit(op ast.BinOp, isLeft leftParam) (isResult, isOk bool) {
+	if op == ast.OpAnd && !bool(isLeft) {
 		return false, true
 	}
-	if op == ast.OpOr && left {
+	if op == ast.OpOr && bool(isLeft) {
 		return true, true
 	}
 	return false, false
@@ -168,20 +174,23 @@ func compare(op ast.BinOp, l, r value.Value) (value.Value, error) {
 	if err != nil {
 		return nil, err
 	}
-	return cmpResult(op, c), nil
+	return cmpResult(op, cParam(c)), nil
 }
 
+// cParam names the c parameter of cmpResult; rename it to the real domain concept.
+type cParam int
+
 // cmpResult turns a -1/0/1 comparison into the boolean the operator wants.
-func cmpResult(op ast.BinOp, c int) bool {
+func cmpResult(op ast.BinOp, c cParam) bool {
 	switch op {
 	case ast.OpGt:
-		return c > 0
+		return int(c) > 0
 	case ast.OpLt:
-		return c < 0
+		return int(c) < 0
 	case ast.OpGe:
-		return c >= 0
+		return int(c) >= 0
 	default:
-		return c <= 0
+		return int(c) <= 0
 	}
 }
 

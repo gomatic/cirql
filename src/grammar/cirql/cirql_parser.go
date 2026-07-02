@@ -356,7 +356,7 @@ func InitEmptyPipelineContext(p *PipelineContext) {
 	p.RuleIndex = cirqlParserRULE_pipeline
 }
 
-func (*PipelineContext) IsPipelineContext() {}
+func (PipelineContext) IsPipelineContext() {}
 
 func NewPipelineContext(parser antlr.Parser, parent antlr.ParserRuleContext, invokingState int) *PipelineContext {
 	var p = new(PipelineContext)
@@ -369,7 +369,7 @@ func NewPipelineContext(parser antlr.Parser, parent antlr.ParserRuleContext, inv
 	return p
 }
 
-func (s *PipelineContext) GetParser() antlr.Parser { return s.parser }
+func (s PipelineContext) GetParser() antlr.Parser { return s.parser }
 
 func (s *PipelineContext) AllStage() []IStageContext {
 	children := s.GetChildren()
@@ -534,7 +534,7 @@ func InitEmptyStageContext(p *StageContext) {
 	p.RuleIndex = cirqlParserRULE_stage
 }
 
-func (*StageContext) IsStageContext() {}
+func (StageContext) IsStageContext() {}
 
 func NewStageContext(parser antlr.Parser, parent antlr.ParserRuleContext, invokingState int) *StageContext {
 	var p = new(StageContext)
@@ -547,7 +547,7 @@ func NewStageContext(parser antlr.Parser, parent antlr.ParserRuleContext, invoki
 	return p
 }
 
-func (s *StageContext) GetParser() antlr.Parser { return s.parser }
+func (s StageContext) GetParser() antlr.Parser { return s.parser }
 
 func (s *StageContext) SourceStage() ISourceStageContext {
 	var t antlr.RuleContext
@@ -676,7 +676,7 @@ func InitEmptySourceStageContext(p *SourceStageContext) {
 	p.RuleIndex = cirqlParserRULE_sourceStage
 }
 
-func (*SourceStageContext) IsSourceStageContext() {}
+func (SourceStageContext) IsSourceStageContext() {}
 
 func NewSourceStageContext(parser antlr.Parser, parent antlr.ParserRuleContext, invokingState int) *SourceStageContext {
 	var p = new(SourceStageContext)
@@ -689,7 +689,7 @@ func NewSourceStageContext(parser antlr.Parser, parent antlr.ParserRuleContext, 
 	return p
 }
 
-func (s *SourceStageContext) GetParser() antlr.Parser { return s.parser }
+func (s SourceStageContext) GetParser() antlr.Parser { return s.parser }
 
 func (s *SourceStageContext) QueryStage() IQueryStageContext {
 	var t antlr.RuleContext
@@ -862,7 +862,7 @@ func InitEmptyQueryStageContext(p *QueryStageContext) {
 	p.RuleIndex = cirqlParserRULE_queryStage
 }
 
-func (*QueryStageContext) IsQueryStageContext() {}
+func (QueryStageContext) IsQueryStageContext() {}
 
 func NewQueryStageContext(parser antlr.Parser, parent antlr.ParserRuleContext, invokingState int) *QueryStageContext {
 	var p = new(QueryStageContext)
@@ -875,7 +875,7 @@ func NewQueryStageContext(parser antlr.Parser, parent antlr.ParserRuleContext, i
 	return p
 }
 
-func (s *QueryStageContext) GetParser() antlr.Parser { return s.parser }
+func (s QueryStageContext) GetParser() antlr.Parser { return s.parser }
 
 func (s *QueryStageContext) QUERY() antlr.TerminalNode {
 	return s.GetToken(cirqlParserQUERY, 0)
@@ -999,7 +999,7 @@ func InitEmptyQueryBodyContext(p *QueryBodyContext) {
 	p.RuleIndex = cirqlParserRULE_queryBody
 }
 
-func (*QueryBodyContext) IsQueryBodyContext() {}
+func (QueryBodyContext) IsQueryBodyContext() {}
 
 func NewQueryBodyContext(parser antlr.Parser, parent antlr.ParserRuleContext, invokingState int) *QueryBodyContext {
 	var p = new(QueryBodyContext)
@@ -1012,7 +1012,7 @@ func NewQueryBodyContext(parser antlr.Parser, parent antlr.ParserRuleContext, in
 	return p
 }
 
-func (s *QueryBodyContext) GetParser() antlr.Parser { return s.parser }
+func (s QueryBodyContext) GetParser() antlr.Parser { return s.parser }
 
 func (s *QueryBodyContext) LBRACE() antlr.TerminalNode {
 	return s.GetToken(cirqlParserLBRACE, 0)
@@ -1127,7 +1127,7 @@ func InitEmptySelectionSetContext(p *SelectionSetContext) {
 	p.RuleIndex = cirqlParserRULE_selectionSet
 }
 
-func (*SelectionSetContext) IsSelectionSetContext() {}
+func (SelectionSetContext) IsSelectionSetContext() {}
 
 func NewSelectionSetContext(parser antlr.Parser, parent antlr.ParserRuleContext, invokingState int) *SelectionSetContext {
 	var p = new(SelectionSetContext)
@@ -1140,7 +1140,7 @@ func NewSelectionSetContext(parser antlr.Parser, parent antlr.ParserRuleContext,
 	return p
 }
 
-func (s *SelectionSetContext) GetParser() antlr.Parser { return s.parser }
+func (s SelectionSetContext) GetParser() antlr.Parser { return s.parser }
 
 func (s *SelectionSetContext) AllField() []IFieldContext {
 	children := s.GetChildren()
@@ -1277,7 +1277,7 @@ func InitEmptyFieldContext(p *FieldContext) {
 	p.RuleIndex = cirqlParserRULE_field
 }
 
-func (*FieldContext) IsFieldContext() {}
+func (FieldContext) IsFieldContext() {}
 
 func NewFieldContext(parser antlr.Parser, parent antlr.ParserRuleContext, invokingState int) *FieldContext {
 	var p = new(FieldContext)
@@ -1290,7 +1290,7 @@ func NewFieldContext(parser antlr.Parser, parent antlr.ParserRuleContext, invoki
 	return p
 }
 
-func (s *FieldContext) GetParser() antlr.Parser { return s.parser }
+func (s FieldContext) GetParser() antlr.Parser { return s.parser }
 
 func (s *FieldContext) NAME() antlr.TerminalNode {
 	return s.GetToken(cirqlParserNAME, 0)
@@ -1483,7 +1483,7 @@ func InitEmptyArgumentsContext(p *ArgumentsContext) {
 	p.RuleIndex = cirqlParserRULE_arguments
 }
 
-func (*ArgumentsContext) IsArgumentsContext() {}
+func (ArgumentsContext) IsArgumentsContext() {}
 
 func NewArgumentsContext(parser antlr.Parser, parent antlr.ParserRuleContext, invokingState int) *ArgumentsContext {
 	var p = new(ArgumentsContext)
@@ -1496,7 +1496,7 @@ func NewArgumentsContext(parser antlr.Parser, parent antlr.ParserRuleContext, in
 	return p
 }
 
-func (s *ArgumentsContext) GetParser() antlr.Parser { return s.parser }
+func (s ArgumentsContext) GetParser() antlr.Parser { return s.parser }
 
 func (s *ArgumentsContext) AllArgument() []IArgumentContext {
 	children := s.GetChildren()
@@ -1650,7 +1650,7 @@ func InitEmptyArgumentContext(p *ArgumentContext) {
 	p.RuleIndex = cirqlParserRULE_argument
 }
 
-func (*ArgumentContext) IsArgumentContext() {}
+func (ArgumentContext) IsArgumentContext() {}
 
 func NewArgumentContext(parser antlr.Parser, parent antlr.ParserRuleContext, invokingState int) *ArgumentContext {
 	var p = new(ArgumentContext)
@@ -1663,7 +1663,7 @@ func NewArgumentContext(parser antlr.Parser, parent antlr.ParserRuleContext, inv
 	return p
 }
 
-func (s *ArgumentContext) GetParser() antlr.Parser { return s.parser }
+func (s ArgumentContext) GetParser() antlr.Parser { return s.parser }
 
 func (s *ArgumentContext) NAME() antlr.TerminalNode {
 	return s.GetToken(cirqlParserNAME, 0)
@@ -1779,7 +1779,7 @@ func InitEmptyHttpStageContext(p *HttpStageContext) {
 	p.RuleIndex = cirqlParserRULE_httpStage
 }
 
-func (*HttpStageContext) IsHttpStageContext() {}
+func (HttpStageContext) IsHttpStageContext() {}
 
 func NewHttpStageContext(parser antlr.Parser, parent antlr.ParserRuleContext, invokingState int) *HttpStageContext {
 	var p = new(HttpStageContext)
@@ -1792,7 +1792,7 @@ func NewHttpStageContext(parser antlr.Parser, parent antlr.ParserRuleContext, in
 	return p
 }
 
-func (s *HttpStageContext) GetParser() antlr.Parser { return s.parser }
+func (s HttpStageContext) GetParser() antlr.Parser { return s.parser }
 
 func (s *HttpStageContext) HTTP() antlr.TerminalNode {
 	return s.GetToken(cirqlParserHTTP, 0)
@@ -1922,7 +1922,7 @@ func InitEmptyFileStageContext(p *FileStageContext) {
 	p.RuleIndex = cirqlParserRULE_fileStage
 }
 
-func (*FileStageContext) IsFileStageContext() {}
+func (FileStageContext) IsFileStageContext() {}
 
 func NewFileStageContext(parser antlr.Parser, parent antlr.ParserRuleContext, invokingState int) *FileStageContext {
 	var p = new(FileStageContext)
@@ -1935,7 +1935,7 @@ func NewFileStageContext(parser antlr.Parser, parent antlr.ParserRuleContext, in
 	return p
 }
 
-func (s *FileStageContext) GetParser() antlr.Parser { return s.parser }
+func (s FileStageContext) GetParser() antlr.Parser { return s.parser }
 
 func (s *FileStageContext) FILE() antlr.TerminalNode {
 	return s.GetToken(cirqlParserFILE, 0)
@@ -2029,7 +2029,7 @@ func InitEmptyStdinStageContext(p *StdinStageContext) {
 	p.RuleIndex = cirqlParserRULE_stdinStage
 }
 
-func (*StdinStageContext) IsStdinStageContext() {}
+func (StdinStageContext) IsStdinStageContext() {}
 
 func NewStdinStageContext(parser antlr.Parser, parent antlr.ParserRuleContext, invokingState int) *StdinStageContext {
 	var p = new(StdinStageContext)
@@ -2042,7 +2042,7 @@ func NewStdinStageContext(parser antlr.Parser, parent antlr.ParserRuleContext, i
 	return p
 }
 
-func (s *StdinStageContext) GetParser() antlr.Parser { return s.parser }
+func (s StdinStageContext) GetParser() antlr.Parser { return s.parser }
 
 func (s *StdinStageContext) STDIN() antlr.TerminalNode {
 	return s.GetToken(cirqlParserSTDIN, 0)
@@ -2130,7 +2130,7 @@ func InitEmptyTransformStageContext(p *TransformStageContext) {
 	p.RuleIndex = cirqlParserRULE_transformStage
 }
 
-func (*TransformStageContext) IsTransformStageContext() {}
+func (TransformStageContext) IsTransformStageContext() {}
 
 func NewTransformStageContext(parser antlr.Parser, parent antlr.ParserRuleContext, invokingState int) *TransformStageContext {
 	var p = new(TransformStageContext)
@@ -2143,7 +2143,7 @@ func NewTransformStageContext(parser antlr.Parser, parent antlr.ParserRuleContex
 	return p
 }
 
-func (s *TransformStageContext) GetParser() antlr.Parser { return s.parser }
+func (s TransformStageContext) GetParser() antlr.Parser { return s.parser }
 
 func (s *TransformStageContext) MapStage() IMapStageContext {
 	var t antlr.RuleContext
@@ -2390,7 +2390,7 @@ func InitEmptyMapStageContext(p *MapStageContext) {
 	p.RuleIndex = cirqlParserRULE_mapStage
 }
 
-func (*MapStageContext) IsMapStageContext() {}
+func (MapStageContext) IsMapStageContext() {}
 
 func NewMapStageContext(parser antlr.Parser, parent antlr.ParserRuleContext, invokingState int) *MapStageContext {
 	var p = new(MapStageContext)
@@ -2403,7 +2403,7 @@ func NewMapStageContext(parser antlr.Parser, parent antlr.ParserRuleContext, inv
 	return p
 }
 
-func (s *MapStageContext) GetParser() antlr.Parser { return s.parser }
+func (s MapStageContext) GetParser() antlr.Parser { return s.parser }
 
 func (s *MapStageContext) MAP() antlr.TerminalNode {
 	return s.GetToken(cirqlParserMAP, 0)
@@ -2597,7 +2597,7 @@ func InitEmptyFlatMapStageContext(p *FlatMapStageContext) {
 	p.RuleIndex = cirqlParserRULE_flatMapStage
 }
 
-func (*FlatMapStageContext) IsFlatMapStageContext() {}
+func (FlatMapStageContext) IsFlatMapStageContext() {}
 
 func NewFlatMapStageContext(parser antlr.Parser, parent antlr.ParserRuleContext, invokingState int) *FlatMapStageContext {
 	var p = new(FlatMapStageContext)
@@ -2610,7 +2610,7 @@ func NewFlatMapStageContext(parser antlr.Parser, parent antlr.ParserRuleContext,
 	return p
 }
 
-func (s *FlatMapStageContext) GetParser() antlr.Parser { return s.parser }
+func (s FlatMapStageContext) GetParser() antlr.Parser { return s.parser }
 
 func (s *FlatMapStageContext) FLATMAP() antlr.TerminalNode {
 	return s.GetToken(cirqlParserFLATMAP, 0)
@@ -2800,7 +2800,7 @@ func InitEmptyMappingContext(p *MappingContext) {
 	p.RuleIndex = cirqlParserRULE_mapping
 }
 
-func (*MappingContext) IsMappingContext() {}
+func (MappingContext) IsMappingContext() {}
 
 func NewMappingContext(parser antlr.Parser, parent antlr.ParserRuleContext, invokingState int) *MappingContext {
 	var p = new(MappingContext)
@@ -2813,7 +2813,7 @@ func NewMappingContext(parser antlr.Parser, parent antlr.ParserRuleContext, invo
 	return p
 }
 
-func (s *MappingContext) GetParser() antlr.Parser { return s.parser }
+func (s MappingContext) GetParser() antlr.Parser { return s.parser }
 
 func (s *MappingContext) NAME() antlr.TerminalNode {
 	return s.GetToken(cirqlParserNAME, 0)
@@ -2928,7 +2928,7 @@ func InitEmptyFilterStageContext(p *FilterStageContext) {
 	p.RuleIndex = cirqlParserRULE_filterStage
 }
 
-func (*FilterStageContext) IsFilterStageContext() {}
+func (FilterStageContext) IsFilterStageContext() {}
 
 func NewFilterStageContext(parser antlr.Parser, parent antlr.ParserRuleContext, invokingState int) *FilterStageContext {
 	var p = new(FilterStageContext)
@@ -2941,7 +2941,7 @@ func NewFilterStageContext(parser antlr.Parser, parent antlr.ParserRuleContext, 
 	return p
 }
 
-func (s *FilterStageContext) GetParser() antlr.Parser { return s.parser }
+func (s FilterStageContext) GetParser() antlr.Parser { return s.parser }
 
 func (s *FilterStageContext) FILTER() antlr.TerminalNode {
 	return s.GetToken(cirqlParserFILTER, 0)
@@ -3047,7 +3047,7 @@ func InitEmptyReduceStageContext(p *ReduceStageContext) {
 	p.RuleIndex = cirqlParserRULE_reduceStage
 }
 
-func (*ReduceStageContext) IsReduceStageContext() {}
+func (ReduceStageContext) IsReduceStageContext() {}
 
 func NewReduceStageContext(parser antlr.Parser, parent antlr.ParserRuleContext, invokingState int) *ReduceStageContext {
 	var p = new(ReduceStageContext)
@@ -3060,7 +3060,7 @@ func NewReduceStageContext(parser antlr.Parser, parent antlr.ParserRuleContext, 
 	return p
 }
 
-func (s *ReduceStageContext) GetParser() antlr.Parser { return s.parser }
+func (s ReduceStageContext) GetParser() antlr.Parser { return s.parser }
 
 func (s *ReduceStageContext) REDUCE() antlr.TerminalNode {
 	return s.GetToken(cirqlParserREDUCE, 0)
@@ -3225,7 +3225,7 @@ func InitEmptyReduceOpContext(p *ReduceOpContext) {
 	p.RuleIndex = cirqlParserRULE_reduceOp
 }
 
-func (*ReduceOpContext) IsReduceOpContext() {}
+func (ReduceOpContext) IsReduceOpContext() {}
 
 func NewReduceOpContext(parser antlr.Parser, parent antlr.ParserRuleContext, invokingState int) *ReduceOpContext {
 	var p = new(ReduceOpContext)
@@ -3238,7 +3238,7 @@ func NewReduceOpContext(parser antlr.Parser, parent antlr.ParserRuleContext, inv
 	return p
 }
 
-func (s *ReduceOpContext) GetParser() antlr.Parser { return s.parser }
+func (s ReduceOpContext) GetParser() antlr.Parser { return s.parser }
 
 func (s *ReduceOpContext) COUNT() antlr.TerminalNode {
 	return s.GetToken(cirqlParserCOUNT, 0)
@@ -3359,7 +3359,7 @@ func InitEmptySortStageContext(p *SortStageContext) {
 	p.RuleIndex = cirqlParserRULE_sortStage
 }
 
-func (*SortStageContext) IsSortStageContext() {}
+func (SortStageContext) IsSortStageContext() {}
 
 func NewSortStageContext(parser antlr.Parser, parent antlr.ParserRuleContext, invokingState int) *SortStageContext {
 	var p = new(SortStageContext)
@@ -3372,7 +3372,7 @@ func NewSortStageContext(parser antlr.Parser, parent antlr.ParserRuleContext, in
 	return p
 }
 
-func (s *SortStageContext) GetParser() antlr.Parser { return s.parser }
+func (s SortStageContext) GetParser() antlr.Parser { return s.parser }
 
 func (s *SortStageContext) SORT() antlr.TerminalNode {
 	return s.GetToken(cirqlParserSORT, 0)
@@ -3505,7 +3505,7 @@ func InitEmptyLimitStageContext(p *LimitStageContext) {
 	p.RuleIndex = cirqlParserRULE_limitStage
 }
 
-func (*LimitStageContext) IsLimitStageContext() {}
+func (LimitStageContext) IsLimitStageContext() {}
 
 func NewLimitStageContext(parser antlr.Parser, parent antlr.ParserRuleContext, invokingState int) *LimitStageContext {
 	var p = new(LimitStageContext)
@@ -3518,7 +3518,7 @@ func NewLimitStageContext(parser antlr.Parser, parent antlr.ParserRuleContext, i
 	return p
 }
 
-func (s *LimitStageContext) GetParser() antlr.Parser { return s.parser }
+func (s LimitStageContext) GetParser() antlr.Parser { return s.parser }
 
 func (s *LimitStageContext) LIMIT() antlr.TerminalNode {
 	return s.GetToken(cirqlParserLIMIT, 0)
@@ -3613,7 +3613,7 @@ func InitEmptyUniqStageContext(p *UniqStageContext) {
 	p.RuleIndex = cirqlParserRULE_uniqStage
 }
 
-func (*UniqStageContext) IsUniqStageContext() {}
+func (UniqStageContext) IsUniqStageContext() {}
 
 func NewUniqStageContext(parser antlr.Parser, parent antlr.ParserRuleContext, invokingState int) *UniqStageContext {
 	var p = new(UniqStageContext)
@@ -3626,7 +3626,7 @@ func NewUniqStageContext(parser antlr.Parser, parent antlr.ParserRuleContext, in
 	return p
 }
 
-func (s *UniqStageContext) GetParser() antlr.Parser { return s.parser }
+func (s UniqStageContext) GetParser() antlr.Parser { return s.parser }
 
 func (s *UniqStageContext) UNIQ() antlr.TerminalNode {
 	return s.GetToken(cirqlParserUNIQ, 0)
@@ -3735,7 +3735,7 @@ func InitEmptyExprContext(p *ExprContext) {
 	p.RuleIndex = cirqlParserRULE_expr
 }
 
-func (*ExprContext) IsExprContext() {}
+func (ExprContext) IsExprContext() {}
 
 func NewExprContext(parser antlr.Parser, parent antlr.ParserRuleContext, invokingState int) *ExprContext {
 	var p = new(ExprContext)
@@ -3748,7 +3748,7 @@ func NewExprContext(parser antlr.Parser, parent antlr.ParserRuleContext, invokin
 	return p
 }
 
-func (s *ExprContext) GetParser() antlr.Parser { return s.parser }
+func (s ExprContext) GetParser() antlr.Parser { return s.parser }
 
 func (s *ExprContext) CopyAll(ctx *ExprContext) {
 	s.CopyFrom(&ctx.BaseParserRuleContext)
@@ -4775,7 +4775,7 @@ func InitEmptyFieldAccessContext(p *FieldAccessContext) {
 	p.RuleIndex = cirqlParserRULE_fieldAccess
 }
 
-func (*FieldAccessContext) IsFieldAccessContext() {}
+func (FieldAccessContext) IsFieldAccessContext() {}
 
 func NewFieldAccessContext(parser antlr.Parser, parent antlr.ParserRuleContext, invokingState int) *FieldAccessContext {
 	var p = new(FieldAccessContext)
@@ -4788,7 +4788,7 @@ func NewFieldAccessContext(parser antlr.Parser, parent antlr.ParserRuleContext, 
 	return p
 }
 
-func (s *FieldAccessContext) GetParser() antlr.Parser { return s.parser }
+func (s FieldAccessContext) GetParser() antlr.Parser { return s.parser }
 
 func (s *FieldAccessContext) DOT() antlr.TerminalNode {
 	return s.GetToken(cirqlParserDOT, 0)
@@ -4970,7 +4970,7 @@ func InitEmptyPathSegContext(p *PathSegContext) {
 	p.RuleIndex = cirqlParserRULE_pathSeg
 }
 
-func (*PathSegContext) IsPathSegContext() {}
+func (PathSegContext) IsPathSegContext() {}
 
 func NewPathSegContext(parser antlr.Parser, parent antlr.ParserRuleContext, invokingState int) *PathSegContext {
 	var p = new(PathSegContext)
@@ -4983,7 +4983,7 @@ func NewPathSegContext(parser antlr.Parser, parent antlr.ParserRuleContext, invo
 	return p
 }
 
-func (s *PathSegContext) GetParser() antlr.Parser { return s.parser }
+func (s PathSegContext) GetParser() antlr.Parser { return s.parser }
 
 func (s *PathSegContext) NAME() antlr.TerminalNode {
 	return s.GetToken(cirqlParserNAME, 0)
@@ -5135,7 +5135,7 @@ func InitEmptyFuncCallContext(p *FuncCallContext) {
 	p.RuleIndex = cirqlParserRULE_funcCall
 }
 
-func (*FuncCallContext) IsFuncCallContext() {}
+func (FuncCallContext) IsFuncCallContext() {}
 
 func NewFuncCallContext(parser antlr.Parser, parent antlr.ParserRuleContext, invokingState int) *FuncCallContext {
 	var p = new(FuncCallContext)
@@ -5148,7 +5148,7 @@ func NewFuncCallContext(parser antlr.Parser, parent antlr.ParserRuleContext, inv
 	return p
 }
 
-func (s *FuncCallContext) GetParser() antlr.Parser { return s.parser }
+func (s FuncCallContext) GetParser() antlr.Parser { return s.parser }
 
 func (s *FuncCallContext) NAME() antlr.TerminalNode {
 	return s.GetToken(cirqlParserNAME, 0)
@@ -5347,7 +5347,7 @@ func InitEmptyVariableContext(p *VariableContext) {
 	p.RuleIndex = cirqlParserRULE_variable
 }
 
-func (*VariableContext) IsVariableContext() {}
+func (VariableContext) IsVariableContext() {}
 
 func NewVariableContext(parser antlr.Parser, parent antlr.ParserRuleContext, invokingState int) *VariableContext {
 	var p = new(VariableContext)
@@ -5360,7 +5360,7 @@ func NewVariableContext(parser antlr.Parser, parent antlr.ParserRuleContext, inv
 	return p
 }
 
-func (s *VariableContext) GetParser() antlr.Parser { return s.parser }
+func (s VariableContext) GetParser() antlr.Parser { return s.parser }
 
 func (s *VariableContext) DOLLAR() antlr.TerminalNode {
 	return s.GetToken(cirqlParserDOLLAR, 0)
@@ -5457,7 +5457,7 @@ func InitEmptyArgValueContext(p *ArgValueContext) {
 	p.RuleIndex = cirqlParserRULE_argValue
 }
 
-func (*ArgValueContext) IsArgValueContext() {}
+func (ArgValueContext) IsArgValueContext() {}
 
 func NewArgValueContext(parser antlr.Parser, parent antlr.ParserRuleContext, invokingState int) *ArgValueContext {
 	var p = new(ArgValueContext)
@@ -5470,7 +5470,7 @@ func NewArgValueContext(parser antlr.Parser, parent antlr.ParserRuleContext, inv
 	return p
 }
 
-func (s *ArgValueContext) GetParser() antlr.Parser { return s.parser }
+func (s ArgValueContext) GetParser() antlr.Parser { return s.parser }
 
 func (s *ArgValueContext) Variable() IVariableContext {
 	var t antlr.RuleContext
@@ -5651,7 +5651,7 @@ func InitEmptyObjectLitContext(p *ObjectLitContext) {
 	p.RuleIndex = cirqlParserRULE_objectLit
 }
 
-func (*ObjectLitContext) IsObjectLitContext() {}
+func (ObjectLitContext) IsObjectLitContext() {}
 
 func NewObjectLitContext(parser antlr.Parser, parent antlr.ParserRuleContext, invokingState int) *ObjectLitContext {
 	var p = new(ObjectLitContext)
@@ -5664,7 +5664,7 @@ func NewObjectLitContext(parser antlr.Parser, parent antlr.ParserRuleContext, in
 	return p
 }
 
-func (s *ObjectLitContext) GetParser() antlr.Parser { return s.parser }
+func (s ObjectLitContext) GetParser() antlr.Parser { return s.parser }
 
 func (s *ObjectLitContext) LBRACE() antlr.TerminalNode {
 	return s.GetToken(cirqlParserLBRACE, 0)
@@ -5903,7 +5903,7 @@ func InitEmptyListLitContext(p *ListLitContext) {
 	p.RuleIndex = cirqlParserRULE_listLit
 }
 
-func (*ListLitContext) IsListLitContext() {}
+func (ListLitContext) IsListLitContext() {}
 
 func NewListLitContext(parser antlr.Parser, parent antlr.ParserRuleContext, invokingState int) *ListLitContext {
 	var p = new(ListLitContext)
@@ -5916,7 +5916,7 @@ func NewListLitContext(parser antlr.Parser, parent antlr.ParserRuleContext, invo
 	return p
 }
 
-func (s *ListLitContext) GetParser() antlr.Parser { return s.parser }
+func (s ListLitContext) GetParser() antlr.Parser { return s.parser }
 
 func (s *ListLitContext) LBRACK() antlr.TerminalNode {
 	return s.GetToken(cirqlParserLBRACK, 0)
@@ -6107,7 +6107,7 @@ func InitEmptyLiteralContext(p *LiteralContext) {
 	p.RuleIndex = cirqlParserRULE_literal
 }
 
-func (*LiteralContext) IsLiteralContext() {}
+func (LiteralContext) IsLiteralContext() {}
 
 func NewLiteralContext(parser antlr.Parser, parent antlr.ParserRuleContext, invokingState int) *LiteralContext {
 	var p = new(LiteralContext)
@@ -6120,7 +6120,7 @@ func NewLiteralContext(parser antlr.Parser, parent antlr.ParserRuleContext, invo
 	return p
 }
 
-func (s *LiteralContext) GetParser() antlr.Parser { return s.parser }
+func (s LiteralContext) GetParser() antlr.Parser { return s.parser }
 
 func (s *LiteralContext) STRING() antlr.TerminalNode {
 	return s.GetToken(cirqlParserSTRING, 0)

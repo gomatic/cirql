@@ -64,12 +64,12 @@ func (b *builder) stage(c *g.StageContext) ast.Stage {
 	return b.transformStage(c.TransformStage().(*g.TransformStageContext))
 }
 
-func (b *builder) sourceStage(c *g.SourceStageContext) ast.Stage {
+func (b builder) sourceStage(c *g.SourceStageContext) ast.Stage {
 	if c.StdinStage() != nil {
 		return ast.StdinStage{}
 	}
 	if s := c.FileStage(); s != nil {
-		return ast.FileStage{Path: unquote(s.(*g.FileStageContext).STRING().GetText())}
+		return ast.FileStage{Path: unquote(sParam(s.(*g.FileStageContext).STRING().GetText()))}
 	}
 	if s := c.HttpStage(); s != nil {
 		return b.httpStage(s.(*g.HttpStageContext))
@@ -77,11 +77,11 @@ func (b *builder) sourceStage(c *g.SourceStageContext) ast.Stage {
 	return ast.QueryStage{Body: c.QueryStage().(*g.QueryStageContext).QueryBody().GetText()}
 }
 
-func (b *builder) httpStage(c *g.HttpStageContext) ast.Stage {
+func (b builder) httpStage(c *g.HttpStageContext) ast.Stage {
 	if v := c.Variable(); v != nil {
 		return ast.HTTPStage{URL: b.variable(v.(*g.VariableContext))}
 	}
-	return ast.HTTPStage{URL: ast.Literal{V: unquote(c.STRING().GetText())}}
+	return ast.HTTPStage{URL: ast.Literal{V: unquote(sParam(c.STRING().GetText()))}}
 }
 
 func (b *builder) transformStage(c *g.TransformStageContext) ast.Stage {
@@ -101,7 +101,7 @@ func (b *builder) transformStage(c *g.TransformStageContext) ast.Stage {
 		return b.sortStage(s.(*g.SortStageContext))
 	}
 	if s := c.LimitStage(); s != nil {
-		return ast.LimitStage{N: atoi(s.(*g.LimitStageContext).INT().GetText())}
+		return ast.LimitStage{N: atoi(sParam(s.(*g.LimitStageContext).INT().GetText()))}
 	}
 	return b.uniqStage(c.UniqStage().(*g.UniqStageContext))
 }
@@ -182,7 +182,7 @@ func (b *builder) funcCall(c *g.FuncCallContext) ast.Expr {
 	return ast.FuncCall{Name: c.NAME().GetText(), Args: args}
 }
 
-func (b *builder) fieldAccess(c *g.FieldAccessContext) ast.Expr {
+func (b builder) fieldAccess(c *g.FieldAccessContext) ast.Expr {
 	fa := ast.FieldAccess{}
 	for _, ps := range c.AllPathSeg() {
 		psc := ps.(*g.PathSegContext)
@@ -195,11 +195,11 @@ func (b *builder) fieldAccess(c *g.FieldAccessContext) ast.Expr {
 	return fa
 }
 
-func (b *builder) variable(c *g.VariableContext) ast.Expr {
+func (b builder) variable(c *g.VariableContext) ast.Expr {
 	return ast.VarRef{Name: c.NAME().GetText()}
 }
 
-func (b *builder) literal(c *g.LitExprContext) ast.Expr {
+func (b builder) literal(c *g.LitExprContext) ast.Expr {
 	return ast.Literal{V: literalValue(c.Literal().(*g.LiteralContext))}
 }
 
@@ -212,13 +212,13 @@ func childOp(ctx antlr.ParserRuleContext) ast.BinOp {
 // literalValue converts a literal token into a value.Value.
 func literalValue(c *g.LiteralContext) value.Value {
 	if t := c.STRING(); t != nil {
-		return unquote(t.GetText())
+		return unquote(sParam(t.GetText()))
 	}
 	if t := c.FLOAT(); t != nil {
-		return parseFloat(t.GetText())
+		return parseFloat(sParam(t.GetText()))
 	}
 	if t := c.INT(); t != nil {
-		return parseInt(t.GetText())
+		return parseInt(sParam(t.GetText()))
 	}
 	if c.TRUE() != nil {
 		return true
@@ -229,26 +229,29 @@ func literalValue(c *g.LiteralContext) value.Value {
 	return nil
 }
 
+// sParam names the s parameter of parseInt; rename it to the real domain concept.
+type sParam string
+
 // parseInt parses a decimal integer, falling back to float on overflow.
-func parseInt(s string) value.Value {
-	n, err := strconv.ParseInt(s, 10, 64)
+func parseInt(s sParam) value.Value {
+	n, err := strconv.ParseInt(string(s), 10, 64)
 	if err != nil {
-		f, _ := strconv.ParseFloat(s, 64)
+		f, _ := strconv.ParseFloat(string(s), 64)
 		return f
 	}
 	return n
 }
 
 // parseFloat parses a float, taking the rounded value even on range overflow.
-func parseFloat(s string) value.Value {
-	f, _ := strconv.ParseFloat(s, 64)
+func parseFloat(s sParam) value.Value {
+	f, _ := strconv.ParseFloat(string(s), 64)
 	return f
 }
 
 // atoi parses a non-negative integer token (guaranteed digits by the lexer);
 // an overflowing limit clamps to the max int, i.e. "keep all".
-func atoi(s string) int {
-	n, err := strconv.Atoi(s)
+func atoi(s sParam) int {
+	n, err := strconv.Atoi(string(s))
 	if err != nil {
 		return int(^uint(0) >> 1)
 	}
@@ -257,13 +260,13 @@ func atoi(s string) int {
 
 // unquote strips the surrounding quotes of a STRING token and resolves its
 // escapes leniently (an unknown escape yields the escaped character verbatim).
-func unquote(s string) string {
-	inner := s[1 : len(s)-1]
+func unquote(s sParam) string {
+	inner := string(s)[1 : len(string(s))-1]
 	var b strings.Builder
 	for i := 0; i < len(inner); i++ {
 		if inner[i] == '\\' && i+1 < len(inner) {
 			i++
-			_ = b.WriteByte(unescape(inner[i]))
+			_ = b.WriteByte(unescape(cParam(inner[i])))
 			continue
 		}
 		_ = b.WriteByte(inner[i])
@@ -271,10 +274,13 @@ func unquote(s string) string {
 	return b.String()
 }
 
+// cParam names the c parameter of unescape; rename it to the real domain concept.
+type cParam byte
+
 // unescape maps a backslash-escaped byte to its value; unknown escapes pass the
 // byte through unchanged.
-func unescape(c byte) byte {
-	switch c {
+func unescape(c cParam) byte {
+	switch byte(c) {
 	case 'n':
 		return '\n'
 	case 't':
@@ -282,5 +288,5 @@ func unescape(c byte) byte {
 	case 'r':
 		return '\r'
 	}
-	return c
+	return byte(c)
 }
