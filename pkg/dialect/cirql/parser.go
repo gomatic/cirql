@@ -47,7 +47,7 @@ type errListener struct {
 
 // SyntaxError records the syntax error (last one wins) as an ErrParse wrap.
 func (l errListener) SyntaxError(_ antlr.Recognizer, _ any, line, col int, msg string, _ antlr.RecognitionException) {
-	*l.err = fmt.Errorf("%w at %d:%d: %s", ErrParse, line, col, msg)
+	*l.err = ErrParse.With(nil, fmt.Sprintf("at %d:%d: %s", line, col, msg))
 }
 
 // builder walks the parse tree into the AST. Every method is total: the parse
