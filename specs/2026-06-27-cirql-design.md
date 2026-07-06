@@ -1,18 +1,16 @@
 # cirql — Design Spec
 
-**Status:** Draft for review
-**Date:** 2026-06-27
-**Scope:** The cirql language as a standalone pure-Go library + tool in the `gomatic` org, and its consumption by `gloo-foo/cmd-json`.
+**Status:** Draft for review **Date:** 2026-06-27 **Scope:** The cirql language as a standalone pure-Go library + tool in the `gomatic` org, and its consumption by `gloo-foo/cmd-json`.
 
 ## Goal
 
 Give `cmd-json` a real query language so it rivals jq, by building **cirql** — a composable JSON pipeline language — as a reusable pure-Go module (`gomatic/cirql`) and a standalone CLI/REPL (`cq`). `cmd-json` becomes a thin [gloo](https://github.com/gloo-foo/framework) `Command` adapter over cirql.
 
-The authoritative language description is the existing draft at [`backplane-arcane/www.cirql.io`](https://github.com/backplane-arcane/www.cirql.io) (spec §5 grammar, §5.5 builtins, §9 examples). This document is the *implementation* design and **overrides the spec where the two conflict** — specifically the parser tooling (see [Grammar](#grammar-antlr-mandatory)).
+The authoritative language description is the existing draft at [`backplane-arcane/www.cirql.io`](https://github.com/backplane-arcane/www.cirql.io) (spec §5 grammar, §5.5 builtins, §9 examples). This document is the _implementation_ design and **overrides the spec where the two conflict** — specifically the parser tooling (see [Grammar](#grammar-antlr-mandatory)).
 
 ## Why
 
-- `cmd-json` today is a Go-function toolkit (`Pluck`, `Select`, `from*` converters) with no query *language*. Each operation is a separately constructed Go `Command`; there is no string-driven pipeline a user can type.
+- `cmd-json` today is a Go-function toolkit (`Pluck`, `Select`, `from*` converters) with no query _language_. Each operation is a separately constructed Go `Command`; there is no string-driven pipeline a user can type.
 - cirql already has a complete language spec, a designated repo, and a website. Implementing it satisfies both goals at once: it is the JSON query language `cmd-json` needs, and a reusable asset for the wider ecosystem.
 - `cmd-jq` (the sibling subprocess wrapper around the real `jq` binary) covers users who want literal jq. cirql/`cmd-json` is the pure-Go alternative with a distinct, GraphQL-influenced surface.
 
@@ -26,7 +24,7 @@ The authoritative language description is the existing draft at [`backplane-arca
 cirql is decomposed into four sub-projects, each with its own spec → plan → build cycle. This document specifies the architecture for all four and the detailed design of **#1 (cirql-core)**, the foundation everything else depends on.
 
 | # | Sub-project | Module | Responsibility | Depends on |
-|---|---|---|---|---|
+| --- | --- | --- | --- | --- |
 | 1 | cirql-core | `gomatic/cirql` | Grammar, AST, value model, expression evaluator, builtins, transform stages, pipeline runtime — **pure, no IO**. | — |
 | 2 | cirql-sources | `gomatic/cirql` | Source stages `stdin`/`file`/`http`/`query` (GraphQL); variable propagation + fan-out. Network behind injected interfaces. | 1 |
 | 3 | cq tool | `gomatic/cirql` | Standalone CLI/REPL — output formats, readline, history. Built from `gomatic/template.cli`. | 1, 2 |
@@ -82,7 +80,7 @@ Per the Go quality standards, every DSL is an **ANTLR4 `.g4` → committed Go** 
 
 cirql is a dynamically-typed JSON language; the value space is the union in spec §5.2 (`Null/Bool/Int/Float/String/List/Object`). **Decision:** represent values as the JSON-compatible Go set — `nil`, `bool`, `int64`, `float64`, `string`, `[]Value`, `map[string]Value` — behind a `value.Value` alias, with a **typed accessor layer** providing the named-type discipline the standards require.
 
-*Alternative considered:* a closed interface hierarchy (`value.Int`, `value.Str`, …). Rejected: it forces boxing/unboxing at every `encoding/json` boundary and across the ANTLR/jq-style surface, adding cognitive load and allocation without buying safety a dynamic language can actually use. The accessor layer gets us testable, named, constant-error type checks without the boxing tax — the same pragmatic choice `gojq` makes, reconciled with the standards via the accessors.
+_Alternative considered:_ a closed interface hierarchy (`value.Int`, `value.Str`, …). Rejected: it forces boxing/unboxing at every `encoding/json` boundary and across the ANTLR/jq-style surface, adding cognitive load and allocation without buying safety a dynamic language can actually use. The accessor layer gets us testable, named, constant-error type checks without the boxing tax — the same pragmatic choice `gojq` makes, reconciled with the standards via the accessors.
 
 - `value.Value = any` (documented constrained union).
 - Accessors return `(typed, error)` with constant sentinels: `AsObject`, `AsList`, `AsString`, `AsInt`, `AsFloat`, `AsBool`, `Truthy`, `Equal`, `Compare`, plus `Kind(Value) Kind` (a named enum). Coercion rules from spec §5.2 (`Int`→`Float` in mixed arithmetic; `null` propagates through field access; `+` concatenates when either operand is `String`) live here as pure functions.

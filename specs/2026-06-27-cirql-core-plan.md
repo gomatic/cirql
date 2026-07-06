@@ -24,11 +24,13 @@
 ### Task 0: Module bootstrap + green empty gate
 
 **Files:**
+
 - Create: `go.mod`, `Makefile`, `.golangci.yaml`, `.goreleaser.yaml`, `.gitignore`, `.github/workflows/ci.yml`, `.github/workflows/release.yml`, `LICENSE`, `README.md`
 - Create: `docker/antlr/Dockerfile`, `scripts/grammars-gen.sh`
 - Create: `doc.go` (package-level placeholder so the module compiles)
 
 **Interfaces:**
+
 - Produces: a buildable `github.com/gomatic/cirql` module whose `make check` passes with no real code yet.
 
 - [ ] **Step 1: Initialize the module and copy gomatic scaffolding**
@@ -141,8 +143,7 @@ package cirql
 
 - [ ] **Step 6: Verify the gate is green on the empty module**
 
-Run: `make check`
-Expected: PASS (lint/vet/staticcheck/vulncheck clean; coverage vacuously 100% — no statements yet).
+Run: `make check` Expected: PASS (lint/vet/staticcheck/vulncheck clean; coverage vacuously 100% — no statements yet).
 
 - [ ] **Step 7: Commit**
 
@@ -156,10 +157,12 @@ git commit -m "init: bootstrap gomatic/cirql module + ANTLR build wiring"
 ### Task 1: Value model (`value`)
 
 **Files:**
+
 - Create: `value/value.go`, `value/errors.go`
 - Test: `value/value_test.go`
 
 **Interfaces:**
+
 - Produces:
   - `type Value = any` (constrained union: `nil`, `bool`, `int64`, `float64`, `string`, `[]Value`, `map[string]Value`)
   - `type Kind int` with `KindNull, KindBool, KindInt, KindFloat, KindString, KindList, KindObject` and `func KindOf(Value) Kind`
@@ -210,8 +213,7 @@ func TestAsObject_OK(t *testing.T) {
 
 - [ ] **Step 2: Run to verify failure**
 
-Run: `go test ./value/ -run TestKindOf -v`
-Expected: FAIL (undefined `KindOf`/`Kind`/sentinels).
+Run: `go test ./value/ -run TestKindOf -v` Expected: FAIL (undefined `KindOf`/`Kind`/sentinels).
 
 - [ ] **Step 3: Implement `value/errors.go`**
 
@@ -346,8 +348,7 @@ func Truthy(v Value) bool {
 
 - [ ] **Step 5: Run accessor tests to PASS**
 
-Run: `go test ./value/ -run 'TestKindOf|TestAsInt|TestAsObject' -v`
-Expected: PASS.
+Run: `go test ./value/ -run 'TestKindOf|TestAsInt|TestAsObject' -v` Expected: PASS.
 
 - [ ] **Step 6: Write failing tests for Equal / Compare / Add (coercion rules, spec §5.2)**
 
@@ -388,8 +389,7 @@ func TestAdd_Numeric(t *testing.T) {
 
 - [ ] **Step 7: Run to verify failure**
 
-Run: `go test ./value/ -run 'TestEqual|TestCompare|TestAdd' -v`
-Expected: FAIL (undefined).
+Run: `go test ./value/ -run 'TestEqual|TestCompare|TestAdd' -v` Expected: FAIL (undefined).
 
 - [ ] **Step 8: Implement Equal / Compare / Add** (append to `value/value.go`; keep helpers small)
 
@@ -522,8 +522,7 @@ func TestTruthy(t *testing.T) {
 
 - [ ] **Step 10: Run full value coverage**
 
-Run: `go test ./value/ -covermode=atomic -coverprofile=/tmp/c.out && go tool cover -func=/tmp/c.out | tail -1`
-Expected: PASS, `total: ... 100.0%`.
+Run: `go test ./value/ -covermode=atomic -coverprofile=/tmp/c.out && go tool cover -func=/tmp/c.out | tail -1` Expected: PASS, `total: ... 100.0%`.
 
 - [ ] **Step 11: Commit**
 
@@ -537,10 +536,12 @@ git commit -m "feat(value): dynamic value model with typed accessors + coercion"
 ### Task 2: AST nodes (`ast`)
 
 **Files:**
+
 - Create: `ast/ast.go`
 - Test: `ast/ast_test.go`
 
 **Interfaces:**
+
 - Produces:
   - `type Pipeline struct { Stages []Stage }`
   - `type Stage interface { isStage() }` with transform implementers `MapStage{Mappings []Mapping}`, `FlatMapStage{Mappings []Mapping}`, `FilterStage{Cond Expr}`, `ReduceStage{Op ReduceOp; Arg Expr}`, `SortStage{Key Expr; Desc bool}`, `LimitStage{N int}`, `UniqStage{Key Expr}`; and source markers `StdinStage{}`, `FileStage{Path string}`, `HTTPStage{...}`, `QueryStage{...}` (declared; executed in #2)
@@ -570,8 +571,7 @@ func TestNodesImplementInterfaces(t *testing.T) {
 
 - [ ] **Step 2: Run to verify failure**
 
-Run: `go test ./ast/ -v`
-Expected: FAIL (undefined types).
+Run: `go test ./ast/ -v` Expected: FAIL (undefined types).
 
 - [ ] **Step 3: Implement `ast/ast.go`** (pure data; unexported tag methods enforce the closed sets)
 
@@ -603,8 +603,7 @@ const OpNot UnOp = "!"
 
 - [ ] **Step 4: Run to PASS**
 
-Run: `go test ./ast/ -v`
-Expected: PASS.
+Run: `go test ./ast/ -v` Expected: PASS.
 
 - [ ] **Step 5: Commit**
 
@@ -618,11 +617,13 @@ git commit -m "feat(ast): cirql AST node types for stages and expressions"
 ### Task 3: Grammar + parser wrapper (`pkg/dialect/cirql`, `src/grammar/cirql`)
 
 **Files:**
+
 - Create: `pkg/dialect/cirql/cirql.g4`, `pkg/dialect/cirql/parser.go`, `pkg/dialect/cirql/errors.go`
 - Create (generated, committed): `src/grammar/cirql/*.go`
 - Test: `pkg/dialect/cirql/parser_test.go`
 
 **Interfaces:**
+
 - Consumes: `ast` (Task 2), `value` (Task 1)
 - Produces: `func Parse(query string) (ast.Pipeline, error)`; sentinel `ErrParse Error` (message form `cirql: parse error at <line>:<col>: <msg>`)
 
@@ -701,8 +702,7 @@ WS:[ \t\r\n]+ -> skip ;
 
 - [ ] **Step 2: Generate the parser**
 
-Run: `make grammars`
-Expected: `src/grammar/cirql/cirql_lexer.go`, `cirql_parser.go`, `cirql_base_visitor.go`, `cirql_visitor.go` created; no `*.interp`/`*.tokens` left.
+Run: `make grammars` Expected: `src/grammar/cirql/cirql_lexer.go`, `cirql_parser.go`, `cirql_base_visitor.go`, `cirql_visitor.go` created; no `*.interp`/`*.tokens` left.
 
 - [ ] **Step 3: Write `pkg/dialect/cirql/errors.go`**
 
@@ -762,8 +762,7 @@ func TestParse_SyntaxError(t *testing.T) {
 
 - [ ] **Step 5: Run to verify failure**
 
-Run: `go test ./pkg/dialect/cirql/ -v`
-Expected: FAIL (undefined `Parse`).
+Run: `go test ./pkg/dialect/cirql/ -v` Expected: FAIL (undefined `Parse`).
 
 - [ ] **Step 6: Implement `parser.go`** — the covered seam: error listener → `ErrParse`, then a visitor walks the tree into `ast`
 
@@ -815,8 +814,7 @@ Then a `builder` type with methods: `pipeline`, `stage`, `transformStage`, `mapS
 
 - [ ] **Step 7: Run parse tests to PASS**
 
-Run: `go test ./pkg/dialect/cirql/ -v`
-Expected: PASS.
+Run: `go test ./pkg/dialect/cirql/ -v` Expected: PASS.
 
 - [ ] **Step 8: Add tests covering every expression/stage alt + literal kind to reach 100% on the wrapper**
 
@@ -824,8 +822,7 @@ Add table-driven cases parsing: each binary operator, `!x`, `(x)`, `$v`, `f(a,b)
 
 - [ ] **Step 9: Verify wrapper coverage = 100% (generated tree excluded)**
 
-Run: `go test $(go list ./... | grep -v '/src/grammar') -covermode=atomic -coverprofile=/tmp/c.out && go tool cover -func=/tmp/c.out | grep dialect | awk '$3!="100.0%"'`
-Expected: no output (all wrapper funcs 100%).
+Run: `go test $(go list ./... | grep -v '/src/grammar') -covermode=atomic -coverprofile=/tmp/c.out && go tool cover -func=/tmp/c.out | grep dialect | awk '$3!="100.0%"'` Expected: no output (all wrapper funcs 100%).
 
 - [ ] **Step 10: Commit**
 
@@ -839,10 +836,12 @@ git commit -m "feat(parser): ANTLR cirql grammar + covered AST-building wrapper"
 ### Task 4: Expression evaluator + builtins (`eval`)
 
 **Files:**
+
 - Create: `eval/eval.go`, `eval/builtins.go`, `eval/errors.go`
 - Test: `eval/eval_test.go`, `eval/builtins_test.go`
 
 **Interfaces:**
+
 - Consumes: `ast`, `value`
 - Produces:
   - `type Env struct { Obj value.Value; Vars map[string]value.Value; Now func() time.Time }`
@@ -898,8 +897,7 @@ func TestEval_Comparison(t *testing.T) {
 
 - [ ] **Step 2: Run to verify failure**
 
-Run: `go test ./eval/ -v`
-Expected: FAIL.
+Run: `go test ./eval/ -v` Expected: FAIL.
 
 - [ ] **Step 3: Implement `eval/errors.go`**
 
@@ -920,6 +918,7 @@ const (
 - [ ] **Step 4: Implement `eval/eval.go`** — one tiny method per node kind; operator dispatch via tables (keeps gocognit ≤ 7)
 
 `Eval` is a type switch routing to `evalField`, `evalVar`, `evalBinary`, `evalUnary`, `evalCall`, `evalLiteral`. `evalBinary` evaluates both sides then dispatches:
+
 - logical (`||`,`&&`) on `value.Truthy`
 - comparison (`==`,`!=`,`<`,…) via `value.Equal`/`value.Compare`
 - arithmetic (`+` via `value.Add`; `-`,`*`,`/`,`%` via a numeric helper that returns `nil` on divide/mod by zero per spec §5.8)
@@ -928,8 +927,7 @@ const (
 
 - [ ] **Step 5: Run eval tests to PASS**
 
-Run: `go test ./eval/ -run TestEval -v`
-Expected: PASS.
+Run: `go test ./eval/ -run TestEval -v` Expected: PASS.
 
 - [ ] **Step 6: Write failing builtin tests** (spec §5.5 table)
 
@@ -972,8 +970,7 @@ func TestBuiltin_Now_Injected(t *testing.T) {
 
 - [ ] **Step 9: Verify eval coverage 100%**
 
-Run: `go test ./eval/ -covermode=atomic -coverprofile=/tmp/c.out && go tool cover -func=/tmp/c.out | awk '$3!="100.0%"'`
-Expected: only the `total: 100.0%` line passes the filter (no sub-100 funcs).
+Run: `go test ./eval/ -covermode=atomic -coverprofile=/tmp/c.out && go tool cover -func=/tmp/c.out | awk '$3!="100.0%"'` Expected: only the `total: 100.0%` line passes the filter (no sub-100 funcs).
 
 - [ ] **Step 10: Commit**
 
@@ -987,10 +984,12 @@ git commit -m "feat(eval): expression evaluator + spec builtins with injected cl
 ### Task 5: Transform stages + pipeline runtime (`stage`, `pipeline`)
 
 **Files:**
+
 - Create: `pipeline/pipeline.go`, `pipeline/errors.go`, `stage/stage.go`
 - Test: `pipeline/pipeline_test.go`, `stage/stage_test.go`
 
 **Interfaces:**
+
 - Consumes: `ast`, `eval`, `value`
 - Produces:
   - `type ResultSet = []value.Value` (each element an Object per §5.3, but kept as Value for normalization)
@@ -1045,12 +1044,12 @@ func TestFilterStage(t *testing.T) {
 
 - [ ] **Step 2: Run to verify failure**
 
-Run: `go test ./pipeline/ -v`
-Expected: FAIL.
+Run: `go test ./pipeline/ -v` Expected: FAIL.
 
 - [ ] **Step 3: Implement `pipeline/errors.go`, `pipeline/pipeline.go`, `stage/stage.go`**
 
 `Normalize`: list → if elements are objects, return as-is; if primitives, wrap each as `{"value": x}`; non-list → single-element set (object as-is; primitive wrapped). `Build`: type switch over `ast.Stage` constructing each executor; source nodes return `ErrStageUnsupported`. `RunStages`: fold, short-circuit on error. Each stage executor in `stage/stage.go` is a small struct with an `Execute` method:
+
 - `mapExec` (1:1, eval each mapping into a new object)
 - `flatMapExec` (N:M, list-valued mapping expands)
 - `filterExec` (keep when `value.Truthy(eval(cond))`)
@@ -1063,8 +1062,7 @@ Keep each `Execute` and helper ≤ 7 cognitive complexity.
 
 - [ ] **Step 4: Run map/filter/normalize tests to PASS**
 
-Run: `go test ./pipeline/ -run 'TestNormalize|TestFilter' -v`
-Expected: PASS.
+Run: `go test ./pipeline/ -run 'TestNormalize|TestFilter' -v` Expected: PASS.
 
 - [ ] **Step 5: Add tests for every stage + reduce op + flatMap expansion + sort asc/desc + uniq both modes + limit, plus `ErrStageUnsupported` for a source node. Drive to 100%.**
 
@@ -1078,8 +1076,7 @@ func TestBuild_SourceUnsupported(t *testing.T) {
 
 - [ ] **Step 6: Verify coverage 100% for stage + pipeline**
 
-Run: `go test ./stage/ ./pipeline/ -covermode=atomic -coverprofile=/tmp/c.out && go tool cover -func=/tmp/c.out | awk '$3!="100.0%"'`
-Expected: no sub-100 functions.
+Run: `go test ./stage/ ./pipeline/ -covermode=atomic -coverprofile=/tmp/c.out && go tool cover -func=/tmp/c.out | awk '$3!="100.0%"'` Expected: no sub-100 functions.
 
 - [ ] **Step 7: Commit**
 
@@ -1093,10 +1090,12 @@ git commit -m "feat(stage,pipeline): transform stage executors + sequential runn
 ### Task 6: Public API + end-to-end (`cirql.go`)
 
 **Files:**
+
 - Modify: `cirql.go` (replace the `doc.go` placeholder package doc home)
 - Test: `cirql_test.go`, `examples/cirql_test.go`
 
 **Interfaces:**
+
 - Consumes: `pkg/dialect/cirql` (Parse), `pipeline`, `value`
 - Produces:
   - `type Pipeline struct { ... }` wrapping the built stages
@@ -1142,22 +1141,19 @@ func TestEndToEnd_FilterMapSortLimit(t *testing.T) {
 
 - [ ] **Step 2: Run to verify failure**
 
-Run: `go test . -run TestEndToEnd -v`
-Expected: FAIL (undefined `Parse`/`Run`).
+Run: `go test . -run TestEndToEnd -v` Expected: FAIL (undefined `Parse`/`Run`).
 
 - [ ] **Step 3: Implement `cirql.go`** — `Parse` calls `dialect.Parse`, then `pipeline.Build` per stage (threading the configured clock), storing the `[]pipeline.Stage`. `Run` calls `pipeline.Normalize` then `pipeline.RunStages`. Options apply the clock (default `time.Now`).
 
 - [ ] **Step 4: Run end-to-end to PASS**
 
-Run: `go test . -run TestEndToEnd -v`
-Expected: PASS.
+Run: `go test . -run TestEndToEnd -v` Expected: PASS.
 
 - [ ] **Step 5: Add an `Example` in `examples/cirql_test.go`** (a runnable doc example with `// Output:`), and a parse-error propagation test asserting `errors.Is(err, dialect.ErrParse)` surfaces through `cirql.Parse`.
 
 - [ ] **Step 6: Run the FULL gate**
 
-Run: `make check`
-Expected: PASS — 100% coverage over `COVER_PKGS`, lint/vet/staticcheck/vulncheck clean, gocognit empty.
+Run: `make check` Expected: PASS — 100% coverage over `COVER_PKGS`, lint/vet/staticcheck/vulncheck clean, gocognit empty.
 
 - [ ] **Step 7: Commit**
 
