@@ -1,10 +1,12 @@
 package eval
 
-// Error is the sentinel error type for the eval package.
-type Error string
+import errs "github.com/gomatic/go-error"
 
-// Error renders the sentinel message.
-func (e Error) Error() string { return string(e) }
+// Error is the sentinel-error type for the eval package — an alias of
+// [errs.Const] from github.com/gomatic/go-error, which owns the mechanism
+// (Error, With). The alias keeps every existing `eval.Error` reference and
+// errors.Is match compiling and behaving identically.
+type Error = errs.Const
 
 const (
 	// ErrUnknownFunc is returned when a called builtin does not exist.
@@ -13,4 +15,8 @@ const (
 	ErrArity Error = "eval: wrong argument count"
 	// ErrType is returned when an operation gets an unsupported value type.
 	ErrType Error = "eval: type error"
+	// ErrNilExpr is returned when Eval is handed a nil expression — a pipeline
+	// assembled programmatically with a missing Cond/Key/Expr, which the parser
+	// never produces.
+	ErrNilExpr Error = "eval: nil expression"
 )

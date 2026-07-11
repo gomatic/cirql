@@ -289,3 +289,141 @@ func TestParse_SyntaxError(t *testing.T) {
 		}
 	}
 }
+
+// Keywords are addressable as field names in path and mapping positions — a
+// JSON query language must handle fields named count, type, map, first, etc.
+func TestParse_KeywordsAsFieldNames(t *testing.T) {
+	p := mustParse(t, `filter .count > 1 | map { first: .last, sum: .map }`)
+	fs, ok := p.Stages[0].(ast.FilterStage)
+	if !ok {
+		t.Fatalf("stage0 = %T", p.Stages[0])
+	}
+	cmp, ok := fs.Cond.(ast.BinaryExpr)
+	if !ok {
+		t.Fatalf("cond = %T want BinaryExpr", fs.Cond)
+	}
+	fa, ok := cmp.L.(ast.FieldAccess)
+	if !ok || len(fa.Path) != 1 || fa.Path[0].Name != "count" {
+		t.Fatalf("lhs path = %#v want .count", fa)
+	}
+	ms := p.Stages[1].(ast.MapStage)
+	if ms.Mappings[0].Key != "first" || ms.Mappings[1].Key != "sum" {
+		t.Fatalf("mapping keys = %q,%q want first,sum", ms.Mappings[0].Key, ms.Mappings[1].Key)
+	}
+	// The mapping VALUE .map addresses a field named map, not a stage.
+	fa2 := ms.Mappings[1].Expr.(ast.FieldAccess)
+	if len(fa2.Path) != 1 || fa2.Path[0].Name != "map" {
+		t.Fatalf("mapping[1] expr = %#v want .map", fa2)
+	}
+}
+
+// A trailing sort direction keyword is NOT absorbed into the sort key path now
+// that keywords are valid field names — .name is one segment, desc is the dir.
+func TestParse_SortKeyDoesNotSwallowDirection(t *testing.T) {
+	p := mustParse(t, `sort .name desc`)
+	s := p.Stages[0].(ast.SortStage)
+	fa := s.Key.(ast.FieldAccess)
+	if len(fa.Path) != 1 || fa.Path[0].Name != "name" || !s.IsDesc {
+		t.Fatalf("sort key=%#v desc=%v want .name desc", fa, s.IsDesc)
+	}
+}
+
+// Deep field paths, root iteration, and mid-path iteration parse to the right
+// segment lists.
+func TestParse_PathShapes(t *testing.T) {
+	cases := map[string][]ast.PathSegment{
+		`filter .a.b.c`: {{Name: "a"}, {Name: "b"}, {Name: "c"}},
+		`filter .[]`:    {{IsIter: true}},
+		`filter .a[].b`: {{Name: "a"}, {IsIter: true}, {Name: "b"}},
+		`filter .`:      nil,
+	}
+	for q, want := range cases {
+		p := mustParse(t, q)
+		fa := p.Stages[0].(ast.FilterStage).Cond.(ast.FieldAccess)
+		if len(fa.Path) != len(want) {
+			t.Fatalf("%s: path=%#v want %#v", q, fa.Path, want)
+		}
+		for i := range want {
+			if fa.Path[i] != want[i] {
+				t.Fatalf("%s: seg %d = %#v want %#v", q, i, fa.Path[i], want[i])
+			}
+		}
+	}
+}
+
+// Operator precedence and associativity are a core deliverable; pin the ladder
+// (unary > mul > add > cmp > and > or) and left-associativity by asserting the
+// parsed tree SHAPE, not just the top node.
+func TestParse_PrecedenceAndAssociativity(t *testing.T) {
+	// 1 + 2 * 3  ==>  1 + (2 * 3): top is Add, right is Mul.
+	add := condOf(t, `filter 1 + 2 * 3`).(ast.BinaryExpr)
+	if add.Op != ast.OpAdd {
+		t.Fatalf("top op = %s want +", add.Op)
+	}
+	if r, ok := add.R.(ast.BinaryExpr); !ok || r.Op != ast.OpMul {
+		t.Fatalf("rhs = %#v want a Mul", add.R)
+	}
+	// 8 - 4 - 2  ==>  (8 - 4) - 2: left-associative, so left is the nested Sub.
+	sub := condOf(t, `filter 8 - 4 - 2`).(ast.BinaryExpr)
+	if l, ok := sub.L.(ast.BinaryExpr); !ok || l.Op != ast.OpSub {
+		t.Fatalf("lhs = %#v want a nested Sub (left-assoc)", sub.L)
+	}
+	// a > 1 && b < 2  ==>  (a>1) && (b<2): && binds looser than comparison.
+	and := condOf(t, `filter .a > 1 && .b < 2`).(ast.BinaryExpr)
+	if and.Op != ast.OpAnd {
+		t.Fatalf("top op = %s want &&", and.Op)
+	}
+	// -2 * 3  ==>  (-2) * 3: unary binds tighter than *.
+	mul := condOf(t, `filter -2 * 3`).(ast.BinaryExpr)
+	if mul.Op != ast.OpMul {
+		t.Fatalf("top op = %s want * (unary binds tighter)", mul.Op)
+	}
+	if _, ok := mul.L.(ast.UnaryExpr); !ok {
+		t.Fatalf("lhs = %#v want a UnaryExpr", mul.L)
+	}
+}
+
+// condOf parses `filter <expr>` and returns the filter condition.
+func condOf(t *testing.T, q string) ast.Expr {
+	t.Helper()
+	return mustParse(t, q).Stages[0].(ast.FilterStage).Cond
+}
+
+// A syntax error carries the source position in its message (design contract:
+// "ErrParse with line:col").
+func TestParse_ErrorCarriesPosition(t *testing.T) {
+	_, err := Parse(Query("filter @"))
+	if !errors.Is(err, ErrParse) {
+		t.Fatalf("got %v want ErrParse", err)
+	}
+	if got := err.Error(); !contains(got, "at 1:") {
+		t.Errorf("error %q missing line:col position", got)
+	}
+}
+
+// A query over the size bound is rejected before parsing, so adversarial deep
+// nesting cannot overflow the stack.
+func TestParse_QueryTooLarge(t *testing.T) {
+	big := "filter " + repeat("(", MaxQueryBytes)
+	_, err := Parse(Query(big))
+	if !errors.Is(err, ErrQueryTooLarge) {
+		t.Fatalf("got %v want ErrQueryTooLarge", err)
+	}
+}
+
+func contains(s, sub string) bool {
+	for i := 0; i+len(sub) <= len(s); i++ {
+		if s[i:i+len(sub)] == sub {
+			return true
+		}
+	}
+	return false
+}
+
+func repeat(s string, n int) string {
+	b := make([]byte, 0, n)
+	for i := 0; i < n; i++ {
+		b = append(b, s...)
+	}
+	return string(b)
+}

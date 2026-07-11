@@ -118,6 +118,9 @@ type cirqlListener interface {
 	// EnterVariable is called when entering the variable production.
 	EnterVariable(c *VariableContext)
 
+	// EnterFieldName is called when entering the fieldName production.
+	EnterFieldName(c *FieldNameContext)
+
 	// EnterArgValue is called when entering the argValue production.
 	EnterArgValue(c *ArgValueContext)
 
@@ -240,6 +243,9 @@ type cirqlListener interface {
 
 	// ExitVariable is called when exiting the variable production.
 	ExitVariable(c *VariableContext)
+
+	// ExitFieldName is called when exiting the fieldName production.
+	ExitFieldName(c *FieldNameContext)
 
 	// ExitArgValue is called when exiting the argValue production.
 	ExitArgValue(c *ArgValueContext)

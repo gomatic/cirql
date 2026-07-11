@@ -5,7 +5,7 @@
 package stage
 
 import (
-	"fmt"
+	"encoding/json"
 	"slices"
 
 	value "github.com/gomatic/go-json"
@@ -135,13 +135,23 @@ func (s flatMapExec) evalAll(item value.Value) ([]kv, error) {
 	return ev, nil
 }
 
-// fanout is the number of output rows: the longest list-valued mapping, min 1.
+// fanout is the number of output rows. With no list-valued mapping the stage is
+// a plain map (one row); with any list mapping it is the longest list's length,
+// so an empty list produces ZERO rows (spec §5.3: one row per element) rather
+// than a phantom null row.
 func fanout(ev []kv) int {
-	n := 1
+	hasList := false
+	n := 0
 	for _, e := range ev {
-		if l, ok := e.val.([]value.Value); ok && len(l) > n {
-			n = len(l)
+		if l, ok := e.val.([]value.Value); ok {
+			hasList = true
+			if len(l) > n {
+				n = len(l)
+			}
 		}
+	}
+	if !hasList {
+		return 1
 	}
 	return n
 }
@@ -250,10 +260,29 @@ func (s reduceExec) groupBy(in pipeline.ResultSet) (value.Value, error) {
 		if err != nil {
 			return nil, err
 		}
-		key := fmt.Sprintf("%v", v)
+		key, kerr := groupKey(v)
+		if kerr != nil {
+			return nil, kerr
+		}
 		groups[key] = append(listOf(groups[key]), item)
 	}
 	return groups, nil
+}
+
+// groupKey renders a group-by key value as a JSON object key: a string value
+// keys directly (so group_by over a name field yields {"alice": …}); every
+// other value is rendered as its JSON text, so objects and booleans never leak
+// Go syntax (fmt %v would render an object as "map[...]"). encoding/json emits
+// map keys in sorted order, so an object key is deterministic.
+func groupKey(v value.Value) (string, error) {
+	if s, ok := v.(string); ok {
+		return s, nil
+	}
+	b, err := json.Marshal(v)
+	if err != nil {
+		return "", eval.ErrType
+	}
+	return string(b), nil
 }
 
 // listOf returns v as a list, or an empty list when absent.
@@ -395,12 +424,15 @@ func unkey(keyed []keyedItem) pipeline.ResultSet {
 	return out
 }
 
-// limitExec truncates the result set to at most n elements.
+// limitExec truncates the result set to at most n elements. A negative n —
+// possible only in a programmatically assembled pipeline, never from the
+// parser — behaves as zero.
 type limitExec struct{ n int }
 
 func (s limitExec) Execute(in pipeline.ResultSet) (pipeline.ResultSet, error) {
-	if s.n < len(in) {
-		return in[:s.n], nil
+	n := max(s.n, 0)
+	if n < len(in) {
+		return in[:n], nil
 	}
 	return in, nil
 }

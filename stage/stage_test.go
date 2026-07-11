@@ -2,6 +2,7 @@ package stage
 
 import (
 	"errors"
+	"math"
 	"testing"
 
 	value "github.com/gomatic/go-json"
@@ -315,5 +316,171 @@ func TestUniq_KeyEvalError(t *testing.T) {
 		Execute(pipeline.ResultSet{obj()})
 	if !errors.Is(err, eval.ErrUnknownFunc) {
 		t.Fatalf("err=%v want ErrUnknownFunc", err)
+	}
+}
+
+// A negative limit — constructible only programmatically, never by the parser —
+// behaves as limit 0 instead of panicking.
+func TestLimitNegativeYieldsEmpty(t *testing.T) {
+	st, err := Build(ast.LimitStage{N: -1}, nil)
+	if err != nil {
+		t.Fatalf("unexpected build error: %v", err)
+	}
+	out, err := st.Execute(pipeline.ResultSet{map[string]value.Value{"a": int64(1)}})
+	if err != nil {
+		t.Fatalf("unexpected error: %v", err)
+	}
+	if len(out) != 0 {
+		t.Errorf("got %v, want empty", out)
+	}
+}
+
+// A nil condition in a programmatically built filter surfaces eval's ErrNilExpr
+// as an error, not a panic.
+func TestFilterNilCondErrors(t *testing.T) {
+	st, err := Build(ast.FilterStage{Cond: nil}, nil)
+	if err != nil {
+		t.Fatalf("unexpected build error: %v", err)
+	}
+	if _, err := st.Execute(pipeline.ResultSet{map[string]value.Value{}}); !errors.Is(err, eval.ErrNilExpr) {
+		t.Errorf("got %v, want eval.ErrNilExpr", err)
+	}
+}
+
+// flatMap over an empty list produces ZERO rows, not a phantom {key: null} row
+// (spec §5.3: one output object per list element).
+func TestFlatMap_EmptyListYieldsNoRows(t *testing.T) {
+	in := pipeline.ResultSet{obj("xs", []value.Value{})}
+	out := run(t, ast.FlatMapStage{Mappings: []ast.Mapping{{Key: "x", Expr: field("xs")}}}, in)
+	if len(out) != 0 {
+		t.Fatalf("got %d rows, want 0", len(out))
+	}
+}
+
+// flatMap with only scalar mappings still emits exactly one row per input.
+func TestFlatMap_AllScalarYieldsOneRow(t *testing.T) {
+	in := pipeline.ResultSet{obj("a", int64(1))}
+	out := run(t, ast.FlatMapStage{Mappings: []ast.Mapping{{Key: "x", Expr: field("a")}}}, in)
+	if len(out) != 1 {
+		t.Fatalf("got %d rows, want 1", len(out))
+	}
+}
+
+// flatMap expands one row per list element, scalars repeating.
+func TestFlatMap_ExpandsPerElement(t *testing.T) {
+	in := pipeline.ResultSet{obj("xs", []value.Value{int64(1), int64(2), int64(3)}, "k", "c")}
+	out := run(t, ast.FlatMapStage{Mappings: []ast.Mapping{
+		{Key: "x", Expr: field("xs")},
+		{Key: "k", Expr: field("k")},
+	}}, in)
+	if len(out) != 3 {
+		t.Fatalf("got %d rows, want 3", len(out))
+	}
+	for i, want := range []int64{1, 2, 3} {
+		row := out[i].(map[string]value.Value)
+		if row["x"] != want || row["k"] != "c" {
+			t.Errorf("row %d = %#v, want x=%d k=c", i, row, want)
+		}
+	}
+}
+
+// group_by keys are JSON: a string value keys directly; a non-string value is
+// rendered as JSON text (never Go's map[...] syntax) and distinct types do not
+// silently collapse.
+func TestReduce_GroupByKeysAreJSON(t *testing.T) {
+	in := pipeline.ResultSet{
+		obj("g", int64(1)),
+		obj("g", "1"),
+		obj("g", true),
+	}
+	out := run(t, ast.ReduceStage{Op: ast.OpGroupBy, Arg: field("g")}, in)
+	groups := out[0].(map[string]value.Value)
+	// int 1 -> "1", string "1" -> "1": these coincide as JSON object keys (an
+	// inherent consequence of object-keyed grouping), so they share one group;
+	// bool true -> "true" is its own group and never renders as a Go-ism.
+	if _, ok := groups["true"]; !ok {
+		t.Errorf("missing JSON key \"true\"; groups=%v keys", keysOf(groups))
+	}
+	for k := range groups {
+		if k == "<nil>" || len(k) >= 4 && k[:4] == "map[" {
+			t.Errorf("group key %q leaks Go syntax", k)
+		}
+	}
+}
+
+// A string group key is the bare string (no surrounding quotes) so results read
+// naturally: group_by .name -> {"alice": [...]}.
+func TestReduce_GroupByStringKeyIsBare(t *testing.T) {
+	in := pipeline.ResultSet{obj("name", "alice"), obj("name", "alice"), obj("name", "bob")}
+	out := run(t, ast.ReduceStage{Op: ast.OpGroupBy, Arg: field("name")}, in)
+	groups := out[0].(map[string]value.Value)
+	if len(groups["alice"].([]value.Value)) != 2 || len(groups["bob"].([]value.Value)) != 1 {
+		t.Fatalf("groups=%#v", groups)
+	}
+}
+
+func keysOf(m map[string]value.Value) []string {
+	ks := make([]string, 0, len(m))
+	for k := range m {
+		ks = append(ks, k)
+	}
+	return ks
+}
+
+// sort is stable: equal keys keep input order (asc) and are NOT reversed by
+// desc (desc negates the comparator, it does not reverse equal runs).
+func TestSort_IsStable(t *testing.T) {
+	in := pipeline.ResultSet{
+		obj("k", int64(1), "id", "a"),
+		obj("k", int64(1), "id", "b"),
+		obj("k", int64(1), "id", "c"),
+	}
+	for _, desc := range []bool{false, true} {
+		out := run(t, ast.SortStage{Key: field("k"), IsDesc: desc}, in)
+		got := []string{
+			out[0].(map[string]value.Value)["id"].(string),
+			out[1].(map[string]value.Value)["id"].(string),
+			out[2].(map[string]value.Value)["id"].(string),
+		}
+		if got[0] != "a" || got[1] != "b" || got[2] != "c" {
+			t.Errorf("desc=%v stable order = %v, want [a b c]", desc, got)
+		}
+	}
+}
+
+// filter keeps the RIGHT items, not merely the right count.
+func TestFilter_KeepsMatchingItems(t *testing.T) {
+	in := pipeline.ResultSet{obj("n", int64(0)), obj("n", int64(5)), obj("n", int64(9))}
+	cond := ast.BinaryExpr{Op: ast.OpGt, L: field("n"), R: ast.Literal{V: int64(1)}}
+	out := run(t, ast.FilterStage{Cond: cond}, in)
+	if len(out) != 2 {
+		t.Fatalf("got %d, want 2", len(out))
+	}
+	if out[0].(map[string]value.Value)["n"] != int64(5) || out[1].(map[string]value.Value)["n"] != int64(9) {
+		t.Errorf("kept the wrong items: %#v", out)
+	}
+}
+
+// Whole-object uniq (no key) dedupes equal OBJECTS without panicking — the
+// exact case that panicked under the old go-json Equal.
+func TestUniq_WholeObjectDedupes(t *testing.T) {
+	in := pipeline.ResultSet{
+		obj("a", int64(1), "b", int64(2)),
+		obj("a", int64(1), "b", int64(2)),
+		obj("a", int64(9)),
+	}
+	out := run(t, ast.UniqStage{}, in)
+	if len(out) != 2 {
+		t.Fatalf("got %d, want 2 (dedupe identical objects)", len(out))
+	}
+}
+
+// group_by over a key that is not JSON-serializable (a non-finite float,
+// reachable via overflow arithmetic) surfaces ErrType rather than a bad key.
+func TestReduce_GroupByNonSerializableKeyErrors(t *testing.T) {
+	in := pipeline.ResultSet{obj("g", math.Inf(1))}
+	_, err := build(t, ast.ReduceStage{Op: ast.OpGroupBy, Arg: field("g")}).Execute(in)
+	if !errors.Is(err, eval.ErrType) {
+		t.Fatalf("got %v, want eval.ErrType", err)
 	}
 }

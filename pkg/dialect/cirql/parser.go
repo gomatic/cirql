@@ -19,8 +19,20 @@ import (
 // Query is the raw text of a cirql query.
 type Query string
 
+// MaxQueryBytes bounds a query's length. The generated parser recurses once per
+// nesting level, so an unbounded query could overflow the goroutine stack (an
+// uncatchable fatal error). 256 KiB caps nesting far below that limit while
+// dwarfing any real query — query text is DSL, not data (data arrives on
+// stdin), so this never constrains legitimate use.
+const MaxQueryBytes = 256 * 1024
+
 // Parse turns a cirql query into a Pipeline AST, or ErrParse on a syntax error.
+// A query longer than MaxQueryBytes is rejected with ErrQueryTooLarge before
+// parsing, so adversarial deep nesting cannot overflow the stack.
 func Parse(query Query) (ast.Pipeline, error) {
+	if len(query) > MaxQueryBytes {
+		return ast.Pipeline{}, ErrQueryTooLarge.With(nil, fmt.Sprintf("%d bytes exceeds %d", len(query), MaxQueryBytes))
+	}
 	var parseErr error
 	el := errListener{err: &parseErr}
 	lexer := g.NewcirqlLexer(antlr.NewInputStream(string(query)))
@@ -116,7 +128,7 @@ func (b builder) transformStage(c g.ITransformStageContext) ast.Stage {
 func (b builder) mappings(all []g.IMappingContext) []ast.Mapping {
 	out := make([]ast.Mapping, 0, len(all))
 	for _, m := range all {
-		out = append(out, ast.Mapping{Key: m.NAME().GetText(), Expr: b.expr(m.Expr())})
+		out = append(out, ast.Mapping{Key: m.FieldName().GetText(), Expr: b.expr(m.Expr())})
 	}
 	return out
 }
@@ -190,9 +202,14 @@ func (b builder) funcCall(c g.IFuncCallContext) ast.Expr {
 
 func (b builder) fieldAccess(c g.IFieldAccessContext) ast.Expr {
 	fa := ast.FieldAccess{}
+	if head := c.FieldName(); head != nil {
+		fa.Path = append(fa.Path, ast.PathSegment{Name: head.GetText()})
+	} else if c.LBRACK() != nil {
+		fa.Path = append(fa.Path, ast.PathSegment{IsIter: true})
+	}
 	for _, ps := range c.AllPathSeg() {
-		if ps.NAME() != nil {
-			fa.Path = append(fa.Path, ast.PathSegment{Name: ps.NAME().GetText()})
+		if fn := ps.FieldName(); fn != nil {
+			fa.Path = append(fa.Path, ast.PathSegment{Name: fn.GetText()})
 			continue
 		}
 		fa.Path = append(fa.Path, ast.PathSegment{IsIter: true})

@@ -25,7 +25,7 @@ transformStage: mapStage | filterStage | reduceStage
               | sortStage | flatMapStage | limitStage | uniqStage ;
 mapStage      : MAP LBRACE mapping (COMMA mapping)* RBRACE ;
 flatMapStage  : FLATMAP LBRACE mapping (COMMA mapping)* RBRACE ;
-mapping       : NAME COLON expr ;
+mapping       : fieldName COLON expr ;
 filterStage   : FILTER expr ;
 reduceStage   : REDUCE reduceOp (LPAREN expr RPAREN)? ;
 reduceOp      : COUNT | SUM | MIN | MAX | AVG | FIRST | LAST | GROUP_BY | COLLECT ;
@@ -46,10 +46,23 @@ expr          : (NOT | MINUS) expr                  # UnaryExpr
               | literal                             # LitExpr
               ;
 
-fieldAccess   : DOT pathSeg (pathSeg)* | DOT ;
-pathSeg       : DOT? NAME | LBRACK RBRACK ;
+// The first segment follows the leading dot directly; every continuation
+// segment carries its own dot (or is []). Requiring the continuation dot keeps
+// a trailing keyword — e.g. the `desc` in `sort .name desc` — from being
+// absorbed into the path now that keywords are valid field names.
+fieldAccess   : DOT (fieldName | LBRACK RBRACK) pathSeg* | DOT ;
+pathSeg       : DOT fieldName | LBRACK RBRACK ;
 funcCall      : NAME LPAREN (expr (COMMA expr)*)? RPAREN ;
 variable      : DOLLAR NAME ;
+
+// fieldName is a JSON object key: an identifier or any keyword. Keywords are
+// only reserved in their own stage/operator positions; as a field name (a path
+// segment or a map output key) every keyword is a plain identifier, so common
+// JSON fields like .count, .type, and map { first: ... } address correctly.
+fieldName     : NAME | QUERY | HTTP | FILE | STDIN | MAP | FLATMAP | FILTER
+              | REDUCE | SORT | LIMIT | UNIQ | COUNT | SUM | MIN | MAX | AVG
+              | FIRST | LAST | GROUP_BY | COLLECT | ASC | DESC
+              | TRUE | FALSE | NULL ;
 
 argValue      : variable | literal | listLit | objectLit ;
 objectLit     : LBRACE (NAME COLON argValue (COMMA NAME COLON argValue)*)? RBRACE ;

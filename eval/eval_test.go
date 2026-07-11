@@ -175,21 +175,44 @@ func TestEval_Compare_TypeError(t *testing.T) {
 }
 
 func TestEval_Arithmetic(t *testing.T) {
+	// int op int: +, -, * preserve int64 (one consistent model across the
+	// additive and multiplicative operators); / and % use the double model.
 	cases := []struct {
 		want value.Value
 		op   ast.BinOp
 	}{
 		{op: ast.OpAdd, want: int64(5)},
-		{op: ast.OpSub, want: 1.0},
-		{op: ast.OpMul, want: 6.0},
+		{op: ast.OpSub, want: int64(1)},
+		{op: ast.OpMul, want: int64(6)},
 		{op: ast.OpDiv, want: 1.5},
 		{op: ast.OpMod, want: 1.0},
 	}
 	for _, c := range cases {
 		got := evalOK(t, ast.BinaryExpr{Op: c.op, L: lit(int64(3)), R: lit(int64(2))}, Env{})
 		if got != c.want {
-			t.Fatalf("3 %s 2 = %v want %v", c.op, got, c.want)
+			t.Fatalf("3 %s 2 = %v (%T) want %v (%T)", c.op, got, got, c.want, c.want)
 		}
+	}
+}
+
+// A mixed int/float operand promotes to float for every arithmetic operator —
+// no operator silently keeps an int when a float is involved.
+func TestEval_ArithmeticMixedPromotesToFloat(t *testing.T) {
+	for _, op := range []ast.BinOp{ast.OpAdd, ast.OpSub, ast.OpMul} {
+		got := evalOK(t, ast.BinaryExpr{Op: op, L: lit(int64(3)), R: lit(2.0)}, Env{})
+		if _, ok := got.(float64); !ok {
+			t.Errorf("3 %s 2.0 = %v (%T), want a float64", op, got, got)
+		}
+	}
+}
+
+// Integer subtraction and multiplication stay exact past 2^53, where the float
+// model would round — the reason to preserve int64 rather than promote.
+func TestEval_IntArithmeticIsExactPast2Pow53(t *testing.T) {
+	big := int64(9007199254740993) // 2^53 + 1, unrepresentable as float64
+	got := evalOK(t, ast.BinaryExpr{Op: ast.OpMul, L: lit(big), R: lit(int64(1))}, Env{})
+	if got != big {
+		t.Errorf("got %v, want exact %d", got, big)
 	}
 }
 
@@ -261,5 +284,14 @@ func TestEval_Call_ArgError(t *testing.T) {
 	_, err := Eval(ast.FuncCall{Name: "length", Args: []ast.Expr{ast.FuncCall{Name: "nope"}}}, Env{})
 	if !errors.Is(err, ErrUnknownFunc) {
 		t.Fatalf("got %v want ErrUnknownFunc", err)
+	}
+}
+
+// A nil expression — constructible only programmatically, never by the parser —
+// reports ErrNilExpr instead of panicking.
+func TestEvalNilExprErrors(t *testing.T) {
+	_, err := Eval(nil, Env{})
+	if !errors.Is(err, ErrNilExpr) {
+		t.Errorf("got %v, want ErrNilExpr", err)
 	}
 }

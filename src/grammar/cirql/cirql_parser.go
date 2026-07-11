@@ -54,143 +54,146 @@ func cirqlParserInit() {
 		"field", "arguments", "argument", "httpStage", "fileStage", "stdinStage",
 		"transformStage", "mapStage", "flatMapStage", "mapping", "filterStage",
 		"reduceStage", "reduceOp", "sortStage", "limitStage", "uniqStage", "expr",
-		"fieldAccess", "pathSeg", "funcCall", "variable", "argValue", "objectLit",
-		"listLit", "literal",
+		"fieldAccess", "pathSeg", "funcCall", "variable", "fieldName", "argValue",
+		"objectLit", "listLit", "literal",
 	}
 	staticData.PredictionContextCache = antlr.NewPredictionContextCache()
 	staticData.serializedATN = []int32{
-		4, 1, 55, 301, 2, 0, 7, 0, 2, 1, 7, 1, 2, 2, 7, 2, 2, 3, 7, 3, 2, 4, 7,
+		4, 1, 55, 307, 2, 0, 7, 0, 2, 1, 7, 1, 2, 2, 7, 2, 2, 3, 7, 3, 2, 4, 7,
 		4, 2, 5, 7, 5, 2, 6, 7, 6, 2, 7, 7, 7, 2, 8, 7, 8, 2, 9, 7, 9, 2, 10, 7,
 		10, 2, 11, 7, 11, 2, 12, 7, 12, 2, 13, 7, 13, 2, 14, 7, 14, 2, 15, 7, 15,
 		2, 16, 7, 16, 2, 17, 7, 17, 2, 18, 7, 18, 2, 19, 7, 19, 2, 20, 7, 20, 2,
 		21, 7, 21, 2, 22, 7, 22, 2, 23, 7, 23, 2, 24, 7, 24, 2, 25, 7, 25, 2, 26,
-		7, 26, 2, 27, 7, 27, 2, 28, 7, 28, 2, 29, 7, 29, 2, 30, 7, 30, 1, 0, 1,
-		0, 1, 0, 5, 0, 66, 8, 0, 10, 0, 12, 0, 69, 9, 0, 1, 0, 1, 0, 1, 1, 1, 1,
-		3, 1, 75, 8, 1, 1, 2, 1, 2, 1, 2, 1, 2, 3, 2, 81, 8, 2, 1, 3, 1, 3, 1,
-		3, 3, 3, 86, 8, 3, 1, 4, 1, 4, 1, 4, 1, 4, 1, 5, 4, 5, 93, 8, 5, 11, 5,
-		12, 5, 94, 1, 6, 1, 6, 1, 6, 1, 6, 1, 6, 3, 6, 102, 8, 6, 1, 6, 1, 6, 1,
-		6, 1, 6, 3, 6, 108, 8, 6, 1, 7, 1, 7, 1, 7, 5, 7, 113, 8, 7, 10, 7, 12,
-		7, 116, 9, 7, 1, 8, 1, 8, 1, 8, 1, 8, 1, 9, 1, 9, 1, 9, 3, 9, 125, 8, 9,
-		1, 10, 1, 10, 1, 10, 1, 11, 1, 11, 1, 12, 1, 12, 1, 12, 1, 12, 1, 12, 1,
-		12, 1, 12, 3, 12, 139, 8, 12, 1, 13, 1, 13, 1, 13, 1, 13, 1, 13, 5, 13,
-		146, 8, 13, 10, 13, 12, 13, 149, 9, 13, 1, 13, 1, 13, 1, 14, 1, 14, 1,
-		14, 1, 14, 1, 14, 5, 14, 158, 8, 14, 10, 14, 12, 14, 161, 9, 14, 1, 14,
-		1, 14, 1, 15, 1, 15, 1, 15, 1, 15, 1, 16, 1, 16, 1, 16, 1, 17, 1, 17, 1,
-		17, 1, 17, 1, 17, 1, 17, 3, 17, 178, 8, 17, 1, 18, 1, 18, 1, 19, 1, 19,
-		1, 19, 3, 19, 185, 8, 19, 1, 20, 1, 20, 1, 20, 1, 21, 1, 21, 3, 21, 192,
-		8, 21, 1, 22, 1, 22, 1, 22, 1, 22, 1, 22, 1, 22, 1, 22, 1, 22, 1, 22, 1,
-		22, 1, 22, 3, 22, 205, 8, 22, 1, 22, 1, 22, 1, 22, 1, 22, 1, 22, 1, 22,
-		1, 22, 1, 22, 1, 22, 1, 22, 1, 22, 1, 22, 1, 22, 1, 22, 1, 22, 5, 22, 222,
-		8, 22, 10, 22, 12, 22, 225, 9, 22, 1, 23, 1, 23, 1, 23, 5, 23, 230, 8,
-		23, 10, 23, 12, 23, 233, 9, 23, 1, 23, 3, 23, 236, 8, 23, 1, 24, 3, 24,
-		239, 8, 24, 1, 24, 1, 24, 1, 24, 3, 24, 244, 8, 24, 1, 25, 1, 25, 1, 25,
-		1, 25, 1, 25, 5, 25, 251, 8, 25, 10, 25, 12, 25, 254, 9, 25, 3, 25, 256,
-		8, 25, 1, 25, 1, 25, 1, 26, 1, 26, 1, 26, 1, 27, 1, 27, 1, 27, 1, 27, 3,
-		27, 267, 8, 27, 1, 28, 1, 28, 1, 28, 1, 28, 1, 28, 1, 28, 1, 28, 1, 28,
-		5, 28, 277, 8, 28, 10, 28, 12, 28, 280, 9, 28, 3, 28, 282, 8, 28, 1, 28,
-		1, 28, 1, 29, 1, 29, 1, 29, 1, 29, 5, 29, 290, 8, 29, 10, 29, 12, 29, 293,
-		9, 29, 3, 29, 295, 8, 29, 1, 29, 1, 29, 1, 30, 1, 30, 1, 30, 0, 1, 44,
-		31, 0, 2, 4, 6, 8, 10, 12, 14, 16, 18, 20, 22, 24, 26, 28, 30, 32, 34,
-		36, 38, 40, 42, 44, 46, 48, 50, 52, 54, 56, 58, 60, 0, 7, 1, 0, 12, 20,
-		1, 0, 21, 22, 2, 0, 39, 39, 47, 47, 1, 0, 48, 50, 1, 0, 46, 47, 1, 0, 40,
-		45, 2, 0, 23, 25, 52, 54, 314, 0, 62, 1, 0, 0, 0, 2, 74, 1, 0, 0, 0, 4,
-		80, 1, 0, 0, 0, 6, 85, 1, 0, 0, 0, 8, 87, 1, 0, 0, 0, 10, 92, 1, 0, 0,
-		0, 12, 96, 1, 0, 0, 0, 14, 109, 1, 0, 0, 0, 16, 117, 1, 0, 0, 0, 18, 121,
-		1, 0, 0, 0, 20, 126, 1, 0, 0, 0, 22, 129, 1, 0, 0, 0, 24, 138, 1, 0, 0,
-		0, 26, 140, 1, 0, 0, 0, 28, 152, 1, 0, 0, 0, 30, 164, 1, 0, 0, 0, 32, 168,
-		1, 0, 0, 0, 34, 171, 1, 0, 0, 0, 36, 179, 1, 0, 0, 0, 38, 181, 1, 0, 0,
-		0, 40, 186, 1, 0, 0, 0, 42, 189, 1, 0, 0, 0, 44, 204, 1, 0, 0, 0, 46, 235,
-		1, 0, 0, 0, 48, 243, 1, 0, 0, 0, 50, 245, 1, 0, 0, 0, 52, 259, 1, 0, 0,
-		0, 54, 266, 1, 0, 0, 0, 56, 268, 1, 0, 0, 0, 58, 285, 1, 0, 0, 0, 60, 298,
-		1, 0, 0, 0, 62, 67, 3, 2, 1, 0, 63, 64, 5, 26, 0, 0, 64, 66, 3, 2, 1, 0,
-		65, 63, 1, 0, 0, 0, 66, 69, 1, 0, 0, 0, 67, 65, 1, 0, 0, 0, 67, 68, 1,
-		0, 0, 0, 68, 70, 1, 0, 0, 0, 69, 67, 1, 0, 0, 0, 70, 71, 5, 0, 0, 1, 71,
-		1, 1, 0, 0, 0, 72, 75, 3, 4, 2, 0, 73, 75, 3, 24, 12, 0, 74, 72, 1, 0,
-		0, 0, 74, 73, 1, 0, 0, 0, 75, 3, 1, 0, 0, 0, 76, 81, 3, 6, 3, 0, 77, 81,
-		3, 18, 9, 0, 78, 81, 3, 20, 10, 0, 79, 81, 3, 22, 11, 0, 80, 76, 1, 0,
-		0, 0, 80, 77, 1, 0, 0, 0, 80, 78, 1, 0, 0, 0, 80, 79, 1, 0, 0, 0, 81, 5,
-		1, 0, 0, 0, 82, 83, 5, 1, 0, 0, 83, 86, 3, 8, 4, 0, 84, 86, 3, 8, 4, 0,
-		85, 82, 1, 0, 0, 0, 85, 84, 1, 0, 0, 0, 86, 7, 1, 0, 0, 0, 87, 88, 5, 33,
-		0, 0, 88, 89, 3, 10, 5, 0, 89, 90, 5, 34, 0, 0, 90, 9, 1, 0, 0, 0, 91,
-		93, 3, 12, 6, 0, 92, 91, 1, 0, 0, 0, 93, 94, 1, 0, 0, 0, 94, 92, 1, 0,
-		0, 0, 94, 95, 1, 0, 0, 0, 95, 11, 1, 0, 0, 0, 96, 101, 5, 51, 0, 0, 97,
-		98, 5, 31, 0, 0, 98, 99, 3, 14, 7, 0, 99, 100, 5, 32, 0, 0, 100, 102, 1,
-		0, 0, 0, 101, 97, 1, 0, 0, 0, 101, 102, 1, 0, 0, 0, 102, 107, 1, 0, 0,
-		0, 103, 104, 5, 33, 0, 0, 104, 105, 3, 10, 5, 0, 105, 106, 5, 34, 0, 0,
-		106, 108, 1, 0, 0, 0, 107, 103, 1, 0, 0, 0, 107, 108, 1, 0, 0, 0, 108,
-		13, 1, 0, 0, 0, 109, 114, 3, 16, 8, 0, 110, 111, 5, 28, 0, 0, 111, 113,
-		3, 16, 8, 0, 112, 110, 1, 0, 0, 0, 113, 116, 1, 0, 0, 0, 114, 112, 1, 0,
-		0, 0, 114, 115, 1, 0, 0, 0, 115, 15, 1, 0, 0, 0, 116, 114, 1, 0, 0, 0,
-		117, 118, 5, 51, 0, 0, 118, 119, 5, 29, 0, 0, 119, 120, 3, 54, 27, 0, 120,
-		17, 1, 0, 0, 0, 121, 124, 5, 2, 0, 0, 122, 125, 5, 54, 0, 0, 123, 125,
-		3, 52, 26, 0, 124, 122, 1, 0, 0, 0, 124, 123, 1, 0, 0, 0, 125, 19, 1, 0,
-		0, 0, 126, 127, 5, 3, 0, 0, 127, 128, 5, 54, 0, 0, 128, 21, 1, 0, 0, 0,
-		129, 130, 5, 4, 0, 0, 130, 23, 1, 0, 0, 0, 131, 139, 3, 26, 13, 0, 132,
-		139, 3, 32, 16, 0, 133, 139, 3, 34, 17, 0, 134, 139, 3, 38, 19, 0, 135,
-		139, 3, 28, 14, 0, 136, 139, 3, 40, 20, 0, 137, 139, 3, 42, 21, 0, 138,
-		131, 1, 0, 0, 0, 138, 132, 1, 0, 0, 0, 138, 133, 1, 0, 0, 0, 138, 134,
-		1, 0, 0, 0, 138, 135, 1, 0, 0, 0, 138, 136, 1, 0, 0, 0, 138, 137, 1, 0,
-		0, 0, 139, 25, 1, 0, 0, 0, 140, 141, 5, 5, 0, 0, 141, 142, 5, 33, 0, 0,
-		142, 147, 3, 30, 15, 0, 143, 144, 5, 28, 0, 0, 144, 146, 3, 30, 15, 0,
-		145, 143, 1, 0, 0, 0, 146, 149, 1, 0, 0, 0, 147, 145, 1, 0, 0, 0, 147,
-		148, 1, 0, 0, 0, 148, 150, 1, 0, 0, 0, 149, 147, 1, 0, 0, 0, 150, 151,
-		5, 34, 0, 0, 151, 27, 1, 0, 0, 0, 152, 153, 5, 6, 0, 0, 153, 154, 5, 33,
-		0, 0, 154, 159, 3, 30, 15, 0, 155, 156, 5, 28, 0, 0, 156, 158, 3, 30, 15,
-		0, 157, 155, 1, 0, 0, 0, 158, 161, 1, 0, 0, 0, 159, 157, 1, 0, 0, 0, 159,
-		160, 1, 0, 0, 0, 160, 162, 1, 0, 0, 0, 161, 159, 1, 0, 0, 0, 162, 163,
-		5, 34, 0, 0, 163, 29, 1, 0, 0, 0, 164, 165, 5, 51, 0, 0, 165, 166, 5, 29,
-		0, 0, 166, 167, 3, 44, 22, 0, 167, 31, 1, 0, 0, 0, 168, 169, 5, 7, 0, 0,
-		169, 170, 3, 44, 22, 0, 170, 33, 1, 0, 0, 0, 171, 172, 5, 8, 0, 0, 172,
-		177, 3, 36, 18, 0, 173, 174, 5, 31, 0, 0, 174, 175, 3, 44, 22, 0, 175,
-		176, 5, 32, 0, 0, 176, 178, 1, 0, 0, 0, 177, 173, 1, 0, 0, 0, 177, 178,
-		1, 0, 0, 0, 178, 35, 1, 0, 0, 0, 179, 180, 7, 0, 0, 0, 180, 37, 1, 0, 0,
-		0, 181, 182, 5, 9, 0, 0, 182, 184, 3, 44, 22, 0, 183, 185, 7, 1, 0, 0,
-		184, 183, 1, 0, 0, 0, 184, 185, 1, 0, 0, 0, 185, 39, 1, 0, 0, 0, 186, 187,
-		5, 10, 0, 0, 187, 188, 5, 53, 0, 0, 188, 41, 1, 0, 0, 0, 189, 191, 5, 11,
-		0, 0, 190, 192, 3, 44, 22, 0, 191, 190, 1, 0, 0, 0, 191, 192, 1, 0, 0,
-		0, 192, 43, 1, 0, 0, 0, 193, 194, 6, 22, -1, 0, 194, 195, 7, 2, 0, 0, 195,
-		205, 3, 44, 22, 11, 196, 197, 5, 31, 0, 0, 197, 198, 3, 44, 22, 0, 198,
-		199, 5, 32, 0, 0, 199, 205, 1, 0, 0, 0, 200, 205, 3, 50, 25, 0, 201, 205,
-		3, 46, 23, 0, 202, 205, 3, 52, 26, 0, 203, 205, 3, 60, 30, 0, 204, 193,
-		1, 0, 0, 0, 204, 196, 1, 0, 0, 0, 204, 200, 1, 0, 0, 0, 204, 201, 1, 0,
-		0, 0, 204, 202, 1, 0, 0, 0, 204, 203, 1, 0, 0, 0, 205, 223, 1, 0, 0, 0,
-		206, 207, 10, 10, 0, 0, 207, 208, 7, 3, 0, 0, 208, 222, 3, 44, 22, 11,
-		209, 210, 10, 9, 0, 0, 210, 211, 7, 4, 0, 0, 211, 222, 3, 44, 22, 10, 212,
-		213, 10, 8, 0, 0, 213, 214, 7, 5, 0, 0, 214, 222, 3, 44, 22, 9, 215, 216,
-		10, 7, 0, 0, 216, 217, 5, 38, 0, 0, 217, 222, 3, 44, 22, 8, 218, 219, 10,
-		6, 0, 0, 219, 220, 5, 37, 0, 0, 220, 222, 3, 44, 22, 7, 221, 206, 1, 0,
-		0, 0, 221, 209, 1, 0, 0, 0, 221, 212, 1, 0, 0, 0, 221, 215, 1, 0, 0, 0,
-		221, 218, 1, 0, 0, 0, 222, 225, 1, 0, 0, 0, 223, 221, 1, 0, 0, 0, 223,
-		224, 1, 0, 0, 0, 224, 45, 1, 0, 0, 0, 225, 223, 1, 0, 0, 0, 226, 227, 5,
-		27, 0, 0, 227, 231, 3, 48, 24, 0, 228, 230, 3, 48, 24, 0, 229, 228, 1,
-		0, 0, 0, 230, 233, 1, 0, 0, 0, 231, 229, 1, 0, 0, 0, 231, 232, 1, 0, 0,
-		0, 232, 236, 1, 0, 0, 0, 233, 231, 1, 0, 0, 0, 234, 236, 5, 27, 0, 0, 235,
-		226, 1, 0, 0, 0, 235, 234, 1, 0, 0, 0, 236, 47, 1, 0, 0, 0, 237, 239, 5,
-		27, 0, 0, 238, 237, 1, 0, 0, 0, 238, 239, 1, 0, 0, 0, 239, 240, 1, 0, 0,
-		0, 240, 244, 5, 51, 0, 0, 241, 242, 5, 35, 0, 0, 242, 244, 5, 36, 0, 0,
-		243, 238, 1, 0, 0, 0, 243, 241, 1, 0, 0, 0, 244, 49, 1, 0, 0, 0, 245, 246,
-		5, 51, 0, 0, 246, 255, 5, 31, 0, 0, 247, 252, 3, 44, 22, 0, 248, 249, 5,
-		28, 0, 0, 249, 251, 3, 44, 22, 0, 250, 248, 1, 0, 0, 0, 251, 254, 1, 0,
-		0, 0, 252, 250, 1, 0, 0, 0, 252, 253, 1, 0, 0, 0, 253, 256, 1, 0, 0, 0,
-		254, 252, 1, 0, 0, 0, 255, 247, 1, 0, 0, 0, 255, 256, 1, 0, 0, 0, 256,
-		257, 1, 0, 0, 0, 257, 258, 5, 32, 0, 0, 258, 51, 1, 0, 0, 0, 259, 260,
-		5, 30, 0, 0, 260, 261, 5, 51, 0, 0, 261, 53, 1, 0, 0, 0, 262, 267, 3, 52,
-		26, 0, 263, 267, 3, 60, 30, 0, 264, 267, 3, 58, 29, 0, 265, 267, 3, 56,
-		28, 0, 266, 262, 1, 0, 0, 0, 266, 263, 1, 0, 0, 0, 266, 264, 1, 0, 0, 0,
-		266, 265, 1, 0, 0, 0, 267, 55, 1, 0, 0, 0, 268, 281, 5, 33, 0, 0, 269,
-		270, 5, 51, 0, 0, 270, 271, 5, 29, 0, 0, 271, 278, 3, 54, 27, 0, 272, 273,
-		5, 28, 0, 0, 273, 274, 5, 51, 0, 0, 274, 275, 5, 29, 0, 0, 275, 277, 3,
-		54, 27, 0, 276, 272, 1, 0, 0, 0, 277, 280, 1, 0, 0, 0, 278, 276, 1, 0,
-		0, 0, 278, 279, 1, 0, 0, 0, 279, 282, 1, 0, 0, 0, 280, 278, 1, 0, 0, 0,
-		281, 269, 1, 0, 0, 0, 281, 282, 1, 0, 0, 0, 282, 283, 1, 0, 0, 0, 283,
-		284, 5, 34, 0, 0, 284, 57, 1, 0, 0, 0, 285, 294, 5, 35, 0, 0, 286, 291,
-		3, 54, 27, 0, 287, 288, 5, 28, 0, 0, 288, 290, 3, 54, 27, 0, 289, 287,
-		1, 0, 0, 0, 290, 293, 1, 0, 0, 0, 291, 289, 1, 0, 0, 0, 291, 292, 1, 0,
-		0, 0, 292, 295, 1, 0, 0, 0, 293, 291, 1, 0, 0, 0, 294, 286, 1, 0, 0, 0,
-		294, 295, 1, 0, 0, 0, 295, 296, 1, 0, 0, 0, 296, 297, 5, 36, 0, 0, 297,
-		59, 1, 0, 0, 0, 298, 299, 7, 6, 0, 0, 299, 61, 1, 0, 0, 0, 29, 67, 74,
-		80, 85, 94, 101, 107, 114, 124, 138, 147, 159, 177, 184, 191, 204, 221,
-		223, 231, 235, 238, 243, 252, 255, 266, 278, 281, 291, 294,
+		7, 26, 2, 27, 7, 27, 2, 28, 7, 28, 2, 29, 7, 29, 2, 30, 7, 30, 2, 31, 7,
+		31, 1, 0, 1, 0, 1, 0, 5, 0, 68, 8, 0, 10, 0, 12, 0, 71, 9, 0, 1, 0, 1,
+		0, 1, 1, 1, 1, 3, 1, 77, 8, 1, 1, 2, 1, 2, 1, 2, 1, 2, 3, 2, 83, 8, 2,
+		1, 3, 1, 3, 1, 3, 3, 3, 88, 8, 3, 1, 4, 1, 4, 1, 4, 1, 4, 1, 5, 4, 5, 95,
+		8, 5, 11, 5, 12, 5, 96, 1, 6, 1, 6, 1, 6, 1, 6, 1, 6, 3, 6, 104, 8, 6,
+		1, 6, 1, 6, 1, 6, 1, 6, 3, 6, 110, 8, 6, 1, 7, 1, 7, 1, 7, 5, 7, 115, 8,
+		7, 10, 7, 12, 7, 118, 9, 7, 1, 8, 1, 8, 1, 8, 1, 8, 1, 9, 1, 9, 1, 9, 3,
+		9, 127, 8, 9, 1, 10, 1, 10, 1, 10, 1, 11, 1, 11, 1, 12, 1, 12, 1, 12, 1,
+		12, 1, 12, 1, 12, 1, 12, 3, 12, 141, 8, 12, 1, 13, 1, 13, 1, 13, 1, 13,
+		1, 13, 5, 13, 148, 8, 13, 10, 13, 12, 13, 151, 9, 13, 1, 13, 1, 13, 1,
+		14, 1, 14, 1, 14, 1, 14, 1, 14, 5, 14, 160, 8, 14, 10, 14, 12, 14, 163,
+		9, 14, 1, 14, 1, 14, 1, 15, 1, 15, 1, 15, 1, 15, 1, 16, 1, 16, 1, 16, 1,
+		17, 1, 17, 1, 17, 1, 17, 1, 17, 1, 17, 3, 17, 180, 8, 17, 1, 18, 1, 18,
+		1, 19, 1, 19, 1, 19, 3, 19, 187, 8, 19, 1, 20, 1, 20, 1, 20, 1, 21, 1,
+		21, 3, 21, 194, 8, 21, 1, 22, 1, 22, 1, 22, 1, 22, 1, 22, 1, 22, 1, 22,
+		1, 22, 1, 22, 1, 22, 1, 22, 3, 22, 207, 8, 22, 1, 22, 1, 22, 1, 22, 1,
+		22, 1, 22, 1, 22, 1, 22, 1, 22, 1, 22, 1, 22, 1, 22, 1, 22, 1, 22, 1, 22,
+		1, 22, 5, 22, 224, 8, 22, 10, 22, 12, 22, 227, 9, 22, 1, 23, 1, 23, 1,
+		23, 1, 23, 3, 23, 233, 8, 23, 1, 23, 5, 23, 236, 8, 23, 10, 23, 12, 23,
+		239, 9, 23, 1, 23, 3, 23, 242, 8, 23, 1, 24, 1, 24, 1, 24, 1, 24, 3, 24,
+		248, 8, 24, 1, 25, 1, 25, 1, 25, 1, 25, 1, 25, 5, 25, 255, 8, 25, 10, 25,
+		12, 25, 258, 9, 25, 3, 25, 260, 8, 25, 1, 25, 1, 25, 1, 26, 1, 26, 1, 26,
+		1, 27, 1, 27, 1, 28, 1, 28, 1, 28, 1, 28, 3, 28, 273, 8, 28, 1, 29, 1,
+		29, 1, 29, 1, 29, 1, 29, 1, 29, 1, 29, 1, 29, 5, 29, 283, 8, 29, 10, 29,
+		12, 29, 286, 9, 29, 3, 29, 288, 8, 29, 1, 29, 1, 29, 1, 30, 1, 30, 1, 30,
+		1, 30, 5, 30, 296, 8, 30, 10, 30, 12, 30, 299, 9, 30, 3, 30, 301, 8, 30,
+		1, 30, 1, 30, 1, 31, 1, 31, 1, 31, 0, 1, 44, 32, 0, 2, 4, 6, 8, 10, 12,
+		14, 16, 18, 20, 22, 24, 26, 28, 30, 32, 34, 36, 38, 40, 42, 44, 46, 48,
+		50, 52, 54, 56, 58, 60, 62, 0, 8, 1, 0, 12, 20, 1, 0, 21, 22, 2, 0, 39,
+		39, 47, 47, 1, 0, 48, 50, 1, 0, 46, 47, 1, 0, 40, 45, 2, 0, 1, 25, 51,
+		51, 2, 0, 23, 25, 52, 54, 319, 0, 64, 1, 0, 0, 0, 2, 76, 1, 0, 0, 0, 4,
+		82, 1, 0, 0, 0, 6, 87, 1, 0, 0, 0, 8, 89, 1, 0, 0, 0, 10, 94, 1, 0, 0,
+		0, 12, 98, 1, 0, 0, 0, 14, 111, 1, 0, 0, 0, 16, 119, 1, 0, 0, 0, 18, 123,
+		1, 0, 0, 0, 20, 128, 1, 0, 0, 0, 22, 131, 1, 0, 0, 0, 24, 140, 1, 0, 0,
+		0, 26, 142, 1, 0, 0, 0, 28, 154, 1, 0, 0, 0, 30, 166, 1, 0, 0, 0, 32, 170,
+		1, 0, 0, 0, 34, 173, 1, 0, 0, 0, 36, 181, 1, 0, 0, 0, 38, 183, 1, 0, 0,
+		0, 40, 188, 1, 0, 0, 0, 42, 191, 1, 0, 0, 0, 44, 206, 1, 0, 0, 0, 46, 241,
+		1, 0, 0, 0, 48, 247, 1, 0, 0, 0, 50, 249, 1, 0, 0, 0, 52, 263, 1, 0, 0,
+		0, 54, 266, 1, 0, 0, 0, 56, 272, 1, 0, 0, 0, 58, 274, 1, 0, 0, 0, 60, 291,
+		1, 0, 0, 0, 62, 304, 1, 0, 0, 0, 64, 69, 3, 2, 1, 0, 65, 66, 5, 26, 0,
+		0, 66, 68, 3, 2, 1, 0, 67, 65, 1, 0, 0, 0, 68, 71, 1, 0, 0, 0, 69, 67,
+		1, 0, 0, 0, 69, 70, 1, 0, 0, 0, 70, 72, 1, 0, 0, 0, 71, 69, 1, 0, 0, 0,
+		72, 73, 5, 0, 0, 1, 73, 1, 1, 0, 0, 0, 74, 77, 3, 4, 2, 0, 75, 77, 3, 24,
+		12, 0, 76, 74, 1, 0, 0, 0, 76, 75, 1, 0, 0, 0, 77, 3, 1, 0, 0, 0, 78, 83,
+		3, 6, 3, 0, 79, 83, 3, 18, 9, 0, 80, 83, 3, 20, 10, 0, 81, 83, 3, 22, 11,
+		0, 82, 78, 1, 0, 0, 0, 82, 79, 1, 0, 0, 0, 82, 80, 1, 0, 0, 0, 82, 81,
+		1, 0, 0, 0, 83, 5, 1, 0, 0, 0, 84, 85, 5, 1, 0, 0, 85, 88, 3, 8, 4, 0,
+		86, 88, 3, 8, 4, 0, 87, 84, 1, 0, 0, 0, 87, 86, 1, 0, 0, 0, 88, 7, 1, 0,
+		0, 0, 89, 90, 5, 33, 0, 0, 90, 91, 3, 10, 5, 0, 91, 92, 5, 34, 0, 0, 92,
+		9, 1, 0, 0, 0, 93, 95, 3, 12, 6, 0, 94, 93, 1, 0, 0, 0, 95, 96, 1, 0, 0,
+		0, 96, 94, 1, 0, 0, 0, 96, 97, 1, 0, 0, 0, 97, 11, 1, 0, 0, 0, 98, 103,
+		5, 51, 0, 0, 99, 100, 5, 31, 0, 0, 100, 101, 3, 14, 7, 0, 101, 102, 5,
+		32, 0, 0, 102, 104, 1, 0, 0, 0, 103, 99, 1, 0, 0, 0, 103, 104, 1, 0, 0,
+		0, 104, 109, 1, 0, 0, 0, 105, 106, 5, 33, 0, 0, 106, 107, 3, 10, 5, 0,
+		107, 108, 5, 34, 0, 0, 108, 110, 1, 0, 0, 0, 109, 105, 1, 0, 0, 0, 109,
+		110, 1, 0, 0, 0, 110, 13, 1, 0, 0, 0, 111, 116, 3, 16, 8, 0, 112, 113,
+		5, 28, 0, 0, 113, 115, 3, 16, 8, 0, 114, 112, 1, 0, 0, 0, 115, 118, 1,
+		0, 0, 0, 116, 114, 1, 0, 0, 0, 116, 117, 1, 0, 0, 0, 117, 15, 1, 0, 0,
+		0, 118, 116, 1, 0, 0, 0, 119, 120, 5, 51, 0, 0, 120, 121, 5, 29, 0, 0,
+		121, 122, 3, 56, 28, 0, 122, 17, 1, 0, 0, 0, 123, 126, 5, 2, 0, 0, 124,
+		127, 5, 54, 0, 0, 125, 127, 3, 52, 26, 0, 126, 124, 1, 0, 0, 0, 126, 125,
+		1, 0, 0, 0, 127, 19, 1, 0, 0, 0, 128, 129, 5, 3, 0, 0, 129, 130, 5, 54,
+		0, 0, 130, 21, 1, 0, 0, 0, 131, 132, 5, 4, 0, 0, 132, 23, 1, 0, 0, 0, 133,
+		141, 3, 26, 13, 0, 134, 141, 3, 32, 16, 0, 135, 141, 3, 34, 17, 0, 136,
+		141, 3, 38, 19, 0, 137, 141, 3, 28, 14, 0, 138, 141, 3, 40, 20, 0, 139,
+		141, 3, 42, 21, 0, 140, 133, 1, 0, 0, 0, 140, 134, 1, 0, 0, 0, 140, 135,
+		1, 0, 0, 0, 140, 136, 1, 0, 0, 0, 140, 137, 1, 0, 0, 0, 140, 138, 1, 0,
+		0, 0, 140, 139, 1, 0, 0, 0, 141, 25, 1, 0, 0, 0, 142, 143, 5, 5, 0, 0,
+		143, 144, 5, 33, 0, 0, 144, 149, 3, 30, 15, 0, 145, 146, 5, 28, 0, 0, 146,
+		148, 3, 30, 15, 0, 147, 145, 1, 0, 0, 0, 148, 151, 1, 0, 0, 0, 149, 147,
+		1, 0, 0, 0, 149, 150, 1, 0, 0, 0, 150, 152, 1, 0, 0, 0, 151, 149, 1, 0,
+		0, 0, 152, 153, 5, 34, 0, 0, 153, 27, 1, 0, 0, 0, 154, 155, 5, 6, 0, 0,
+		155, 156, 5, 33, 0, 0, 156, 161, 3, 30, 15, 0, 157, 158, 5, 28, 0, 0, 158,
+		160, 3, 30, 15, 0, 159, 157, 1, 0, 0, 0, 160, 163, 1, 0, 0, 0, 161, 159,
+		1, 0, 0, 0, 161, 162, 1, 0, 0, 0, 162, 164, 1, 0, 0, 0, 163, 161, 1, 0,
+		0, 0, 164, 165, 5, 34, 0, 0, 165, 29, 1, 0, 0, 0, 166, 167, 3, 54, 27,
+		0, 167, 168, 5, 29, 0, 0, 168, 169, 3, 44, 22, 0, 169, 31, 1, 0, 0, 0,
+		170, 171, 5, 7, 0, 0, 171, 172, 3, 44, 22, 0, 172, 33, 1, 0, 0, 0, 173,
+		174, 5, 8, 0, 0, 174, 179, 3, 36, 18, 0, 175, 176, 5, 31, 0, 0, 176, 177,
+		3, 44, 22, 0, 177, 178, 5, 32, 0, 0, 178, 180, 1, 0, 0, 0, 179, 175, 1,
+		0, 0, 0, 179, 180, 1, 0, 0, 0, 180, 35, 1, 0, 0, 0, 181, 182, 7, 0, 0,
+		0, 182, 37, 1, 0, 0, 0, 183, 184, 5, 9, 0, 0, 184, 186, 3, 44, 22, 0, 185,
+		187, 7, 1, 0, 0, 186, 185, 1, 0, 0, 0, 186, 187, 1, 0, 0, 0, 187, 39, 1,
+		0, 0, 0, 188, 189, 5, 10, 0, 0, 189, 190, 5, 53, 0, 0, 190, 41, 1, 0, 0,
+		0, 191, 193, 5, 11, 0, 0, 192, 194, 3, 44, 22, 0, 193, 192, 1, 0, 0, 0,
+		193, 194, 1, 0, 0, 0, 194, 43, 1, 0, 0, 0, 195, 196, 6, 22, -1, 0, 196,
+		197, 7, 2, 0, 0, 197, 207, 3, 44, 22, 11, 198, 199, 5, 31, 0, 0, 199, 200,
+		3, 44, 22, 0, 200, 201, 5, 32, 0, 0, 201, 207, 1, 0, 0, 0, 202, 207, 3,
+		50, 25, 0, 203, 207, 3, 46, 23, 0, 204, 207, 3, 52, 26, 0, 205, 207, 3,
+		62, 31, 0, 206, 195, 1, 0, 0, 0, 206, 198, 1, 0, 0, 0, 206, 202, 1, 0,
+		0, 0, 206, 203, 1, 0, 0, 0, 206, 204, 1, 0, 0, 0, 206, 205, 1, 0, 0, 0,
+		207, 225, 1, 0, 0, 0, 208, 209, 10, 10, 0, 0, 209, 210, 7, 3, 0, 0, 210,
+		224, 3, 44, 22, 11, 211, 212, 10, 9, 0, 0, 212, 213, 7, 4, 0, 0, 213, 224,
+		3, 44, 22, 10, 214, 215, 10, 8, 0, 0, 215, 216, 7, 5, 0, 0, 216, 224, 3,
+		44, 22, 9, 217, 218, 10, 7, 0, 0, 218, 219, 5, 38, 0, 0, 219, 224, 3, 44,
+		22, 8, 220, 221, 10, 6, 0, 0, 221, 222, 5, 37, 0, 0, 222, 224, 3, 44, 22,
+		7, 223, 208, 1, 0, 0, 0, 223, 211, 1, 0, 0, 0, 223, 214, 1, 0, 0, 0, 223,
+		217, 1, 0, 0, 0, 223, 220, 1, 0, 0, 0, 224, 227, 1, 0, 0, 0, 225, 223,
+		1, 0, 0, 0, 225, 226, 1, 0, 0, 0, 226, 45, 1, 0, 0, 0, 227, 225, 1, 0,
+		0, 0, 228, 232, 5, 27, 0, 0, 229, 233, 3, 54, 27, 0, 230, 231, 5, 35, 0,
+		0, 231, 233, 5, 36, 0, 0, 232, 229, 1, 0, 0, 0, 232, 230, 1, 0, 0, 0, 233,
+		237, 1, 0, 0, 0, 234, 236, 3, 48, 24, 0, 235, 234, 1, 0, 0, 0, 236, 239,
+		1, 0, 0, 0, 237, 235, 1, 0, 0, 0, 237, 238, 1, 0, 0, 0, 238, 242, 1, 0,
+		0, 0, 239, 237, 1, 0, 0, 0, 240, 242, 5, 27, 0, 0, 241, 228, 1, 0, 0, 0,
+		241, 240, 1, 0, 0, 0, 242, 47, 1, 0, 0, 0, 243, 244, 5, 27, 0, 0, 244,
+		248, 3, 54, 27, 0, 245, 246, 5, 35, 0, 0, 246, 248, 5, 36, 0, 0, 247, 243,
+		1, 0, 0, 0, 247, 245, 1, 0, 0, 0, 248, 49, 1, 0, 0, 0, 249, 250, 5, 51,
+		0, 0, 250, 259, 5, 31, 0, 0, 251, 256, 3, 44, 22, 0, 252, 253, 5, 28, 0,
+		0, 253, 255, 3, 44, 22, 0, 254, 252, 1, 0, 0, 0, 255, 258, 1, 0, 0, 0,
+		256, 254, 1, 0, 0, 0, 256, 257, 1, 0, 0, 0, 257, 260, 1, 0, 0, 0, 258,
+		256, 1, 0, 0, 0, 259, 251, 1, 0, 0, 0, 259, 260, 1, 0, 0, 0, 260, 261,
+		1, 0, 0, 0, 261, 262, 5, 32, 0, 0, 262, 51, 1, 0, 0, 0, 263, 264, 5, 30,
+		0, 0, 264, 265, 5, 51, 0, 0, 265, 53, 1, 0, 0, 0, 266, 267, 7, 6, 0, 0,
+		267, 55, 1, 0, 0, 0, 268, 273, 3, 52, 26, 0, 269, 273, 3, 62, 31, 0, 270,
+		273, 3, 60, 30, 0, 271, 273, 3, 58, 29, 0, 272, 268, 1, 0, 0, 0, 272, 269,
+		1, 0, 0, 0, 272, 270, 1, 0, 0, 0, 272, 271, 1, 0, 0, 0, 273, 57, 1, 0,
+		0, 0, 274, 287, 5, 33, 0, 0, 275, 276, 5, 51, 0, 0, 276, 277, 5, 29, 0,
+		0, 277, 284, 3, 56, 28, 0, 278, 279, 5, 28, 0, 0, 279, 280, 5, 51, 0, 0,
+		280, 281, 5, 29, 0, 0, 281, 283, 3, 56, 28, 0, 282, 278, 1, 0, 0, 0, 283,
+		286, 1, 0, 0, 0, 284, 282, 1, 0, 0, 0, 284, 285, 1, 0, 0, 0, 285, 288,
+		1, 0, 0, 0, 286, 284, 1, 0, 0, 0, 287, 275, 1, 0, 0, 0, 287, 288, 1, 0,
+		0, 0, 288, 289, 1, 0, 0, 0, 289, 290, 5, 34, 0, 0, 290, 59, 1, 0, 0, 0,
+		291, 300, 5, 35, 0, 0, 292, 297, 3, 56, 28, 0, 293, 294, 5, 28, 0, 0, 294,
+		296, 3, 56, 28, 0, 295, 293, 1, 0, 0, 0, 296, 299, 1, 0, 0, 0, 297, 295,
+		1, 0, 0, 0, 297, 298, 1, 0, 0, 0, 298, 301, 1, 0, 0, 0, 299, 297, 1, 0,
+		0, 0, 300, 292, 1, 0, 0, 0, 300, 301, 1, 0, 0, 0, 301, 302, 1, 0, 0, 0,
+		302, 303, 5, 36, 0, 0, 303, 61, 1, 0, 0, 0, 304, 305, 7, 7, 0, 0, 305,
+		63, 1, 0, 0, 0, 29, 69, 76, 82, 87, 96, 103, 109, 116, 126, 140, 149, 161,
+		179, 186, 193, 206, 223, 225, 232, 237, 241, 247, 256, 259, 272, 284, 287,
+		297, 300,
 	}
 	deserializer := antlr.NewATNDeserializer(nil)
 	staticData.atn = deserializer.Deserialize(staticData.serializedATN)
@@ -315,10 +318,11 @@ const (
 	cirqlParserRULE_pathSeg        = 24
 	cirqlParserRULE_funcCall       = 25
 	cirqlParserRULE_variable       = 26
-	cirqlParserRULE_argValue       = 27
-	cirqlParserRULE_objectLit      = 28
-	cirqlParserRULE_listLit        = 29
-	cirqlParserRULE_literal        = 30
+	cirqlParserRULE_fieldName      = 27
+	cirqlParserRULE_argValue       = 28
+	cirqlParserRULE_objectLit      = 29
+	cirqlParserRULE_listLit        = 30
+	cirqlParserRULE_literal        = 31
 )
 
 // IPipelineContext is an interface to support dynamic dispatch.
@@ -356,7 +360,7 @@ func InitEmptyPipelineContext(p *PipelineContext) {
 	p.RuleIndex = cirqlParserRULE_pipeline
 }
 
-func (PipelineContext) IsPipelineContext() {}
+func (*PipelineContext) IsPipelineContext() {}
 
 func NewPipelineContext(parser antlr.Parser, parent antlr.ParserRuleContext, invokingState int) *PipelineContext {
 	var p = new(PipelineContext)
@@ -369,7 +373,7 @@ func NewPipelineContext(parser antlr.Parser, parent antlr.ParserRuleContext, inv
 	return p
 }
 
-func (s PipelineContext) GetParser() antlr.Parser { return s.parser }
+func (s *PipelineContext) GetParser() antlr.Parser { return s.parser }
 
 func (s *PipelineContext) AllStage() []IStageContext {
 	children := s.GetChildren()
@@ -451,10 +455,10 @@ func (p *cirqlParser) Pipeline() (localctx IPipelineContext) {
 
 	p.EnterOuterAlt(localctx, 1)
 	{
-		p.SetState(62)
+		p.SetState(64)
 		p.Stage()
 	}
-	p.SetState(67)
+	p.SetState(69)
 	p.GetErrorHandler().Sync(p)
 	if p.HasError() {
 		goto errorExit
@@ -462,7 +466,7 @@ func (p *cirqlParser) Pipeline() (localctx IPipelineContext) {
 	_la = p.GetTokenStream().LA(1)
 	for _la == cirqlParserPIPE {
 		{
-			p.SetState(63)
+			p.SetState(65)
 			p.Match(cirqlParserPIPE)
 			if p.HasError() {
 				// Recognition error - abort rule
@@ -470,11 +474,11 @@ func (p *cirqlParser) Pipeline() (localctx IPipelineContext) {
 			}
 		}
 		{
-			p.SetState(64)
+			p.SetState(66)
 			p.Stage()
 		}
 
-		p.SetState(69)
+		p.SetState(71)
 		p.GetErrorHandler().Sync(p)
 		if p.HasError() {
 			goto errorExit
@@ -482,7 +486,7 @@ func (p *cirqlParser) Pipeline() (localctx IPipelineContext) {
 		_la = p.GetTokenStream().LA(1)
 	}
 	{
-		p.SetState(70)
+		p.SetState(72)
 		p.Match(cirqlParserEOF)
 		if p.HasError() {
 			// Recognition error - abort rule
@@ -534,7 +538,7 @@ func InitEmptyStageContext(p *StageContext) {
 	p.RuleIndex = cirqlParserRULE_stage
 }
 
-func (StageContext) IsStageContext() {}
+func (*StageContext) IsStageContext() {}
 
 func NewStageContext(parser antlr.Parser, parent antlr.ParserRuleContext, invokingState int) *StageContext {
 	var p = new(StageContext)
@@ -547,7 +551,7 @@ func NewStageContext(parser antlr.Parser, parent antlr.ParserRuleContext, invoki
 	return p
 }
 
-func (s StageContext) GetParser() antlr.Parser { return s.parser }
+func (s *StageContext) GetParser() antlr.Parser { return s.parser }
 
 func (s *StageContext) SourceStage() ISourceStageContext {
 	var t antlr.RuleContext
@@ -604,7 +608,7 @@ func (s *StageContext) ExitRule(listener antlr.ParseTreeListener) {
 func (p *cirqlParser) Stage() (localctx IStageContext) {
 	localctx = NewStageContext(p, p.GetParserRuleContext(), p.GetState())
 	p.EnterRule(localctx, 2, cirqlParserRULE_stage)
-	p.SetState(74)
+	p.SetState(76)
 	p.GetErrorHandler().Sync(p)
 	if p.HasError() {
 		goto errorExit
@@ -614,14 +618,14 @@ func (p *cirqlParser) Stage() (localctx IStageContext) {
 	case cirqlParserQUERY, cirqlParserHTTP, cirqlParserFILE, cirqlParserSTDIN, cirqlParserLBRACE:
 		p.EnterOuterAlt(localctx, 1)
 		{
-			p.SetState(72)
+			p.SetState(74)
 			p.SourceStage()
 		}
 
 	case cirqlParserMAP, cirqlParserFLATMAP, cirqlParserFILTER, cirqlParserREDUCE, cirqlParserSORT, cirqlParserLIMIT, cirqlParserUNIQ:
 		p.EnterOuterAlt(localctx, 2)
 		{
-			p.SetState(73)
+			p.SetState(75)
 			p.TransformStage()
 		}
 
@@ -676,7 +680,7 @@ func InitEmptySourceStageContext(p *SourceStageContext) {
 	p.RuleIndex = cirqlParserRULE_sourceStage
 }
 
-func (SourceStageContext) IsSourceStageContext() {}
+func (*SourceStageContext) IsSourceStageContext() {}
 
 func NewSourceStageContext(parser antlr.Parser, parent antlr.ParserRuleContext, invokingState int) *SourceStageContext {
 	var p = new(SourceStageContext)
@@ -689,7 +693,7 @@ func NewSourceStageContext(parser antlr.Parser, parent antlr.ParserRuleContext, 
 	return p
 }
 
-func (s SourceStageContext) GetParser() antlr.Parser { return s.parser }
+func (s *SourceStageContext) GetParser() antlr.Parser { return s.parser }
 
 func (s *SourceStageContext) QueryStage() IQueryStageContext {
 	var t antlr.RuleContext
@@ -778,7 +782,7 @@ func (s *SourceStageContext) ExitRule(listener antlr.ParseTreeListener) {
 func (p *cirqlParser) SourceStage() (localctx ISourceStageContext) {
 	localctx = NewSourceStageContext(p, p.GetParserRuleContext(), p.GetState())
 	p.EnterRule(localctx, 4, cirqlParserRULE_sourceStage)
-	p.SetState(80)
+	p.SetState(82)
 	p.GetErrorHandler().Sync(p)
 	if p.HasError() {
 		goto errorExit
@@ -788,28 +792,28 @@ func (p *cirqlParser) SourceStage() (localctx ISourceStageContext) {
 	case cirqlParserQUERY, cirqlParserLBRACE:
 		p.EnterOuterAlt(localctx, 1)
 		{
-			p.SetState(76)
+			p.SetState(78)
 			p.QueryStage()
 		}
 
 	case cirqlParserHTTP:
 		p.EnterOuterAlt(localctx, 2)
 		{
-			p.SetState(77)
+			p.SetState(79)
 			p.HttpStage()
 		}
 
 	case cirqlParserFILE:
 		p.EnterOuterAlt(localctx, 3)
 		{
-			p.SetState(78)
+			p.SetState(80)
 			p.FileStage()
 		}
 
 	case cirqlParserSTDIN:
 		p.EnterOuterAlt(localctx, 4)
 		{
-			p.SetState(79)
+			p.SetState(81)
 			p.StdinStage()
 		}
 
@@ -862,7 +866,7 @@ func InitEmptyQueryStageContext(p *QueryStageContext) {
 	p.RuleIndex = cirqlParserRULE_queryStage
 }
 
-func (QueryStageContext) IsQueryStageContext() {}
+func (*QueryStageContext) IsQueryStageContext() {}
 
 func NewQueryStageContext(parser antlr.Parser, parent antlr.ParserRuleContext, invokingState int) *QueryStageContext {
 	var p = new(QueryStageContext)
@@ -875,7 +879,7 @@ func NewQueryStageContext(parser antlr.Parser, parent antlr.ParserRuleContext, i
 	return p
 }
 
-func (s QueryStageContext) GetParser() antlr.Parser { return s.parser }
+func (s *QueryStageContext) GetParser() antlr.Parser { return s.parser }
 
 func (s *QueryStageContext) QUERY() antlr.TerminalNode {
 	return s.GetToken(cirqlParserQUERY, 0)
@@ -920,7 +924,7 @@ func (s *QueryStageContext) ExitRule(listener antlr.ParseTreeListener) {
 func (p *cirqlParser) QueryStage() (localctx IQueryStageContext) {
 	localctx = NewQueryStageContext(p, p.GetParserRuleContext(), p.GetState())
 	p.EnterRule(localctx, 6, cirqlParserRULE_queryStage)
-	p.SetState(85)
+	p.SetState(87)
 	p.GetErrorHandler().Sync(p)
 	if p.HasError() {
 		goto errorExit
@@ -930,7 +934,7 @@ func (p *cirqlParser) QueryStage() (localctx IQueryStageContext) {
 	case cirqlParserQUERY:
 		p.EnterOuterAlt(localctx, 1)
 		{
-			p.SetState(82)
+			p.SetState(84)
 			p.Match(cirqlParserQUERY)
 			if p.HasError() {
 				// Recognition error - abort rule
@@ -938,14 +942,14 @@ func (p *cirqlParser) QueryStage() (localctx IQueryStageContext) {
 			}
 		}
 		{
-			p.SetState(83)
+			p.SetState(85)
 			p.QueryBody()
 		}
 
 	case cirqlParserLBRACE:
 		p.EnterOuterAlt(localctx, 2)
 		{
-			p.SetState(84)
+			p.SetState(86)
 			p.QueryBody()
 		}
 
@@ -999,7 +1003,7 @@ func InitEmptyQueryBodyContext(p *QueryBodyContext) {
 	p.RuleIndex = cirqlParserRULE_queryBody
 }
 
-func (QueryBodyContext) IsQueryBodyContext() {}
+func (*QueryBodyContext) IsQueryBodyContext() {}
 
 func NewQueryBodyContext(parser antlr.Parser, parent antlr.ParserRuleContext, invokingState int) *QueryBodyContext {
 	var p = new(QueryBodyContext)
@@ -1012,7 +1016,7 @@ func NewQueryBodyContext(parser antlr.Parser, parent antlr.ParserRuleContext, in
 	return p
 }
 
-func (s QueryBodyContext) GetParser() antlr.Parser { return s.parser }
+func (s *QueryBodyContext) GetParser() antlr.Parser { return s.parser }
 
 func (s *QueryBodyContext) LBRACE() antlr.TerminalNode {
 	return s.GetToken(cirqlParserLBRACE, 0)
@@ -1063,7 +1067,7 @@ func (p *cirqlParser) QueryBody() (localctx IQueryBodyContext) {
 	p.EnterRule(localctx, 8, cirqlParserRULE_queryBody)
 	p.EnterOuterAlt(localctx, 1)
 	{
-		p.SetState(87)
+		p.SetState(89)
 		p.Match(cirqlParserLBRACE)
 		if p.HasError() {
 			// Recognition error - abort rule
@@ -1071,11 +1075,11 @@ func (p *cirqlParser) QueryBody() (localctx IQueryBodyContext) {
 		}
 	}
 	{
-		p.SetState(88)
+		p.SetState(90)
 		p.SelectionSet()
 	}
 	{
-		p.SetState(89)
+		p.SetState(91)
 		p.Match(cirqlParserRBRACE)
 		if p.HasError() {
 			// Recognition error - abort rule
@@ -1127,7 +1131,7 @@ func InitEmptySelectionSetContext(p *SelectionSetContext) {
 	p.RuleIndex = cirqlParserRULE_selectionSet
 }
 
-func (SelectionSetContext) IsSelectionSetContext() {}
+func (*SelectionSetContext) IsSelectionSetContext() {}
 
 func NewSelectionSetContext(parser antlr.Parser, parent antlr.ParserRuleContext, invokingState int) *SelectionSetContext {
 	var p = new(SelectionSetContext)
@@ -1140,7 +1144,7 @@ func NewSelectionSetContext(parser antlr.Parser, parent antlr.ParserRuleContext,
 	return p
 }
 
-func (s SelectionSetContext) GetParser() antlr.Parser { return s.parser }
+func (s *SelectionSetContext) GetParser() antlr.Parser { return s.parser }
 
 func (s *SelectionSetContext) AllField() []IFieldContext {
 	children := s.GetChildren()
@@ -1209,18 +1213,18 @@ func (p *cirqlParser) SelectionSet() (localctx ISelectionSetContext) {
 	var _la int
 
 	p.EnterOuterAlt(localctx, 1)
-	p.SetState(92)
+	p.SetState(94)
 	p.GetErrorHandler().Sync(p)
 	if p.HasError() {
 		goto errorExit
 	}
 	for ok := true; ok; ok = _la == cirqlParserNAME {
 		{
-			p.SetState(91)
+			p.SetState(93)
 			p.Field()
 		}
 
-		p.SetState(94)
+		p.SetState(96)
 		p.GetErrorHandler().Sync(p)
 		if p.HasError() {
 			goto errorExit
@@ -1277,7 +1281,7 @@ func InitEmptyFieldContext(p *FieldContext) {
 	p.RuleIndex = cirqlParserRULE_field
 }
 
-func (FieldContext) IsFieldContext() {}
+func (*FieldContext) IsFieldContext() {}
 
 func NewFieldContext(parser antlr.Parser, parent antlr.ParserRuleContext, invokingState int) *FieldContext {
 	var p = new(FieldContext)
@@ -1290,7 +1294,7 @@ func NewFieldContext(parser antlr.Parser, parent antlr.ParserRuleContext, invoki
 	return p
 }
 
-func (s FieldContext) GetParser() antlr.Parser { return s.parser }
+func (s *FieldContext) GetParser() antlr.Parser { return s.parser }
 
 func (s *FieldContext) NAME() antlr.TerminalNode {
 	return s.GetToken(cirqlParserNAME, 0)
@@ -1371,14 +1375,14 @@ func (p *cirqlParser) Field() (localctx IFieldContext) {
 
 	p.EnterOuterAlt(localctx, 1)
 	{
-		p.SetState(96)
+		p.SetState(98)
 		p.Match(cirqlParserNAME)
 		if p.HasError() {
 			// Recognition error - abort rule
 			goto errorExit
 		}
 	}
-	p.SetState(101)
+	p.SetState(103)
 	p.GetErrorHandler().Sync(p)
 	if p.HasError() {
 		goto errorExit
@@ -1386,7 +1390,7 @@ func (p *cirqlParser) Field() (localctx IFieldContext) {
 	_la = p.GetTokenStream().LA(1)
 	if _la == cirqlParserLPAREN {
 		{
-			p.SetState(97)
+			p.SetState(99)
 			p.Match(cirqlParserLPAREN)
 			if p.HasError() {
 				// Recognition error - abort rule
@@ -1394,11 +1398,11 @@ func (p *cirqlParser) Field() (localctx IFieldContext) {
 			}
 		}
 		{
-			p.SetState(98)
+			p.SetState(100)
 			p.Arguments()
 		}
 		{
-			p.SetState(99)
+			p.SetState(101)
 			p.Match(cirqlParserRPAREN)
 			if p.HasError() {
 				// Recognition error - abort rule
@@ -1407,7 +1411,7 @@ func (p *cirqlParser) Field() (localctx IFieldContext) {
 		}
 
 	}
-	p.SetState(107)
+	p.SetState(109)
 	p.GetErrorHandler().Sync(p)
 	if p.HasError() {
 		goto errorExit
@@ -1415,7 +1419,7 @@ func (p *cirqlParser) Field() (localctx IFieldContext) {
 	_la = p.GetTokenStream().LA(1)
 	if _la == cirqlParserLBRACE {
 		{
-			p.SetState(103)
+			p.SetState(105)
 			p.Match(cirqlParserLBRACE)
 			if p.HasError() {
 				// Recognition error - abort rule
@@ -1423,11 +1427,11 @@ func (p *cirqlParser) Field() (localctx IFieldContext) {
 			}
 		}
 		{
-			p.SetState(104)
+			p.SetState(106)
 			p.SelectionSet()
 		}
 		{
-			p.SetState(105)
+			p.SetState(107)
 			p.Match(cirqlParserRBRACE)
 			if p.HasError() {
 				// Recognition error - abort rule
@@ -1483,7 +1487,7 @@ func InitEmptyArgumentsContext(p *ArgumentsContext) {
 	p.RuleIndex = cirqlParserRULE_arguments
 }
 
-func (ArgumentsContext) IsArgumentsContext() {}
+func (*ArgumentsContext) IsArgumentsContext() {}
 
 func NewArgumentsContext(parser antlr.Parser, parent antlr.ParserRuleContext, invokingState int) *ArgumentsContext {
 	var p = new(ArgumentsContext)
@@ -1496,7 +1500,7 @@ func NewArgumentsContext(parser antlr.Parser, parent antlr.ParserRuleContext, in
 	return p
 }
 
-func (s ArgumentsContext) GetParser() antlr.Parser { return s.parser }
+func (s *ArgumentsContext) GetParser() antlr.Parser { return s.parser }
 
 func (s *ArgumentsContext) AllArgument() []IArgumentContext {
 	children := s.GetChildren()
@@ -1574,10 +1578,10 @@ func (p *cirqlParser) Arguments() (localctx IArgumentsContext) {
 
 	p.EnterOuterAlt(localctx, 1)
 	{
-		p.SetState(109)
+		p.SetState(111)
 		p.Argument()
 	}
-	p.SetState(114)
+	p.SetState(116)
 	p.GetErrorHandler().Sync(p)
 	if p.HasError() {
 		goto errorExit
@@ -1585,7 +1589,7 @@ func (p *cirqlParser) Arguments() (localctx IArgumentsContext) {
 	_la = p.GetTokenStream().LA(1)
 	for _la == cirqlParserCOMMA {
 		{
-			p.SetState(110)
+			p.SetState(112)
 			p.Match(cirqlParserCOMMA)
 			if p.HasError() {
 				// Recognition error - abort rule
@@ -1593,11 +1597,11 @@ func (p *cirqlParser) Arguments() (localctx IArgumentsContext) {
 			}
 		}
 		{
-			p.SetState(111)
+			p.SetState(113)
 			p.Argument()
 		}
 
-		p.SetState(116)
+		p.SetState(118)
 		p.GetErrorHandler().Sync(p)
 		if p.HasError() {
 			goto errorExit
@@ -1650,7 +1654,7 @@ func InitEmptyArgumentContext(p *ArgumentContext) {
 	p.RuleIndex = cirqlParserRULE_argument
 }
 
-func (ArgumentContext) IsArgumentContext() {}
+func (*ArgumentContext) IsArgumentContext() {}
 
 func NewArgumentContext(parser antlr.Parser, parent antlr.ParserRuleContext, invokingState int) *ArgumentContext {
 	var p = new(ArgumentContext)
@@ -1663,7 +1667,7 @@ func NewArgumentContext(parser antlr.Parser, parent antlr.ParserRuleContext, inv
 	return p
 }
 
-func (s ArgumentContext) GetParser() antlr.Parser { return s.parser }
+func (s *ArgumentContext) GetParser() antlr.Parser { return s.parser }
 
 func (s *ArgumentContext) NAME() antlr.TerminalNode {
 	return s.GetToken(cirqlParserNAME, 0)
@@ -1714,7 +1718,7 @@ func (p *cirqlParser) Argument() (localctx IArgumentContext) {
 	p.EnterRule(localctx, 16, cirqlParserRULE_argument)
 	p.EnterOuterAlt(localctx, 1)
 	{
-		p.SetState(117)
+		p.SetState(119)
 		p.Match(cirqlParserNAME)
 		if p.HasError() {
 			// Recognition error - abort rule
@@ -1722,7 +1726,7 @@ func (p *cirqlParser) Argument() (localctx IArgumentContext) {
 		}
 	}
 	{
-		p.SetState(118)
+		p.SetState(120)
 		p.Match(cirqlParserCOLON)
 		if p.HasError() {
 			// Recognition error - abort rule
@@ -1730,7 +1734,7 @@ func (p *cirqlParser) Argument() (localctx IArgumentContext) {
 		}
 	}
 	{
-		p.SetState(119)
+		p.SetState(121)
 		p.ArgValue()
 	}
 
@@ -1779,7 +1783,7 @@ func InitEmptyHttpStageContext(p *HttpStageContext) {
 	p.RuleIndex = cirqlParserRULE_httpStage
 }
 
-func (HttpStageContext) IsHttpStageContext() {}
+func (*HttpStageContext) IsHttpStageContext() {}
 
 func NewHttpStageContext(parser antlr.Parser, parent antlr.ParserRuleContext, invokingState int) *HttpStageContext {
 	var p = new(HttpStageContext)
@@ -1792,7 +1796,7 @@ func NewHttpStageContext(parser antlr.Parser, parent antlr.ParserRuleContext, in
 	return p
 }
 
-func (s HttpStageContext) GetParser() antlr.Parser { return s.parser }
+func (s *HttpStageContext) GetParser() antlr.Parser { return s.parser }
 
 func (s *HttpStageContext) HTTP() antlr.TerminalNode {
 	return s.GetToken(cirqlParserHTTP, 0)
@@ -1843,14 +1847,14 @@ func (p *cirqlParser) HttpStage() (localctx IHttpStageContext) {
 	p.EnterRule(localctx, 18, cirqlParserRULE_httpStage)
 	p.EnterOuterAlt(localctx, 1)
 	{
-		p.SetState(121)
+		p.SetState(123)
 		p.Match(cirqlParserHTTP)
 		if p.HasError() {
 			// Recognition error - abort rule
 			goto errorExit
 		}
 	}
-	p.SetState(124)
+	p.SetState(126)
 	p.GetErrorHandler().Sync(p)
 	if p.HasError() {
 		goto errorExit
@@ -1859,7 +1863,7 @@ func (p *cirqlParser) HttpStage() (localctx IHttpStageContext) {
 	switch p.GetTokenStream().LA(1) {
 	case cirqlParserSTRING:
 		{
-			p.SetState(122)
+			p.SetState(124)
 			p.Match(cirqlParserSTRING)
 			if p.HasError() {
 				// Recognition error - abort rule
@@ -1869,7 +1873,7 @@ func (p *cirqlParser) HttpStage() (localctx IHttpStageContext) {
 
 	case cirqlParserDOLLAR:
 		{
-			p.SetState(123)
+			p.SetState(125)
 			p.Variable()
 		}
 
@@ -1922,7 +1926,7 @@ func InitEmptyFileStageContext(p *FileStageContext) {
 	p.RuleIndex = cirqlParserRULE_fileStage
 }
 
-func (FileStageContext) IsFileStageContext() {}
+func (*FileStageContext) IsFileStageContext() {}
 
 func NewFileStageContext(parser antlr.Parser, parent antlr.ParserRuleContext, invokingState int) *FileStageContext {
 	var p = new(FileStageContext)
@@ -1935,7 +1939,7 @@ func NewFileStageContext(parser antlr.Parser, parent antlr.ParserRuleContext, in
 	return p
 }
 
-func (s FileStageContext) GetParser() antlr.Parser { return s.parser }
+func (s *FileStageContext) GetParser() antlr.Parser { return s.parser }
 
 func (s *FileStageContext) FILE() antlr.TerminalNode {
 	return s.GetToken(cirqlParserFILE, 0)
@@ -1970,7 +1974,7 @@ func (p *cirqlParser) FileStage() (localctx IFileStageContext) {
 	p.EnterRule(localctx, 20, cirqlParserRULE_fileStage)
 	p.EnterOuterAlt(localctx, 1)
 	{
-		p.SetState(126)
+		p.SetState(128)
 		p.Match(cirqlParserFILE)
 		if p.HasError() {
 			// Recognition error - abort rule
@@ -1978,7 +1982,7 @@ func (p *cirqlParser) FileStage() (localctx IFileStageContext) {
 		}
 	}
 	{
-		p.SetState(127)
+		p.SetState(129)
 		p.Match(cirqlParserSTRING)
 		if p.HasError() {
 			// Recognition error - abort rule
@@ -2029,7 +2033,7 @@ func InitEmptyStdinStageContext(p *StdinStageContext) {
 	p.RuleIndex = cirqlParserRULE_stdinStage
 }
 
-func (StdinStageContext) IsStdinStageContext() {}
+func (*StdinStageContext) IsStdinStageContext() {}
 
 func NewStdinStageContext(parser antlr.Parser, parent antlr.ParserRuleContext, invokingState int) *StdinStageContext {
 	var p = new(StdinStageContext)
@@ -2042,7 +2046,7 @@ func NewStdinStageContext(parser antlr.Parser, parent antlr.ParserRuleContext, i
 	return p
 }
 
-func (s StdinStageContext) GetParser() antlr.Parser { return s.parser }
+func (s *StdinStageContext) GetParser() antlr.Parser { return s.parser }
 
 func (s *StdinStageContext) STDIN() antlr.TerminalNode {
 	return s.GetToken(cirqlParserSTDIN, 0)
@@ -2073,7 +2077,7 @@ func (p *cirqlParser) StdinStage() (localctx IStdinStageContext) {
 	p.EnterRule(localctx, 22, cirqlParserRULE_stdinStage)
 	p.EnterOuterAlt(localctx, 1)
 	{
-		p.SetState(129)
+		p.SetState(131)
 		p.Match(cirqlParserSTDIN)
 		if p.HasError() {
 			// Recognition error - abort rule
@@ -2130,7 +2134,7 @@ func InitEmptyTransformStageContext(p *TransformStageContext) {
 	p.RuleIndex = cirqlParserRULE_transformStage
 }
 
-func (TransformStageContext) IsTransformStageContext() {}
+func (*TransformStageContext) IsTransformStageContext() {}
 
 func NewTransformStageContext(parser antlr.Parser, parent antlr.ParserRuleContext, invokingState int) *TransformStageContext {
 	var p = new(TransformStageContext)
@@ -2143,7 +2147,7 @@ func NewTransformStageContext(parser antlr.Parser, parent antlr.ParserRuleContex
 	return p
 }
 
-func (s TransformStageContext) GetParser() antlr.Parser { return s.parser }
+func (s *TransformStageContext) GetParser() antlr.Parser { return s.parser }
 
 func (s *TransformStageContext) MapStage() IMapStageContext {
 	var t antlr.RuleContext
@@ -2280,7 +2284,7 @@ func (s *TransformStageContext) ExitRule(listener antlr.ParseTreeListener) {
 func (p *cirqlParser) TransformStage() (localctx ITransformStageContext) {
 	localctx = NewTransformStageContext(p, p.GetParserRuleContext(), p.GetState())
 	p.EnterRule(localctx, 24, cirqlParserRULE_transformStage)
-	p.SetState(138)
+	p.SetState(140)
 	p.GetErrorHandler().Sync(p)
 	if p.HasError() {
 		goto errorExit
@@ -2290,49 +2294,49 @@ func (p *cirqlParser) TransformStage() (localctx ITransformStageContext) {
 	case cirqlParserMAP:
 		p.EnterOuterAlt(localctx, 1)
 		{
-			p.SetState(131)
+			p.SetState(133)
 			p.MapStage()
 		}
 
 	case cirqlParserFILTER:
 		p.EnterOuterAlt(localctx, 2)
 		{
-			p.SetState(132)
+			p.SetState(134)
 			p.FilterStage()
 		}
 
 	case cirqlParserREDUCE:
 		p.EnterOuterAlt(localctx, 3)
 		{
-			p.SetState(133)
+			p.SetState(135)
 			p.ReduceStage()
 		}
 
 	case cirqlParserSORT:
 		p.EnterOuterAlt(localctx, 4)
 		{
-			p.SetState(134)
+			p.SetState(136)
 			p.SortStage()
 		}
 
 	case cirqlParserFLATMAP:
 		p.EnterOuterAlt(localctx, 5)
 		{
-			p.SetState(135)
+			p.SetState(137)
 			p.FlatMapStage()
 		}
 
 	case cirqlParserLIMIT:
 		p.EnterOuterAlt(localctx, 6)
 		{
-			p.SetState(136)
+			p.SetState(138)
 			p.LimitStage()
 		}
 
 	case cirqlParserUNIQ:
 		p.EnterOuterAlt(localctx, 7)
 		{
-			p.SetState(137)
+			p.SetState(139)
 			p.UniqStage()
 		}
 
@@ -2390,7 +2394,7 @@ func InitEmptyMapStageContext(p *MapStageContext) {
 	p.RuleIndex = cirqlParserRULE_mapStage
 }
 
-func (MapStageContext) IsMapStageContext() {}
+func (*MapStageContext) IsMapStageContext() {}
 
 func NewMapStageContext(parser antlr.Parser, parent antlr.ParserRuleContext, invokingState int) *MapStageContext {
 	var p = new(MapStageContext)
@@ -2403,7 +2407,7 @@ func NewMapStageContext(parser antlr.Parser, parent antlr.ParserRuleContext, inv
 	return p
 }
 
-func (s MapStageContext) GetParser() antlr.Parser { return s.parser }
+func (s *MapStageContext) GetParser() antlr.Parser { return s.parser }
 
 func (s *MapStageContext) MAP() antlr.TerminalNode {
 	return s.GetToken(cirqlParserMAP, 0)
@@ -2493,7 +2497,7 @@ func (p *cirqlParser) MapStage() (localctx IMapStageContext) {
 
 	p.EnterOuterAlt(localctx, 1)
 	{
-		p.SetState(140)
+		p.SetState(142)
 		p.Match(cirqlParserMAP)
 		if p.HasError() {
 			// Recognition error - abort rule
@@ -2501,7 +2505,7 @@ func (p *cirqlParser) MapStage() (localctx IMapStageContext) {
 		}
 	}
 	{
-		p.SetState(141)
+		p.SetState(143)
 		p.Match(cirqlParserLBRACE)
 		if p.HasError() {
 			// Recognition error - abort rule
@@ -2509,10 +2513,10 @@ func (p *cirqlParser) MapStage() (localctx IMapStageContext) {
 		}
 	}
 	{
-		p.SetState(142)
+		p.SetState(144)
 		p.Mapping()
 	}
-	p.SetState(147)
+	p.SetState(149)
 	p.GetErrorHandler().Sync(p)
 	if p.HasError() {
 		goto errorExit
@@ -2520,7 +2524,7 @@ func (p *cirqlParser) MapStage() (localctx IMapStageContext) {
 	_la = p.GetTokenStream().LA(1)
 	for _la == cirqlParserCOMMA {
 		{
-			p.SetState(143)
+			p.SetState(145)
 			p.Match(cirqlParserCOMMA)
 			if p.HasError() {
 				// Recognition error - abort rule
@@ -2528,11 +2532,11 @@ func (p *cirqlParser) MapStage() (localctx IMapStageContext) {
 			}
 		}
 		{
-			p.SetState(144)
+			p.SetState(146)
 			p.Mapping()
 		}
 
-		p.SetState(149)
+		p.SetState(151)
 		p.GetErrorHandler().Sync(p)
 		if p.HasError() {
 			goto errorExit
@@ -2540,7 +2544,7 @@ func (p *cirqlParser) MapStage() (localctx IMapStageContext) {
 		_la = p.GetTokenStream().LA(1)
 	}
 	{
-		p.SetState(150)
+		p.SetState(152)
 		p.Match(cirqlParserRBRACE)
 		if p.HasError() {
 			// Recognition error - abort rule
@@ -2597,7 +2601,7 @@ func InitEmptyFlatMapStageContext(p *FlatMapStageContext) {
 	p.RuleIndex = cirqlParserRULE_flatMapStage
 }
 
-func (FlatMapStageContext) IsFlatMapStageContext() {}
+func (*FlatMapStageContext) IsFlatMapStageContext() {}
 
 func NewFlatMapStageContext(parser antlr.Parser, parent antlr.ParserRuleContext, invokingState int) *FlatMapStageContext {
 	var p = new(FlatMapStageContext)
@@ -2610,7 +2614,7 @@ func NewFlatMapStageContext(parser antlr.Parser, parent antlr.ParserRuleContext,
 	return p
 }
 
-func (s FlatMapStageContext) GetParser() antlr.Parser { return s.parser }
+func (s *FlatMapStageContext) GetParser() antlr.Parser { return s.parser }
 
 func (s *FlatMapStageContext) FLATMAP() antlr.TerminalNode {
 	return s.GetToken(cirqlParserFLATMAP, 0)
@@ -2700,7 +2704,7 @@ func (p *cirqlParser) FlatMapStage() (localctx IFlatMapStageContext) {
 
 	p.EnterOuterAlt(localctx, 1)
 	{
-		p.SetState(152)
+		p.SetState(154)
 		p.Match(cirqlParserFLATMAP)
 		if p.HasError() {
 			// Recognition error - abort rule
@@ -2708,7 +2712,7 @@ func (p *cirqlParser) FlatMapStage() (localctx IFlatMapStageContext) {
 		}
 	}
 	{
-		p.SetState(153)
+		p.SetState(155)
 		p.Match(cirqlParserLBRACE)
 		if p.HasError() {
 			// Recognition error - abort rule
@@ -2716,10 +2720,10 @@ func (p *cirqlParser) FlatMapStage() (localctx IFlatMapStageContext) {
 		}
 	}
 	{
-		p.SetState(154)
+		p.SetState(156)
 		p.Mapping()
 	}
-	p.SetState(159)
+	p.SetState(161)
 	p.GetErrorHandler().Sync(p)
 	if p.HasError() {
 		goto errorExit
@@ -2727,7 +2731,7 @@ func (p *cirqlParser) FlatMapStage() (localctx IFlatMapStageContext) {
 	_la = p.GetTokenStream().LA(1)
 	for _la == cirqlParserCOMMA {
 		{
-			p.SetState(155)
+			p.SetState(157)
 			p.Match(cirqlParserCOMMA)
 			if p.HasError() {
 				// Recognition error - abort rule
@@ -2735,11 +2739,11 @@ func (p *cirqlParser) FlatMapStage() (localctx IFlatMapStageContext) {
 			}
 		}
 		{
-			p.SetState(156)
+			p.SetState(158)
 			p.Mapping()
 		}
 
-		p.SetState(161)
+		p.SetState(163)
 		p.GetErrorHandler().Sync(p)
 		if p.HasError() {
 			goto errorExit
@@ -2747,7 +2751,7 @@ func (p *cirqlParser) FlatMapStage() (localctx IFlatMapStageContext) {
 		_la = p.GetTokenStream().LA(1)
 	}
 	{
-		p.SetState(162)
+		p.SetState(164)
 		p.Match(cirqlParserRBRACE)
 		if p.HasError() {
 			// Recognition error - abort rule
@@ -2775,7 +2779,7 @@ type IMappingContext interface {
 	GetParser() antlr.Parser
 
 	// Getter signatures
-	NAME() antlr.TerminalNode
+	FieldName() IFieldNameContext
 	COLON() antlr.TerminalNode
 	Expr() IExprContext
 
@@ -2800,7 +2804,7 @@ func InitEmptyMappingContext(p *MappingContext) {
 	p.RuleIndex = cirqlParserRULE_mapping
 }
 
-func (MappingContext) IsMappingContext() {}
+func (*MappingContext) IsMappingContext() {}
 
 func NewMappingContext(parser antlr.Parser, parent antlr.ParserRuleContext, invokingState int) *MappingContext {
 	var p = new(MappingContext)
@@ -2813,10 +2817,22 @@ func NewMappingContext(parser antlr.Parser, parent antlr.ParserRuleContext, invo
 	return p
 }
 
-func (s MappingContext) GetParser() antlr.Parser { return s.parser }
+func (s *MappingContext) GetParser() antlr.Parser { return s.parser }
 
-func (s *MappingContext) NAME() antlr.TerminalNode {
-	return s.GetToken(cirqlParserNAME, 0)
+func (s *MappingContext) FieldName() IFieldNameContext {
+	var t antlr.RuleContext
+	for _, ctx := range s.GetChildren() {
+		if _, ok := ctx.(IFieldNameContext); ok {
+			t = ctx.(antlr.RuleContext)
+			break
+		}
+	}
+
+	if t == nil {
+		return nil
+	}
+
+	return t.(IFieldNameContext)
 }
 
 func (s *MappingContext) COLON() antlr.TerminalNode {
@@ -2864,15 +2880,11 @@ func (p *cirqlParser) Mapping() (localctx IMappingContext) {
 	p.EnterRule(localctx, 30, cirqlParserRULE_mapping)
 	p.EnterOuterAlt(localctx, 1)
 	{
-		p.SetState(164)
-		p.Match(cirqlParserNAME)
-		if p.HasError() {
-			// Recognition error - abort rule
-			goto errorExit
-		}
+		p.SetState(166)
+		p.FieldName()
 	}
 	{
-		p.SetState(165)
+		p.SetState(167)
 		p.Match(cirqlParserCOLON)
 		if p.HasError() {
 			// Recognition error - abort rule
@@ -2880,7 +2892,7 @@ func (p *cirqlParser) Mapping() (localctx IMappingContext) {
 		}
 	}
 	{
-		p.SetState(166)
+		p.SetState(168)
 		p.expr(0)
 	}
 
@@ -2928,7 +2940,7 @@ func InitEmptyFilterStageContext(p *FilterStageContext) {
 	p.RuleIndex = cirqlParserRULE_filterStage
 }
 
-func (FilterStageContext) IsFilterStageContext() {}
+func (*FilterStageContext) IsFilterStageContext() {}
 
 func NewFilterStageContext(parser antlr.Parser, parent antlr.ParserRuleContext, invokingState int) *FilterStageContext {
 	var p = new(FilterStageContext)
@@ -2941,7 +2953,7 @@ func NewFilterStageContext(parser antlr.Parser, parent antlr.ParserRuleContext, 
 	return p
 }
 
-func (s FilterStageContext) GetParser() antlr.Parser { return s.parser }
+func (s *FilterStageContext) GetParser() antlr.Parser { return s.parser }
 
 func (s *FilterStageContext) FILTER() antlr.TerminalNode {
 	return s.GetToken(cirqlParserFILTER, 0)
@@ -2988,7 +3000,7 @@ func (p *cirqlParser) FilterStage() (localctx IFilterStageContext) {
 	p.EnterRule(localctx, 32, cirqlParserRULE_filterStage)
 	p.EnterOuterAlt(localctx, 1)
 	{
-		p.SetState(168)
+		p.SetState(170)
 		p.Match(cirqlParserFILTER)
 		if p.HasError() {
 			// Recognition error - abort rule
@@ -2996,7 +3008,7 @@ func (p *cirqlParser) FilterStage() (localctx IFilterStageContext) {
 		}
 	}
 	{
-		p.SetState(169)
+		p.SetState(171)
 		p.expr(0)
 	}
 
@@ -3047,7 +3059,7 @@ func InitEmptyReduceStageContext(p *ReduceStageContext) {
 	p.RuleIndex = cirqlParserRULE_reduceStage
 }
 
-func (ReduceStageContext) IsReduceStageContext() {}
+func (*ReduceStageContext) IsReduceStageContext() {}
 
 func NewReduceStageContext(parser antlr.Parser, parent antlr.ParserRuleContext, invokingState int) *ReduceStageContext {
 	var p = new(ReduceStageContext)
@@ -3060,7 +3072,7 @@ func NewReduceStageContext(parser antlr.Parser, parent antlr.ParserRuleContext, 
 	return p
 }
 
-func (s ReduceStageContext) GetParser() antlr.Parser { return s.parser }
+func (s *ReduceStageContext) GetParser() antlr.Parser { return s.parser }
 
 func (s *ReduceStageContext) REDUCE() antlr.TerminalNode {
 	return s.GetToken(cirqlParserREDUCE, 0)
@@ -3133,7 +3145,7 @@ func (p *cirqlParser) ReduceStage() (localctx IReduceStageContext) {
 
 	p.EnterOuterAlt(localctx, 1)
 	{
-		p.SetState(171)
+		p.SetState(173)
 		p.Match(cirqlParserREDUCE)
 		if p.HasError() {
 			// Recognition error - abort rule
@@ -3141,10 +3153,10 @@ func (p *cirqlParser) ReduceStage() (localctx IReduceStageContext) {
 		}
 	}
 	{
-		p.SetState(172)
+		p.SetState(174)
 		p.ReduceOp()
 	}
-	p.SetState(177)
+	p.SetState(179)
 	p.GetErrorHandler().Sync(p)
 	if p.HasError() {
 		goto errorExit
@@ -3152,7 +3164,7 @@ func (p *cirqlParser) ReduceStage() (localctx IReduceStageContext) {
 	_la = p.GetTokenStream().LA(1)
 	if _la == cirqlParserLPAREN {
 		{
-			p.SetState(173)
+			p.SetState(175)
 			p.Match(cirqlParserLPAREN)
 			if p.HasError() {
 				// Recognition error - abort rule
@@ -3160,11 +3172,11 @@ func (p *cirqlParser) ReduceStage() (localctx IReduceStageContext) {
 			}
 		}
 		{
-			p.SetState(174)
+			p.SetState(176)
 			p.expr(0)
 		}
 		{
-			p.SetState(175)
+			p.SetState(177)
 			p.Match(cirqlParserRPAREN)
 			if p.HasError() {
 				// Recognition error - abort rule
@@ -3225,7 +3237,7 @@ func InitEmptyReduceOpContext(p *ReduceOpContext) {
 	p.RuleIndex = cirqlParserRULE_reduceOp
 }
 
-func (ReduceOpContext) IsReduceOpContext() {}
+func (*ReduceOpContext) IsReduceOpContext() {}
 
 func NewReduceOpContext(parser antlr.Parser, parent antlr.ParserRuleContext, invokingState int) *ReduceOpContext {
 	var p = new(ReduceOpContext)
@@ -3238,7 +3250,7 @@ func NewReduceOpContext(parser antlr.Parser, parent antlr.ParserRuleContext, inv
 	return p
 }
 
-func (s ReduceOpContext) GetParser() antlr.Parser { return s.parser }
+func (s *ReduceOpContext) GetParser() antlr.Parser { return s.parser }
 
 func (s *ReduceOpContext) COUNT() antlr.TerminalNode {
 	return s.GetToken(cirqlParserCOUNT, 0)
@@ -3303,7 +3315,7 @@ func (p *cirqlParser) ReduceOp() (localctx IReduceOpContext) {
 
 	p.EnterOuterAlt(localctx, 1)
 	{
-		p.SetState(179)
+		p.SetState(181)
 		_la = p.GetTokenStream().LA(1)
 
 		if !((int64(_la) & ^0x3f) == 0 && ((int64(1)<<_la)&2093056) != 0) {
@@ -3359,7 +3371,7 @@ func InitEmptySortStageContext(p *SortStageContext) {
 	p.RuleIndex = cirqlParserRULE_sortStage
 }
 
-func (SortStageContext) IsSortStageContext() {}
+func (*SortStageContext) IsSortStageContext() {}
 
 func NewSortStageContext(parser antlr.Parser, parent antlr.ParserRuleContext, invokingState int) *SortStageContext {
 	var p = new(SortStageContext)
@@ -3372,7 +3384,7 @@ func NewSortStageContext(parser antlr.Parser, parent antlr.ParserRuleContext, in
 	return p
 }
 
-func (s SortStageContext) GetParser() antlr.Parser { return s.parser }
+func (s *SortStageContext) GetParser() antlr.Parser { return s.parser }
 
 func (s *SortStageContext) SORT() antlr.TerminalNode {
 	return s.GetToken(cirqlParserSORT, 0)
@@ -3429,7 +3441,7 @@ func (p *cirqlParser) SortStage() (localctx ISortStageContext) {
 
 	p.EnterOuterAlt(localctx, 1)
 	{
-		p.SetState(181)
+		p.SetState(183)
 		p.Match(cirqlParserSORT)
 		if p.HasError() {
 			// Recognition error - abort rule
@@ -3437,10 +3449,10 @@ func (p *cirqlParser) SortStage() (localctx ISortStageContext) {
 		}
 	}
 	{
-		p.SetState(182)
+		p.SetState(184)
 		p.expr(0)
 	}
-	p.SetState(184)
+	p.SetState(186)
 	p.GetErrorHandler().Sync(p)
 	if p.HasError() {
 		goto errorExit
@@ -3448,7 +3460,7 @@ func (p *cirqlParser) SortStage() (localctx ISortStageContext) {
 	_la = p.GetTokenStream().LA(1)
 	if _la == cirqlParserASC || _la == cirqlParserDESC {
 		{
-			p.SetState(183)
+			p.SetState(185)
 			_la = p.GetTokenStream().LA(1)
 
 			if !(_la == cirqlParserASC || _la == cirqlParserDESC) {
@@ -3505,7 +3517,7 @@ func InitEmptyLimitStageContext(p *LimitStageContext) {
 	p.RuleIndex = cirqlParserRULE_limitStage
 }
 
-func (LimitStageContext) IsLimitStageContext() {}
+func (*LimitStageContext) IsLimitStageContext() {}
 
 func NewLimitStageContext(parser antlr.Parser, parent antlr.ParserRuleContext, invokingState int) *LimitStageContext {
 	var p = new(LimitStageContext)
@@ -3518,7 +3530,7 @@ func NewLimitStageContext(parser antlr.Parser, parent antlr.ParserRuleContext, i
 	return p
 }
 
-func (s LimitStageContext) GetParser() antlr.Parser { return s.parser }
+func (s *LimitStageContext) GetParser() antlr.Parser { return s.parser }
 
 func (s *LimitStageContext) LIMIT() antlr.TerminalNode {
 	return s.GetToken(cirqlParserLIMIT, 0)
@@ -3553,7 +3565,7 @@ func (p *cirqlParser) LimitStage() (localctx ILimitStageContext) {
 	p.EnterRule(localctx, 40, cirqlParserRULE_limitStage)
 	p.EnterOuterAlt(localctx, 1)
 	{
-		p.SetState(186)
+		p.SetState(188)
 		p.Match(cirqlParserLIMIT)
 		if p.HasError() {
 			// Recognition error - abort rule
@@ -3561,7 +3573,7 @@ func (p *cirqlParser) LimitStage() (localctx ILimitStageContext) {
 		}
 	}
 	{
-		p.SetState(187)
+		p.SetState(189)
 		p.Match(cirqlParserINT)
 		if p.HasError() {
 			// Recognition error - abort rule
@@ -3613,7 +3625,7 @@ func InitEmptyUniqStageContext(p *UniqStageContext) {
 	p.RuleIndex = cirqlParserRULE_uniqStage
 }
 
-func (UniqStageContext) IsUniqStageContext() {}
+func (*UniqStageContext) IsUniqStageContext() {}
 
 func NewUniqStageContext(parser antlr.Parser, parent antlr.ParserRuleContext, invokingState int) *UniqStageContext {
 	var p = new(UniqStageContext)
@@ -3626,7 +3638,7 @@ func NewUniqStageContext(parser antlr.Parser, parent antlr.ParserRuleContext, in
 	return p
 }
 
-func (s UniqStageContext) GetParser() antlr.Parser { return s.parser }
+func (s *UniqStageContext) GetParser() antlr.Parser { return s.parser }
 
 func (s *UniqStageContext) UNIQ() antlr.TerminalNode {
 	return s.GetToken(cirqlParserUNIQ, 0)
@@ -3675,14 +3687,14 @@ func (p *cirqlParser) UniqStage() (localctx IUniqStageContext) {
 
 	p.EnterOuterAlt(localctx, 1)
 	{
-		p.SetState(189)
+		p.SetState(191)
 		p.Match(cirqlParserUNIQ)
 		if p.HasError() {
 			// Recognition error - abort rule
 			goto errorExit
 		}
 	}
-	p.SetState(191)
+	p.SetState(193)
 	p.GetErrorHandler().Sync(p)
 	if p.HasError() {
 		goto errorExit
@@ -3690,7 +3702,7 @@ func (p *cirqlParser) UniqStage() (localctx IUniqStageContext) {
 	_la = p.GetTokenStream().LA(1)
 	if (int64(_la) & ^0x3f) == 0 && ((int64(1)<<_la)&33918287863611392) != 0 {
 		{
-			p.SetState(190)
+			p.SetState(192)
 			p.expr(0)
 		}
 
@@ -3735,7 +3747,7 @@ func InitEmptyExprContext(p *ExprContext) {
 	p.RuleIndex = cirqlParserRULE_expr
 }
 
-func (ExprContext) IsExprContext() {}
+func (*ExprContext) IsExprContext() {}
 
 func NewExprContext(parser antlr.Parser, parent antlr.ParserRuleContext, invokingState int) *ExprContext {
 	var p = new(ExprContext)
@@ -3748,7 +3760,7 @@ func NewExprContext(parser antlr.Parser, parent antlr.ParserRuleContext, invokin
 	return p
 }
 
-func (s ExprContext) GetParser() antlr.Parser { return s.parser }
+func (s *ExprContext) GetParser() antlr.Parser { return s.parser }
 
 func (s *ExprContext) CopyAll(ctx *ExprContext) {
 	s.CopyFrom(&ctx.BaseParserRuleContext)
@@ -4479,7 +4491,7 @@ func (p *cirqlParser) expr(_p int) (localctx IExprContext) {
 	var _alt int
 
 	p.EnterOuterAlt(localctx, 1)
-	p.SetState(204)
+	p.SetState(206)
 	p.GetErrorHandler().Sync(p)
 	if p.HasError() {
 		goto errorExit
@@ -4492,7 +4504,7 @@ func (p *cirqlParser) expr(_p int) (localctx IExprContext) {
 		_prevctx = localctx
 
 		{
-			p.SetState(194)
+			p.SetState(196)
 			_la = p.GetTokenStream().LA(1)
 
 			if !(_la == cirqlParserNOT || _la == cirqlParserMINUS) {
@@ -4503,7 +4515,7 @@ func (p *cirqlParser) expr(_p int) (localctx IExprContext) {
 			}
 		}
 		{
-			p.SetState(195)
+			p.SetState(197)
 			p.expr(11)
 		}
 
@@ -4512,7 +4524,7 @@ func (p *cirqlParser) expr(_p int) (localctx IExprContext) {
 		p.SetParserRuleContext(localctx)
 		_prevctx = localctx
 		{
-			p.SetState(196)
+			p.SetState(198)
 			p.Match(cirqlParserLPAREN)
 			if p.HasError() {
 				// Recognition error - abort rule
@@ -4520,11 +4532,11 @@ func (p *cirqlParser) expr(_p int) (localctx IExprContext) {
 			}
 		}
 		{
-			p.SetState(197)
+			p.SetState(199)
 			p.expr(0)
 		}
 		{
-			p.SetState(198)
+			p.SetState(200)
 			p.Match(cirqlParserRPAREN)
 			if p.HasError() {
 				// Recognition error - abort rule
@@ -4537,7 +4549,7 @@ func (p *cirqlParser) expr(_p int) (localctx IExprContext) {
 		p.SetParserRuleContext(localctx)
 		_prevctx = localctx
 		{
-			p.SetState(200)
+			p.SetState(202)
 			p.FuncCall()
 		}
 
@@ -4546,7 +4558,7 @@ func (p *cirqlParser) expr(_p int) (localctx IExprContext) {
 		p.SetParserRuleContext(localctx)
 		_prevctx = localctx
 		{
-			p.SetState(201)
+			p.SetState(203)
 			p.FieldAccess()
 		}
 
@@ -4555,7 +4567,7 @@ func (p *cirqlParser) expr(_p int) (localctx IExprContext) {
 		p.SetParserRuleContext(localctx)
 		_prevctx = localctx
 		{
-			p.SetState(202)
+			p.SetState(204)
 			p.Variable()
 		}
 
@@ -4564,7 +4576,7 @@ func (p *cirqlParser) expr(_p int) (localctx IExprContext) {
 		p.SetParserRuleContext(localctx)
 		_prevctx = localctx
 		{
-			p.SetState(203)
+			p.SetState(205)
 			p.Literal()
 		}
 
@@ -4573,7 +4585,7 @@ func (p *cirqlParser) expr(_p int) (localctx IExprContext) {
 		goto errorExit
 	}
 	p.GetParserRuleContext().SetStop(p.GetTokenStream().LT(-1))
-	p.SetState(223)
+	p.SetState(225)
 	p.GetErrorHandler().Sync(p)
 	if p.HasError() {
 		goto errorExit
@@ -4588,7 +4600,7 @@ func (p *cirqlParser) expr(_p int) (localctx IExprContext) {
 				p.TriggerExitRuleEvent()
 			}
 			_prevctx = localctx
-			p.SetState(221)
+			p.SetState(223)
 			p.GetErrorHandler().Sync(p)
 			if p.HasError() {
 				goto errorExit
@@ -4598,14 +4610,14 @@ func (p *cirqlParser) expr(_p int) (localctx IExprContext) {
 			case 1:
 				localctx = NewMulExprContext(p, NewExprContext(p, _parentctx, _parentState))
 				p.PushNewRecursionContext(localctx, _startState, cirqlParserRULE_expr)
-				p.SetState(206)
+				p.SetState(208)
 
 				if !(p.Precpred(p.GetParserRuleContext(), 10)) {
 					p.SetError(antlr.NewFailedPredicateException(p, "p.Precpred(p.GetParserRuleContext(), 10)", ""))
 					goto errorExit
 				}
 				{
-					p.SetState(207)
+					p.SetState(209)
 					_la = p.GetTokenStream().LA(1)
 
 					if !((int64(_la) & ^0x3f) == 0 && ((int64(1)<<_la)&1970324836974592) != 0) {
@@ -4616,21 +4628,21 @@ func (p *cirqlParser) expr(_p int) (localctx IExprContext) {
 					}
 				}
 				{
-					p.SetState(208)
+					p.SetState(210)
 					p.expr(11)
 				}
 
 			case 2:
 				localctx = NewAddExprContext(p, NewExprContext(p, _parentctx, _parentState))
 				p.PushNewRecursionContext(localctx, _startState, cirqlParserRULE_expr)
-				p.SetState(209)
+				p.SetState(211)
 
 				if !(p.Precpred(p.GetParserRuleContext(), 9)) {
 					p.SetError(antlr.NewFailedPredicateException(p, "p.Precpred(p.GetParserRuleContext(), 9)", ""))
 					goto errorExit
 				}
 				{
-					p.SetState(210)
+					p.SetState(212)
 					_la = p.GetTokenStream().LA(1)
 
 					if !(_la == cirqlParserPLUS || _la == cirqlParserMINUS) {
@@ -4641,21 +4653,21 @@ func (p *cirqlParser) expr(_p int) (localctx IExprContext) {
 					}
 				}
 				{
-					p.SetState(211)
+					p.SetState(213)
 					p.expr(10)
 				}
 
 			case 3:
 				localctx = NewCmpExprContext(p, NewExprContext(p, _parentctx, _parentState))
 				p.PushNewRecursionContext(localctx, _startState, cirqlParserRULE_expr)
-				p.SetState(212)
+				p.SetState(214)
 
 				if !(p.Precpred(p.GetParserRuleContext(), 8)) {
 					p.SetError(antlr.NewFailedPredicateException(p, "p.Precpred(p.GetParserRuleContext(), 8)", ""))
 					goto errorExit
 				}
 				{
-					p.SetState(213)
+					p.SetState(215)
 					_la = p.GetTokenStream().LA(1)
 
 					if !((int64(_la) & ^0x3f) == 0 && ((int64(1)<<_la)&69269232549888) != 0) {
@@ -4666,21 +4678,21 @@ func (p *cirqlParser) expr(_p int) (localctx IExprContext) {
 					}
 				}
 				{
-					p.SetState(214)
+					p.SetState(216)
 					p.expr(9)
 				}
 
 			case 4:
 				localctx = NewAndExprContext(p, NewExprContext(p, _parentctx, _parentState))
 				p.PushNewRecursionContext(localctx, _startState, cirqlParserRULE_expr)
-				p.SetState(215)
+				p.SetState(217)
 
 				if !(p.Precpred(p.GetParserRuleContext(), 7)) {
 					p.SetError(antlr.NewFailedPredicateException(p, "p.Precpred(p.GetParserRuleContext(), 7)", ""))
 					goto errorExit
 				}
 				{
-					p.SetState(216)
+					p.SetState(218)
 					p.Match(cirqlParserAND)
 					if p.HasError() {
 						// Recognition error - abort rule
@@ -4688,21 +4700,21 @@ func (p *cirqlParser) expr(_p int) (localctx IExprContext) {
 					}
 				}
 				{
-					p.SetState(217)
+					p.SetState(219)
 					p.expr(8)
 				}
 
 			case 5:
 				localctx = NewOrExprContext(p, NewExprContext(p, _parentctx, _parentState))
 				p.PushNewRecursionContext(localctx, _startState, cirqlParserRULE_expr)
-				p.SetState(218)
+				p.SetState(220)
 
 				if !(p.Precpred(p.GetParserRuleContext(), 6)) {
 					p.SetError(antlr.NewFailedPredicateException(p, "p.Precpred(p.GetParserRuleContext(), 6)", ""))
 					goto errorExit
 				}
 				{
-					p.SetState(219)
+					p.SetState(221)
 					p.Match(cirqlParserOR)
 					if p.HasError() {
 						// Recognition error - abort rule
@@ -4710,7 +4722,7 @@ func (p *cirqlParser) expr(_p int) (localctx IExprContext) {
 					}
 				}
 				{
-					p.SetState(220)
+					p.SetState(222)
 					p.expr(7)
 				}
 
@@ -4719,7 +4731,7 @@ func (p *cirqlParser) expr(_p int) (localctx IExprContext) {
 			}
 
 		}
-		p.SetState(225)
+		p.SetState(227)
 		p.GetErrorHandler().Sync(p)
 		if p.HasError() {
 			goto errorExit
@@ -4751,6 +4763,9 @@ type IFieldAccessContext interface {
 
 	// Getter signatures
 	DOT() antlr.TerminalNode
+	FieldName() IFieldNameContext
+	LBRACK() antlr.TerminalNode
+	RBRACK() antlr.TerminalNode
 	AllPathSeg() []IPathSegContext
 	PathSeg(i int) IPathSegContext
 
@@ -4775,7 +4790,7 @@ func InitEmptyFieldAccessContext(p *FieldAccessContext) {
 	p.RuleIndex = cirqlParserRULE_fieldAccess
 }
 
-func (FieldAccessContext) IsFieldAccessContext() {}
+func (*FieldAccessContext) IsFieldAccessContext() {}
 
 func NewFieldAccessContext(parser antlr.Parser, parent antlr.ParserRuleContext, invokingState int) *FieldAccessContext {
 	var p = new(FieldAccessContext)
@@ -4788,10 +4803,34 @@ func NewFieldAccessContext(parser antlr.Parser, parent antlr.ParserRuleContext, 
 	return p
 }
 
-func (s FieldAccessContext) GetParser() antlr.Parser { return s.parser }
+func (s *FieldAccessContext) GetParser() antlr.Parser { return s.parser }
 
 func (s *FieldAccessContext) DOT() antlr.TerminalNode {
 	return s.GetToken(cirqlParserDOT, 0)
+}
+
+func (s *FieldAccessContext) FieldName() IFieldNameContext {
+	var t antlr.RuleContext
+	for _, ctx := range s.GetChildren() {
+		if _, ok := ctx.(IFieldNameContext); ok {
+			t = ctx.(antlr.RuleContext)
+			break
+		}
+	}
+
+	if t == nil {
+		return nil
+	}
+
+	return t.(IFieldNameContext)
+}
+
+func (s *FieldAccessContext) LBRACK() antlr.TerminalNode {
+	return s.GetToken(cirqlParserLBRACK, 0)
+}
+
+func (s *FieldAccessContext) RBRACK() antlr.TerminalNode {
+	return s.GetToken(cirqlParserRBRACK, 0)
 }
 
 func (s *FieldAccessContext) AllPathSeg() []IPathSegContext {
@@ -4860,50 +4899,81 @@ func (p *cirqlParser) FieldAccess() (localctx IFieldAccessContext) {
 	p.EnterRule(localctx, 46, cirqlParserRULE_fieldAccess)
 	var _alt int
 
-	p.SetState(235)
+	p.SetState(241)
 	p.GetErrorHandler().Sync(p)
 	if p.HasError() {
 		goto errorExit
 	}
 
-	switch p.GetInterpreter().AdaptivePredict(p.BaseParser, p.GetTokenStream(), 19, p.GetParserRuleContext()) {
+	switch p.GetInterpreter().AdaptivePredict(p.BaseParser, p.GetTokenStream(), 20, p.GetParserRuleContext()) {
 	case 1:
 		p.EnterOuterAlt(localctx, 1)
 		{
-			p.SetState(226)
+			p.SetState(228)
 			p.Match(cirqlParserDOT)
 			if p.HasError() {
 				// Recognition error - abort rule
 				goto errorExit
 			}
 		}
-		{
-			p.SetState(227)
-			p.PathSeg()
-		}
-		p.SetState(231)
+		p.SetState(232)
 		p.GetErrorHandler().Sync(p)
 		if p.HasError() {
 			goto errorExit
 		}
-		_alt = p.GetInterpreter().AdaptivePredict(p.BaseParser, p.GetTokenStream(), 18, p.GetParserRuleContext())
+
+		switch p.GetTokenStream().LA(1) {
+		case cirqlParserQUERY, cirqlParserHTTP, cirqlParserFILE, cirqlParserSTDIN, cirqlParserMAP, cirqlParserFLATMAP, cirqlParserFILTER, cirqlParserREDUCE, cirqlParserSORT, cirqlParserLIMIT, cirqlParserUNIQ, cirqlParserCOUNT, cirqlParserSUM, cirqlParserMIN, cirqlParserMAX, cirqlParserAVG, cirqlParserFIRST, cirqlParserLAST, cirqlParserGROUP_BY, cirqlParserCOLLECT, cirqlParserASC, cirqlParserDESC, cirqlParserTRUE, cirqlParserFALSE, cirqlParserNULL, cirqlParserNAME:
+			{
+				p.SetState(229)
+				p.FieldName()
+			}
+
+		case cirqlParserLBRACK:
+			{
+				p.SetState(230)
+				p.Match(cirqlParserLBRACK)
+				if p.HasError() {
+					// Recognition error - abort rule
+					goto errorExit
+				}
+			}
+			{
+				p.SetState(231)
+				p.Match(cirqlParserRBRACK)
+				if p.HasError() {
+					// Recognition error - abort rule
+					goto errorExit
+				}
+			}
+
+		default:
+			p.SetError(antlr.NewNoViableAltException(p, nil, nil, nil, nil, nil))
+			goto errorExit
+		}
+		p.SetState(237)
+		p.GetErrorHandler().Sync(p)
+		if p.HasError() {
+			goto errorExit
+		}
+		_alt = p.GetInterpreter().AdaptivePredict(p.BaseParser, p.GetTokenStream(), 19, p.GetParserRuleContext())
 		if p.HasError() {
 			goto errorExit
 		}
 		for _alt != 2 && _alt != antlr.ATNInvalidAltNumber {
 			if _alt == 1 {
 				{
-					p.SetState(228)
+					p.SetState(234)
 					p.PathSeg()
 				}
 
 			}
-			p.SetState(233)
+			p.SetState(239)
 			p.GetErrorHandler().Sync(p)
 			if p.HasError() {
 				goto errorExit
 			}
-			_alt = p.GetInterpreter().AdaptivePredict(p.BaseParser, p.GetTokenStream(), 18, p.GetParserRuleContext())
+			_alt = p.GetInterpreter().AdaptivePredict(p.BaseParser, p.GetTokenStream(), 19, p.GetParserRuleContext())
 			if p.HasError() {
 				goto errorExit
 			}
@@ -4912,7 +4982,7 @@ func (p *cirqlParser) FieldAccess() (localctx IFieldAccessContext) {
 	case 2:
 		p.EnterOuterAlt(localctx, 2)
 		{
-			p.SetState(234)
+			p.SetState(240)
 			p.Match(cirqlParserDOT)
 			if p.HasError() {
 				// Recognition error - abort rule
@@ -4944,8 +5014,8 @@ type IPathSegContext interface {
 	GetParser() antlr.Parser
 
 	// Getter signatures
-	NAME() antlr.TerminalNode
 	DOT() antlr.TerminalNode
+	FieldName() IFieldNameContext
 	LBRACK() antlr.TerminalNode
 	RBRACK() antlr.TerminalNode
 
@@ -4970,7 +5040,7 @@ func InitEmptyPathSegContext(p *PathSegContext) {
 	p.RuleIndex = cirqlParserRULE_pathSeg
 }
 
-func (PathSegContext) IsPathSegContext() {}
+func (*PathSegContext) IsPathSegContext() {}
 
 func NewPathSegContext(parser antlr.Parser, parent antlr.ParserRuleContext, invokingState int) *PathSegContext {
 	var p = new(PathSegContext)
@@ -4983,14 +5053,26 @@ func NewPathSegContext(parser antlr.Parser, parent antlr.ParserRuleContext, invo
 	return p
 }
 
-func (s PathSegContext) GetParser() antlr.Parser { return s.parser }
-
-func (s *PathSegContext) NAME() antlr.TerminalNode {
-	return s.GetToken(cirqlParserNAME, 0)
-}
+func (s *PathSegContext) GetParser() antlr.Parser { return s.parser }
 
 func (s *PathSegContext) DOT() antlr.TerminalNode {
 	return s.GetToken(cirqlParserDOT, 0)
+}
+
+func (s *PathSegContext) FieldName() IFieldNameContext {
+	var t antlr.RuleContext
+	for _, ctx := range s.GetChildren() {
+		if _, ok := ctx.(IFieldNameContext); ok {
+			t = ctx.(antlr.RuleContext)
+			break
+		}
+	}
+
+	if t == nil {
+		return nil
+	}
+
+	return t.(IFieldNameContext)
 }
 
 func (s *PathSegContext) LBRACK() antlr.TerminalNode {
@@ -5024,48 +5106,32 @@ func (s *PathSegContext) ExitRule(listener antlr.ParseTreeListener) {
 func (p *cirqlParser) PathSeg() (localctx IPathSegContext) {
 	localctx = NewPathSegContext(p, p.GetParserRuleContext(), p.GetState())
 	p.EnterRule(localctx, 48, cirqlParserRULE_pathSeg)
-	var _la int
-
-	p.SetState(243)
+	p.SetState(247)
 	p.GetErrorHandler().Sync(p)
 	if p.HasError() {
 		goto errorExit
 	}
 
 	switch p.GetTokenStream().LA(1) {
-	case cirqlParserDOT, cirqlParserNAME:
+	case cirqlParserDOT:
 		p.EnterOuterAlt(localctx, 1)
-		p.SetState(238)
-		p.GetErrorHandler().Sync(p)
-		if p.HasError() {
-			goto errorExit
-		}
-		_la = p.GetTokenStream().LA(1)
-
-		if _la == cirqlParserDOT {
-			{
-				p.SetState(237)
-				p.Match(cirqlParserDOT)
-				if p.HasError() {
-					// Recognition error - abort rule
-					goto errorExit
-				}
-			}
-
-		}
 		{
-			p.SetState(240)
-			p.Match(cirqlParserNAME)
+			p.SetState(243)
+			p.Match(cirqlParserDOT)
 			if p.HasError() {
 				// Recognition error - abort rule
 				goto errorExit
 			}
 		}
+		{
+			p.SetState(244)
+			p.FieldName()
+		}
 
 	case cirqlParserLBRACK:
 		p.EnterOuterAlt(localctx, 2)
 		{
-			p.SetState(241)
+			p.SetState(245)
 			p.Match(cirqlParserLBRACK)
 			if p.HasError() {
 				// Recognition error - abort rule
@@ -5073,7 +5139,7 @@ func (p *cirqlParser) PathSeg() (localctx IPathSegContext) {
 			}
 		}
 		{
-			p.SetState(242)
+			p.SetState(246)
 			p.Match(cirqlParserRBRACK)
 			if p.HasError() {
 				// Recognition error - abort rule
@@ -5135,7 +5201,7 @@ func InitEmptyFuncCallContext(p *FuncCallContext) {
 	p.RuleIndex = cirqlParserRULE_funcCall
 }
 
-func (FuncCallContext) IsFuncCallContext() {}
+func (*FuncCallContext) IsFuncCallContext() {}
 
 func NewFuncCallContext(parser antlr.Parser, parent antlr.ParserRuleContext, invokingState int) *FuncCallContext {
 	var p = new(FuncCallContext)
@@ -5148,7 +5214,7 @@ func NewFuncCallContext(parser antlr.Parser, parent antlr.ParserRuleContext, inv
 	return p
 }
 
-func (s FuncCallContext) GetParser() antlr.Parser { return s.parser }
+func (s *FuncCallContext) GetParser() antlr.Parser { return s.parser }
 
 func (s *FuncCallContext) NAME() antlr.TerminalNode {
 	return s.GetToken(cirqlParserNAME, 0)
@@ -5238,7 +5304,7 @@ func (p *cirqlParser) FuncCall() (localctx IFuncCallContext) {
 
 	p.EnterOuterAlt(localctx, 1)
 	{
-		p.SetState(245)
+		p.SetState(249)
 		p.Match(cirqlParserNAME)
 		if p.HasError() {
 			// Recognition error - abort rule
@@ -5246,14 +5312,14 @@ func (p *cirqlParser) FuncCall() (localctx IFuncCallContext) {
 		}
 	}
 	{
-		p.SetState(246)
+		p.SetState(250)
 		p.Match(cirqlParserLPAREN)
 		if p.HasError() {
 			// Recognition error - abort rule
 			goto errorExit
 		}
 	}
-	p.SetState(255)
+	p.SetState(259)
 	p.GetErrorHandler().Sync(p)
 	if p.HasError() {
 		goto errorExit
@@ -5261,10 +5327,10 @@ func (p *cirqlParser) FuncCall() (localctx IFuncCallContext) {
 	_la = p.GetTokenStream().LA(1)
 	if (int64(_la) & ^0x3f) == 0 && ((int64(1)<<_la)&33918287863611392) != 0 {
 		{
-			p.SetState(247)
+			p.SetState(251)
 			p.expr(0)
 		}
-		p.SetState(252)
+		p.SetState(256)
 		p.GetErrorHandler().Sync(p)
 		if p.HasError() {
 			goto errorExit
@@ -5273,7 +5339,7 @@ func (p *cirqlParser) FuncCall() (localctx IFuncCallContext) {
 
 		for _la == cirqlParserCOMMA {
 			{
-				p.SetState(248)
+				p.SetState(252)
 				p.Match(cirqlParserCOMMA)
 				if p.HasError() {
 					// Recognition error - abort rule
@@ -5281,11 +5347,11 @@ func (p *cirqlParser) FuncCall() (localctx IFuncCallContext) {
 				}
 			}
 			{
-				p.SetState(249)
+				p.SetState(253)
 				p.expr(0)
 			}
 
-			p.SetState(254)
+			p.SetState(258)
 			p.GetErrorHandler().Sync(p)
 			if p.HasError() {
 				goto errorExit
@@ -5295,7 +5361,7 @@ func (p *cirqlParser) FuncCall() (localctx IFuncCallContext) {
 
 	}
 	{
-		p.SetState(257)
+		p.SetState(261)
 		p.Match(cirqlParserRPAREN)
 		if p.HasError() {
 			// Recognition error - abort rule
@@ -5347,7 +5413,7 @@ func InitEmptyVariableContext(p *VariableContext) {
 	p.RuleIndex = cirqlParserRULE_variable
 }
 
-func (VariableContext) IsVariableContext() {}
+func (*VariableContext) IsVariableContext() {}
 
 func NewVariableContext(parser antlr.Parser, parent antlr.ParserRuleContext, invokingState int) *VariableContext {
 	var p = new(VariableContext)
@@ -5360,7 +5426,7 @@ func NewVariableContext(parser antlr.Parser, parent antlr.ParserRuleContext, inv
 	return p
 }
 
-func (s VariableContext) GetParser() antlr.Parser { return s.parser }
+func (s *VariableContext) GetParser() antlr.Parser { return s.parser }
 
 func (s *VariableContext) DOLLAR() antlr.TerminalNode {
 	return s.GetToken(cirqlParserDOLLAR, 0)
@@ -5395,7 +5461,7 @@ func (p *cirqlParser) Variable() (localctx IVariableContext) {
 	p.EnterRule(localctx, 52, cirqlParserRULE_variable)
 	p.EnterOuterAlt(localctx, 1)
 	{
-		p.SetState(259)
+		p.SetState(263)
 		p.Match(cirqlParserDOLLAR)
 		if p.HasError() {
 			// Recognition error - abort rule
@@ -5403,7 +5469,7 @@ func (p *cirqlParser) Variable() (localctx IVariableContext) {
 		}
 	}
 	{
-		p.SetState(260)
+		p.SetState(264)
 		p.Match(cirqlParserNAME)
 		if p.HasError() {
 			// Recognition error - abort rule
@@ -5412,6 +5478,230 @@ func (p *cirqlParser) Variable() (localctx IVariableContext) {
 	}
 
 errorExit:
+	if p.HasError() {
+		v := p.GetError()
+		localctx.SetException(v)
+		p.GetErrorHandler().ReportError(p, v)
+		p.GetErrorHandler().Recover(p, v)
+		p.SetError(nil)
+	}
+	p.ExitRule()
+	return localctx
+}
+
+// IFieldNameContext is an interface to support dynamic dispatch.
+type IFieldNameContext interface {
+	antlr.ParserRuleContext
+
+	// GetParser returns the parser.
+	GetParser() antlr.Parser
+
+	// Getter signatures
+	NAME() antlr.TerminalNode
+	QUERY() antlr.TerminalNode
+	HTTP() antlr.TerminalNode
+	FILE() antlr.TerminalNode
+	STDIN() antlr.TerminalNode
+	MAP() antlr.TerminalNode
+	FLATMAP() antlr.TerminalNode
+	FILTER() antlr.TerminalNode
+	REDUCE() antlr.TerminalNode
+	SORT() antlr.TerminalNode
+	LIMIT() antlr.TerminalNode
+	UNIQ() antlr.TerminalNode
+	COUNT() antlr.TerminalNode
+	SUM() antlr.TerminalNode
+	MIN() antlr.TerminalNode
+	MAX() antlr.TerminalNode
+	AVG() antlr.TerminalNode
+	FIRST() antlr.TerminalNode
+	LAST() antlr.TerminalNode
+	GROUP_BY() antlr.TerminalNode
+	COLLECT() antlr.TerminalNode
+	ASC() antlr.TerminalNode
+	DESC() antlr.TerminalNode
+	TRUE() antlr.TerminalNode
+	FALSE() antlr.TerminalNode
+	NULL() antlr.TerminalNode
+
+	// IsFieldNameContext differentiates from other interfaces.
+	IsFieldNameContext()
+}
+
+type FieldNameContext struct {
+	antlr.BaseParserRuleContext
+	parser antlr.Parser
+}
+
+func NewEmptyFieldNameContext() *FieldNameContext {
+	var p = new(FieldNameContext)
+	antlr.InitBaseParserRuleContext(&p.BaseParserRuleContext, nil, -1)
+	p.RuleIndex = cirqlParserRULE_fieldName
+	return p
+}
+
+func InitEmptyFieldNameContext(p *FieldNameContext) {
+	antlr.InitBaseParserRuleContext(&p.BaseParserRuleContext, nil, -1)
+	p.RuleIndex = cirqlParserRULE_fieldName
+}
+
+func (*FieldNameContext) IsFieldNameContext() {}
+
+func NewFieldNameContext(parser antlr.Parser, parent antlr.ParserRuleContext, invokingState int) *FieldNameContext {
+	var p = new(FieldNameContext)
+
+	antlr.InitBaseParserRuleContext(&p.BaseParserRuleContext, parent, invokingState)
+
+	p.parser = parser
+	p.RuleIndex = cirqlParserRULE_fieldName
+
+	return p
+}
+
+func (s *FieldNameContext) GetParser() antlr.Parser { return s.parser }
+
+func (s *FieldNameContext) NAME() antlr.TerminalNode {
+	return s.GetToken(cirqlParserNAME, 0)
+}
+
+func (s *FieldNameContext) QUERY() antlr.TerminalNode {
+	return s.GetToken(cirqlParserQUERY, 0)
+}
+
+func (s *FieldNameContext) HTTP() antlr.TerminalNode {
+	return s.GetToken(cirqlParserHTTP, 0)
+}
+
+func (s *FieldNameContext) FILE() antlr.TerminalNode {
+	return s.GetToken(cirqlParserFILE, 0)
+}
+
+func (s *FieldNameContext) STDIN() antlr.TerminalNode {
+	return s.GetToken(cirqlParserSTDIN, 0)
+}
+
+func (s *FieldNameContext) MAP() antlr.TerminalNode {
+	return s.GetToken(cirqlParserMAP, 0)
+}
+
+func (s *FieldNameContext) FLATMAP() antlr.TerminalNode {
+	return s.GetToken(cirqlParserFLATMAP, 0)
+}
+
+func (s *FieldNameContext) FILTER() antlr.TerminalNode {
+	return s.GetToken(cirqlParserFILTER, 0)
+}
+
+func (s *FieldNameContext) REDUCE() antlr.TerminalNode {
+	return s.GetToken(cirqlParserREDUCE, 0)
+}
+
+func (s *FieldNameContext) SORT() antlr.TerminalNode {
+	return s.GetToken(cirqlParserSORT, 0)
+}
+
+func (s *FieldNameContext) LIMIT() antlr.TerminalNode {
+	return s.GetToken(cirqlParserLIMIT, 0)
+}
+
+func (s *FieldNameContext) UNIQ() antlr.TerminalNode {
+	return s.GetToken(cirqlParserUNIQ, 0)
+}
+
+func (s *FieldNameContext) COUNT() antlr.TerminalNode {
+	return s.GetToken(cirqlParserCOUNT, 0)
+}
+
+func (s *FieldNameContext) SUM() antlr.TerminalNode {
+	return s.GetToken(cirqlParserSUM, 0)
+}
+
+func (s *FieldNameContext) MIN() antlr.TerminalNode {
+	return s.GetToken(cirqlParserMIN, 0)
+}
+
+func (s *FieldNameContext) MAX() antlr.TerminalNode {
+	return s.GetToken(cirqlParserMAX, 0)
+}
+
+func (s *FieldNameContext) AVG() antlr.TerminalNode {
+	return s.GetToken(cirqlParserAVG, 0)
+}
+
+func (s *FieldNameContext) FIRST() antlr.TerminalNode {
+	return s.GetToken(cirqlParserFIRST, 0)
+}
+
+func (s *FieldNameContext) LAST() antlr.TerminalNode {
+	return s.GetToken(cirqlParserLAST, 0)
+}
+
+func (s *FieldNameContext) GROUP_BY() antlr.TerminalNode {
+	return s.GetToken(cirqlParserGROUP_BY, 0)
+}
+
+func (s *FieldNameContext) COLLECT() antlr.TerminalNode {
+	return s.GetToken(cirqlParserCOLLECT, 0)
+}
+
+func (s *FieldNameContext) ASC() antlr.TerminalNode {
+	return s.GetToken(cirqlParserASC, 0)
+}
+
+func (s *FieldNameContext) DESC() antlr.TerminalNode {
+	return s.GetToken(cirqlParserDESC, 0)
+}
+
+func (s *FieldNameContext) TRUE() antlr.TerminalNode {
+	return s.GetToken(cirqlParserTRUE, 0)
+}
+
+func (s *FieldNameContext) FALSE() antlr.TerminalNode {
+	return s.GetToken(cirqlParserFALSE, 0)
+}
+
+func (s *FieldNameContext) NULL() antlr.TerminalNode {
+	return s.GetToken(cirqlParserNULL, 0)
+}
+
+func (s *FieldNameContext) GetRuleContext() antlr.RuleContext {
+	return s
+}
+
+func (s *FieldNameContext) ToStringTree(ruleNames []string, recog antlr.Recognizer) string {
+	return antlr.TreesStringTree(s, ruleNames, recog)
+}
+
+func (s *FieldNameContext) EnterRule(listener antlr.ParseTreeListener) {
+	if listenerT, ok := listener.(cirqlListener); ok {
+		listenerT.EnterFieldName(s)
+	}
+}
+
+func (s *FieldNameContext) ExitRule(listener antlr.ParseTreeListener) {
+	if listenerT, ok := listener.(cirqlListener); ok {
+		listenerT.ExitFieldName(s)
+	}
+}
+
+func (p *cirqlParser) FieldName() (localctx IFieldNameContext) {
+	localctx = NewFieldNameContext(p, p.GetParserRuleContext(), p.GetState())
+	p.EnterRule(localctx, 54, cirqlParserRULE_fieldName)
+	var _la int
+
+	p.EnterOuterAlt(localctx, 1)
+	{
+		p.SetState(266)
+		_la = p.GetTokenStream().LA(1)
+
+		if !((int64(_la) & ^0x3f) == 0 && ((int64(1)<<_la)&2251799880794110) != 0) {
+			p.GetErrorHandler().RecoverInline(p)
+		} else {
+			p.GetErrorHandler().ReportMatch(p)
+			p.Consume()
+		}
+	}
+
 	if p.HasError() {
 		v := p.GetError()
 		localctx.SetException(v)
@@ -5457,7 +5747,7 @@ func InitEmptyArgValueContext(p *ArgValueContext) {
 	p.RuleIndex = cirqlParserRULE_argValue
 }
 
-func (ArgValueContext) IsArgValueContext() {}
+func (*ArgValueContext) IsArgValueContext() {}
 
 func NewArgValueContext(parser antlr.Parser, parent antlr.ParserRuleContext, invokingState int) *ArgValueContext {
 	var p = new(ArgValueContext)
@@ -5470,7 +5760,7 @@ func NewArgValueContext(parser antlr.Parser, parent antlr.ParserRuleContext, inv
 	return p
 }
 
-func (s ArgValueContext) GetParser() antlr.Parser { return s.parser }
+func (s *ArgValueContext) GetParser() antlr.Parser { return s.parser }
 
 func (s *ArgValueContext) Variable() IVariableContext {
 	var t antlr.RuleContext
@@ -5558,8 +5848,8 @@ func (s *ArgValueContext) ExitRule(listener antlr.ParseTreeListener) {
 
 func (p *cirqlParser) ArgValue() (localctx IArgValueContext) {
 	localctx = NewArgValueContext(p, p.GetParserRuleContext(), p.GetState())
-	p.EnterRule(localctx, 54, cirqlParserRULE_argValue)
-	p.SetState(266)
+	p.EnterRule(localctx, 56, cirqlParserRULE_argValue)
+	p.SetState(272)
 	p.GetErrorHandler().Sync(p)
 	if p.HasError() {
 		goto errorExit
@@ -5569,28 +5859,28 @@ func (p *cirqlParser) ArgValue() (localctx IArgValueContext) {
 	case cirqlParserDOLLAR:
 		p.EnterOuterAlt(localctx, 1)
 		{
-			p.SetState(262)
+			p.SetState(268)
 			p.Variable()
 		}
 
 	case cirqlParserTRUE, cirqlParserFALSE, cirqlParserNULL, cirqlParserFLOAT, cirqlParserINT, cirqlParserSTRING:
 		p.EnterOuterAlt(localctx, 2)
 		{
-			p.SetState(263)
+			p.SetState(269)
 			p.Literal()
 		}
 
 	case cirqlParserLBRACK:
 		p.EnterOuterAlt(localctx, 3)
 		{
-			p.SetState(264)
+			p.SetState(270)
 			p.ListLit()
 		}
 
 	case cirqlParserLBRACE:
 		p.EnterOuterAlt(localctx, 4)
 		{
-			p.SetState(265)
+			p.SetState(271)
 			p.ObjectLit()
 		}
 
@@ -5651,7 +5941,7 @@ func InitEmptyObjectLitContext(p *ObjectLitContext) {
 	p.RuleIndex = cirqlParserRULE_objectLit
 }
 
-func (ObjectLitContext) IsObjectLitContext() {}
+func (*ObjectLitContext) IsObjectLitContext() {}
 
 func NewObjectLitContext(parser antlr.Parser, parent antlr.ParserRuleContext, invokingState int) *ObjectLitContext {
 	var p = new(ObjectLitContext)
@@ -5664,7 +5954,7 @@ func NewObjectLitContext(parser antlr.Parser, parent antlr.ParserRuleContext, in
 	return p
 }
 
-func (s ObjectLitContext) GetParser() antlr.Parser { return s.parser }
+func (s *ObjectLitContext) GetParser() antlr.Parser { return s.parser }
 
 func (s *ObjectLitContext) LBRACE() antlr.TerminalNode {
 	return s.GetToken(cirqlParserLBRACE, 0)
@@ -5761,19 +6051,19 @@ func (s *ObjectLitContext) ExitRule(listener antlr.ParseTreeListener) {
 
 func (p *cirqlParser) ObjectLit() (localctx IObjectLitContext) {
 	localctx = NewObjectLitContext(p, p.GetParserRuleContext(), p.GetState())
-	p.EnterRule(localctx, 56, cirqlParserRULE_objectLit)
+	p.EnterRule(localctx, 58, cirqlParserRULE_objectLit)
 	var _la int
 
 	p.EnterOuterAlt(localctx, 1)
 	{
-		p.SetState(268)
+		p.SetState(274)
 		p.Match(cirqlParserLBRACE)
 		if p.HasError() {
 			// Recognition error - abort rule
 			goto errorExit
 		}
 	}
-	p.SetState(281)
+	p.SetState(287)
 	p.GetErrorHandler().Sync(p)
 	if p.HasError() {
 		goto errorExit
@@ -5781,7 +6071,7 @@ func (p *cirqlParser) ObjectLit() (localctx IObjectLitContext) {
 	_la = p.GetTokenStream().LA(1)
 	if _la == cirqlParserNAME {
 		{
-			p.SetState(269)
+			p.SetState(275)
 			p.Match(cirqlParserNAME)
 			if p.HasError() {
 				// Recognition error - abort rule
@@ -5789,7 +6079,7 @@ func (p *cirqlParser) ObjectLit() (localctx IObjectLitContext) {
 			}
 		}
 		{
-			p.SetState(270)
+			p.SetState(276)
 			p.Match(cirqlParserCOLON)
 			if p.HasError() {
 				// Recognition error - abort rule
@@ -5797,10 +6087,10 @@ func (p *cirqlParser) ObjectLit() (localctx IObjectLitContext) {
 			}
 		}
 		{
-			p.SetState(271)
+			p.SetState(277)
 			p.ArgValue()
 		}
-		p.SetState(278)
+		p.SetState(284)
 		p.GetErrorHandler().Sync(p)
 		if p.HasError() {
 			goto errorExit
@@ -5809,7 +6099,7 @@ func (p *cirqlParser) ObjectLit() (localctx IObjectLitContext) {
 
 		for _la == cirqlParserCOMMA {
 			{
-				p.SetState(272)
+				p.SetState(278)
 				p.Match(cirqlParserCOMMA)
 				if p.HasError() {
 					// Recognition error - abort rule
@@ -5817,7 +6107,7 @@ func (p *cirqlParser) ObjectLit() (localctx IObjectLitContext) {
 				}
 			}
 			{
-				p.SetState(273)
+				p.SetState(279)
 				p.Match(cirqlParserNAME)
 				if p.HasError() {
 					// Recognition error - abort rule
@@ -5825,7 +6115,7 @@ func (p *cirqlParser) ObjectLit() (localctx IObjectLitContext) {
 				}
 			}
 			{
-				p.SetState(274)
+				p.SetState(280)
 				p.Match(cirqlParserCOLON)
 				if p.HasError() {
 					// Recognition error - abort rule
@@ -5833,11 +6123,11 @@ func (p *cirqlParser) ObjectLit() (localctx IObjectLitContext) {
 				}
 			}
 			{
-				p.SetState(275)
+				p.SetState(281)
 				p.ArgValue()
 			}
 
-			p.SetState(280)
+			p.SetState(286)
 			p.GetErrorHandler().Sync(p)
 			if p.HasError() {
 				goto errorExit
@@ -5847,7 +6137,7 @@ func (p *cirqlParser) ObjectLit() (localctx IObjectLitContext) {
 
 	}
 	{
-		p.SetState(283)
+		p.SetState(289)
 		p.Match(cirqlParserRBRACE)
 		if p.HasError() {
 			// Recognition error - abort rule
@@ -5903,7 +6193,7 @@ func InitEmptyListLitContext(p *ListLitContext) {
 	p.RuleIndex = cirqlParserRULE_listLit
 }
 
-func (ListLitContext) IsListLitContext() {}
+func (*ListLitContext) IsListLitContext() {}
 
 func NewListLitContext(parser antlr.Parser, parent antlr.ParserRuleContext, invokingState int) *ListLitContext {
 	var p = new(ListLitContext)
@@ -5916,7 +6206,7 @@ func NewListLitContext(parser antlr.Parser, parent antlr.ParserRuleContext, invo
 	return p
 }
 
-func (s ListLitContext) GetParser() antlr.Parser { return s.parser }
+func (s *ListLitContext) GetParser() antlr.Parser { return s.parser }
 
 func (s *ListLitContext) LBRACK() antlr.TerminalNode {
 	return s.GetToken(cirqlParserLBRACK, 0)
@@ -5997,19 +6287,19 @@ func (s *ListLitContext) ExitRule(listener antlr.ParseTreeListener) {
 
 func (p *cirqlParser) ListLit() (localctx IListLitContext) {
 	localctx = NewListLitContext(p, p.GetParserRuleContext(), p.GetState())
-	p.EnterRule(localctx, 58, cirqlParserRULE_listLit)
+	p.EnterRule(localctx, 60, cirqlParserRULE_listLit)
 	var _la int
 
 	p.EnterOuterAlt(localctx, 1)
 	{
-		p.SetState(285)
+		p.SetState(291)
 		p.Match(cirqlParserLBRACK)
 		if p.HasError() {
 			// Recognition error - abort rule
 			goto errorExit
 		}
 	}
-	p.SetState(294)
+	p.SetState(300)
 	p.GetErrorHandler().Sync(p)
 	if p.HasError() {
 		goto errorExit
@@ -6017,10 +6307,10 @@ func (p *cirqlParser) ListLit() (localctx IListLitContext) {
 	_la = p.GetTokenStream().LA(1)
 	if (int64(_la) & ^0x3f) == 0 && ((int64(1)<<_la)&31525241473728512) != 0 {
 		{
-			p.SetState(286)
+			p.SetState(292)
 			p.ArgValue()
 		}
-		p.SetState(291)
+		p.SetState(297)
 		p.GetErrorHandler().Sync(p)
 		if p.HasError() {
 			goto errorExit
@@ -6029,7 +6319,7 @@ func (p *cirqlParser) ListLit() (localctx IListLitContext) {
 
 		for _la == cirqlParserCOMMA {
 			{
-				p.SetState(287)
+				p.SetState(293)
 				p.Match(cirqlParserCOMMA)
 				if p.HasError() {
 					// Recognition error - abort rule
@@ -6037,11 +6327,11 @@ func (p *cirqlParser) ListLit() (localctx IListLitContext) {
 				}
 			}
 			{
-				p.SetState(288)
+				p.SetState(294)
 				p.ArgValue()
 			}
 
-			p.SetState(293)
+			p.SetState(299)
 			p.GetErrorHandler().Sync(p)
 			if p.HasError() {
 				goto errorExit
@@ -6051,7 +6341,7 @@ func (p *cirqlParser) ListLit() (localctx IListLitContext) {
 
 	}
 	{
-		p.SetState(296)
+		p.SetState(302)
 		p.Match(cirqlParserRBRACK)
 		if p.HasError() {
 			// Recognition error - abort rule
@@ -6107,7 +6397,7 @@ func InitEmptyLiteralContext(p *LiteralContext) {
 	p.RuleIndex = cirqlParserRULE_literal
 }
 
-func (LiteralContext) IsLiteralContext() {}
+func (*LiteralContext) IsLiteralContext() {}
 
 func NewLiteralContext(parser antlr.Parser, parent antlr.ParserRuleContext, invokingState int) *LiteralContext {
 	var p = new(LiteralContext)
@@ -6120,7 +6410,7 @@ func NewLiteralContext(parser antlr.Parser, parent antlr.ParserRuleContext, invo
 	return p
 }
 
-func (s LiteralContext) GetParser() antlr.Parser { return s.parser }
+func (s *LiteralContext) GetParser() antlr.Parser { return s.parser }
 
 func (s *LiteralContext) STRING() antlr.TerminalNode {
 	return s.GetToken(cirqlParserSTRING, 0)
@@ -6168,12 +6458,12 @@ func (s *LiteralContext) ExitRule(listener antlr.ParseTreeListener) {
 
 func (p *cirqlParser) Literal() (localctx ILiteralContext) {
 	localctx = NewLiteralContext(p, p.GetParserRuleContext(), p.GetState())
-	p.EnterRule(localctx, 60, cirqlParserRULE_literal)
+	p.EnterRule(localctx, 62, cirqlParserRULE_literal)
 	var _la int
 
 	p.EnterOuterAlt(localctx, 1)
 	{
-		p.SetState(298)
+		p.SetState(304)
 		_la = p.GetTokenStream().LA(1)
 
 		if !((int64(_la) & ^0x3f) == 0 && ((int64(1)<<_la)&31525197450313728) != 0) {

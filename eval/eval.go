@@ -19,8 +19,13 @@ type Env struct {
 	Now  func() int64 // epoch seconds; nil falls back to a zero clock
 }
 
-// Eval evaluates e against env.
+// Eval evaluates e against env. A nil expression — possible only in a
+// programmatically assembled pipeline, never from the parser — reports
+// ErrNilExpr rather than panicking.
 func Eval(e ast.Expr, env Env) (value.Value, error) {
+	if e == nil {
+		return nil, ErrNilExpr
+	}
 	switch n := e.(type) {
 	case ast.Literal:
 		return n.V, nil
@@ -194,8 +199,16 @@ func cmpResult(op ast.BinOp, c ordering) bool {
 	}
 }
 
-// arith evaluates -, *, /, % in the double model; / and % by zero yield null.
+// arith evaluates -, *, /, %. Subtraction and multiplication preserve int64
+// when both operands are integers — matching + (value.Add) — so the numeric
+// model is consistent across the additive and multiplicative operators;
+// division and modulo use the double model, yielding null on a zero divisor.
 func arith(op ast.BinOp, l, r value.Value) (value.Value, error) {
+	if op == ast.OpSub || op == ast.OpMul {
+		if v, ok := intArith(op, l, r); ok {
+			return v, nil
+		}
+	}
 	x, err := value.AsFloat(l)
 	if err != nil {
 		return nil, ErrType
@@ -205,6 +218,20 @@ func arith(op ast.BinOp, l, r value.Value) (value.Value, error) {
 		return nil, ErrType
 	}
 	return arithFloat(op, operand(x), operand(y)), nil
+}
+
+// intArith computes an integer subtraction or multiplication when both operands
+// are int64, reporting ok=false to fall through to the float model otherwise.
+func intArith(op ast.BinOp, l, r value.Value) (value.Value, bool) {
+	li, lok := l.(int64)
+	ri, rok := r.(int64)
+	if !lok || !rok {
+		return nil, false
+	}
+	if op == ast.OpSub {
+		return li - ri, true
+	}
+	return li * ri, true
 }
 
 // operand is one numeric operand of an arithmetic operation in the double model.

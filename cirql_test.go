@@ -72,3 +72,41 @@ func TestRun_PropagatesStageError(t *testing.T) {
 		t.Fatalf("err=%v want ErrIncomparable", err)
 	}
 }
+
+// End-to-end: a query addressing keyword-named JSON fields (count, type) and
+// grouping produces natural JSON keys — the whole point of the keyword-field
+// and group-by fixes, exercised through the public API.
+func TestEndToEnd_KeywordFieldsAndGroupBy(t *testing.T) {
+	p, err := cirql.Parse(`filter .count > 1 | map { type: .type, count: .count }`)
+	if err != nil {
+		t.Fatalf("parse: %v", err)
+	}
+	in := []value.Value{
+		map[string]value.Value{"type": "x", "count": int64(5)},
+		map[string]value.Value{"type": "y", "count": int64(1)},
+	}
+	out, err := p.Run(in)
+	if err != nil {
+		t.Fatalf("run: %v", err)
+	}
+	if len(out) != 1 {
+		t.Fatalf("want 1 row got %d", len(out))
+	}
+	row := out[0].(map[string]value.Value)
+	if row["type"] != "x" || row["count"] != int64(5) {
+		t.Errorf("row = %#v, want type=x count=5", row)
+	}
+}
+
+// A query above the size bound is rejected as ErrQueryTooLarge through the
+// public Parse, not a stack overflow.
+func TestParse_RejectsOversizedQuery(t *testing.T) {
+	big := make([]byte, dialect.MaxQueryBytes+1)
+	for i := range big {
+		big[i] = ' '
+	}
+	_, err := cirql.Parse(cirql.Query(big))
+	if !errors.Is(err, dialect.ErrQueryTooLarge) {
+		t.Fatalf("got %v want ErrQueryTooLarge", err)
+	}
+}
