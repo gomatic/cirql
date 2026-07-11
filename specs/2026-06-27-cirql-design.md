@@ -32,7 +32,7 @@ cirql is decomposed into four sub-projects, each with its own spec → plan → 
 
 ### Data flow (the whole language)
 
-```
+```text
 query text ──▶ Parse (ANTLR) ──▶ Pipeline AST ──▶ Run(ResultSet) ──▶ ResultSet ──▶ encode
                   │                                    │
             parse errors                         stage executors
@@ -47,7 +47,7 @@ A **`ResultSet` is a `[]Object`** (spec §5.3) — the unit flowing between stag
 
 Mirrors [`sqlrest/graft`](https://github.com/sqlrest/graft) (the in-ecosystem ANTLR exemplar) and the gomatic shared-Makefile/`go.mod` tool-stanza standard.
 
-```
+```text
 gomatic/cirql/
   pkg/dialect/cirql/
     cirql.g4            # hand-authored grammar (the WHOLE language — transforms + sources)
@@ -104,7 +104,7 @@ Each stage is a constructor returning a `pipeline.Stage` whose `Execute` is a pu
 
 ### Public API (`cirql.go`)
 
-```
+```text
 Parse(query string) (Pipeline, error)        // ANTLR parse → AST → Pipeline
 Pipeline.Run(in ResultSet) (ResultSet, error) // execute transforms
 ```
@@ -126,7 +126,7 @@ One `type Error string` sentinel set per package (constant errors standard); `er
 
 `cmd-json` gains a primary constructor that takes a cirql query string and returns a `gloo.Command[[]byte,[]byte]`:
 
-```
+```text
 Json(query string, opts ...any) gloo.Command[[]byte, []byte]
 ```
 

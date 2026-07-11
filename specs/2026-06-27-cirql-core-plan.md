@@ -121,7 +121,7 @@ find "$out" -name '*.tokens' -delete
 
 Add to `.gitignore`:
 
-```
+```text
 *.interp
 *.tokens
 ```
