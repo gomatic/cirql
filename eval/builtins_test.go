@@ -111,129 +111,57 @@ func TestBuiltin_Conversions(t *testing.T) {
 	}
 }
 
-func TestBuiltin_StringOps(t *testing.T) {
-	if v := callOK(t, "upper", "ab"); v != "AB" {
-		t.Fatalf("upper=%v", v)
+// TestArg2RequiresExactlyTwoArguments names arg2's claim. Every two-argument
+// builtin destructures through it, so an off-by-one here is an index panic
+// inside a builtin on user-supplied query text. "Exactly" means both
+// directions: one argument too few and one too many are equally rejected, and
+// the rejection is ErrArity so a caller can tell a misused function from a type
+// error.
+func TestArg2RequiresExactlyTwoArguments(t *testing.T) {
+	for _, args := range [][]value.Value{
+		nil,
+		{int64(1)},
+		{int64(1), int64(2), int64(3)},
+	} {
+		if _, _, err := arg2(args); !errors.Is(err, ErrArity) {
+			t.Fatalf("arg2(%d args) = %v, want ErrArity", len(args), err)
+		}
 	}
-	if v := callOK(t, "lower", "AB"); v != "ab" {
-		t.Fatalf("lower=%v", v)
+
+	a, b, err := arg2([]value.Value{int64(1), "two"})
+	if err != nil {
+		t.Fatalf("arg2 of exactly two arguments: %v", err)
 	}
-	if v := callOK(t, "trim", "  x  "); v != "x" {
-		t.Fatalf("trim=%v", v)
-	}
-	if _, err := call(t, "upper", int64(1)); !errors.Is(err, ErrType) {
-		t.Fatalf("upper(int) err=%v want ErrType", err)
-	}
-	if _, err := call(t, "lower"); !errors.Is(err, ErrArity) {
-		t.Fatalf("lower() err=%v want ErrArity", err)
+	if a != value.Value(int64(1)) || b != value.Value("two") {
+		t.Fatalf("arg2 returned (%v, %v), want the arguments in order", a, b)
 	}
 }
 
-func TestBuiltin_SplitJoin(t *testing.T) {
-	got := callOK(t, "split", "a,b,c", ",")
-	if !reflect.DeepEqual(got, []value.Value{"a", "b", "c"}) {
-		t.Fatalf("split=%#v", got)
-	}
-	if v := callOK(t, "join", []value.Value{"a", "b"}, "-"); v != "a-b" {
-		t.Fatalf("join=%v want a-b", v)
-	}
-	if _, err := call(t, "split", int64(1), ","); !errors.Is(err, ErrType) {
-		t.Fatalf("split(int) err=%v want ErrType", err)
-	}
-	if _, err := call(t, "split", "a"); !errors.Is(err, ErrArity) {
-		t.Fatalf("split arity err=%v want ErrArity", err)
-	}
-	if _, err := call(t, "join", int64(1), "-"); !errors.Is(err, ErrType) {
-		t.Fatalf("join(int) err=%v want ErrType", err)
-	}
-	if _, err := call(t, "join", []value.Value{int64(1)}, "-"); !errors.Is(err, ErrType) {
-		t.Fatalf("join(non-string elems) err=%v want ErrType", err)
-	}
-	if _, err := call(t, "join", []value.Value{}); !errors.Is(err, ErrArity) {
-		t.Fatalf("join arity err=%v want ErrArity", err)
+// TestKindNameCoversEveryDeclaredKind pins the table's totality. The `type`
+// builtin surfaces these names to the user, so a kind falling through to the
+// fallback would report a list or an object as "null" — a lie the query author
+// would then branch on.
+func TestKindNameCoversEveryDeclaredKind(t *testing.T) {
+	for kind, want := range map[value.Kind]string{
+		value.KindNull:   typeNull,
+		value.KindBool:   typeBool,
+		value.KindInt:    typeNumber,
+		value.KindFloat:  typeNumber,
+		value.KindString: typeString,
+		value.KindList:   typeList,
+		value.KindObject: typeObject,
+	} {
+		if got := kindName(kind); got != want {
+			t.Fatalf("kindName(%v) = %q, want %q", kind, got, want)
+		}
 	}
 }
 
-func TestBuiltin_Contains(t *testing.T) {
-	if v := callOK(t, "contains", "hello", "ell"); v != true {
-		t.Fatalf("contains(str)=%v want true", v)
-	}
-	if v := callOK(t, "contains", []value.Value{"a", "b"}, "b"); v != true {
-		t.Fatalf("contains(list)=%v want true", v)
-	}
-	if v := callOK(t, "contains", []value.Value{"a"}, "z"); v != false {
-		t.Fatalf("contains(list miss)=%v want false", v)
-	}
-	if _, err := call(t, "contains", "x", int64(1)); !errors.Is(err, ErrType) {
-		t.Fatalf("contains(str,int) err=%v want ErrType", err)
-	}
-	if _, err := call(t, "contains", int64(1), int64(1)); !errors.Is(err, ErrType) {
-		t.Fatalf("contains(int,int) err=%v want ErrType", err)
-	}
-	if _, err := call(t, "contains", "x"); !errors.Is(err, ErrArity) {
-		t.Fatalf("contains arity err=%v want ErrArity", err)
-	}
-}
-
-func TestBuiltin_StartsWith(t *testing.T) {
-	if v := callOK(t, "startsWith", "abc", "ab"); v != true {
-		t.Fatalf("startsWith=%v want true", v)
-	}
-	if _, err := call(t, "startsWith", "a"); !errors.Is(err, ErrArity) {
-		t.Fatalf("startsWith arity err=%v want ErrArity", err)
-	}
-}
-
-func TestBuiltin_Now(t *testing.T) {
-	v, err := Eval(ast.FuncCall{Name: "now"}, Env{Now: func() int64 { return 1234 }})
-	if err != nil || v != int64(1234) {
-		t.Fatalf("now()=%v,%v want 1234", v, err)
-	}
-	zero, err := Eval(ast.FuncCall{Name: "now"}, Env{})
-	if err != nil || zero != int64(0) {
-		t.Fatalf("now() zero clock=%v,%v want 0", zero, err)
-	}
-	if _, err := Eval(ast.FuncCall{Name: "now", Args: []ast.Expr{lit(int64(1))}}, Env{}); !errors.Is(err, ErrArity) {
-		t.Fatalf("now(x) err=%v want ErrArity", err)
-	}
-}
-
-func TestBuiltin_Flatten(t *testing.T) {
-	in := []value.Value{[]value.Value{int64(1), int64(2)}, int64(3)}
-	got := callOK(t, "flatten", in)
-	if !reflect.DeepEqual(got, []value.Value{int64(1), int64(2), int64(3)}) {
-		t.Fatalf("flatten=%#v", got)
-	}
-	if _, err := call(t, "flatten", int64(1)); !errors.Is(err, ErrType) {
-		t.Fatalf("flatten(int) err=%v want ErrType", err)
-	}
-	if _, err := call(t, "flatten"); !errors.Is(err, ErrArity) {
-		t.Fatalf("flatten arity err=%v want ErrArity", err)
-	}
-}
-
-func TestBuiltin_Distinct(t *testing.T) {
-	in := []value.Value{int64(1), int64(1), int64(2)}
-	got := callOK(t, "distinct", in)
-	if !reflect.DeepEqual(got, []value.Value{int64(1), int64(2)}) {
-		t.Fatalf("distinct=%#v", got)
-	}
-	if _, err := call(t, "distinct", int64(1)); !errors.Is(err, ErrType) {
-		t.Fatalf("distinct(int) err=%v want ErrType", err)
-	}
-	if _, err := call(t, "distinct"); !errors.Is(err, ErrArity) {
-		t.Fatalf("distinct arity err=%v want ErrArity", err)
-	}
-}
-
-func TestBuiltin_Coalesce(t *testing.T) {
-	if v := callOK(t, "coalesce", nil, "x"); v != "x" {
-		t.Fatalf("coalesce=%v want x", v)
-	}
-	if v := callOK(t, "coalesce", nil, nil); v != nil {
-		t.Fatalf("coalesce all nil=%v want nil", v)
-	}
-	if _, err := call(t, "coalesce"); !errors.Is(err, ErrArity) {
-		t.Fatalf("coalesce arity err=%v want ErrArity", err)
+// TestKindNameFallsBackToNullForAnUndeclaredKind covers the fallback, which is
+// reachable only by constructing a Kind the package does not declare — the same
+// answer value.KindOf gives for an unrecognized concrete type.
+func TestKindNameFallsBackToNullForAnUndeclaredKind(t *testing.T) {
+	if got := kindName(value.Kind(200)); got != typeNull {
+		t.Fatalf("kindName(undeclared) = %q, want %q", got, typeNull)
 	}
 }

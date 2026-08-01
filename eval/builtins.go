@@ -2,7 +2,6 @@ package eval
 
 import (
 	"sort"
-	"strings"
 
 	value "github.com/gomatic/go-json"
 )
@@ -133,22 +132,29 @@ func biType(args []value.Value, _ Env) (value.Value, error) {
 	return kindName(value.KindOf(x)), nil
 }
 
-// kindName is the spec type name for a kind.
+// kindNames is the spec type name for every kind. A table rather than a switch
+// so that the mapping is total by construction: a Kind added to go-json without
+// a name here is a build-time omission an exhaustiveness check can see, not a
+// value that silently reports itself as null.
+var kindNames = map[value.Kind]string{
+	value.KindNull:   typeNull,
+	value.KindBool:   typeBool,
+	value.KindInt:    typeNumber,
+	value.KindFloat:  typeNumber,
+	value.KindString: typeString,
+	value.KindList:   typeList,
+	value.KindObject: typeObject,
+}
+
+// kindName is the spec type name for a kind. A Kind outside the declared set
+// cannot arrive from value.KindOf, but the language permits one to be
+// constructed, and the spec has no name for it — null is the same answer
+// KindOf gives an unrecognized concrete type.
 func kindName(k value.Kind) string {
-	switch k {
-	case value.KindBool:
-		return typeBool
-	case value.KindInt, value.KindFloat:
-		return typeNumber
-	case value.KindString:
-		return typeString
-	case value.KindList:
-		return typeList
-	case value.KindObject:
-		return typeObject
-	default:
-		return typeNull
+	if name, ok := kindNames[k]; ok {
+		return name
 	}
+	return typeNull
 }
 
 func biToInt(args []value.Value, _ Env) (value.Value, error) {
@@ -185,193 +191,4 @@ func biToString(args []value.Value, _ Env) (value.Value, error) {
 		return str, nil
 	}
 	return nil, ErrType
-}
-
-func biUpper(args []value.Value, _ Env) (value.Value, error) {
-	return stringOp(args, strings.ToUpper)
-}
-
-func biLower(args []value.Value, _ Env) (value.Value, error) {
-	return stringOp(args, strings.ToLower)
-}
-
-func biTrim(args []value.Value, _ Env) (value.Value, error) {
-	return stringOp(args, strings.TrimSpace)
-}
-
-// stringOp applies a string transform to a single string argument.
-func stringOp(args []value.Value, fn func(string) string) (value.Value, error) {
-	x, err := arg1(args)
-	if err != nil {
-		return nil, err
-	}
-	s, serr := value.AsString(x)
-	if serr != nil {
-		return nil, ErrType
-	}
-	return fn(s), nil
-}
-
-func biSplit(args []value.Value, _ Env) (value.Value, error) {
-	s, sep, err := twoStrings(args)
-	if err != nil {
-		return nil, err
-	}
-	parts := strings.Split(s, sep)
-	out := make([]value.Value, len(parts))
-	for i, p := range parts {
-		out[i] = p
-	}
-	return out, nil
-}
-
-func biJoin(args []value.Value, _ Env) (value.Value, error) {
-	list, sep, err := listAndSep(args)
-	if err != nil {
-		return nil, err
-	}
-	parts := make([]string, 0, len(list))
-	for _, item := range list {
-		s, serr := value.AsString(item)
-		if serr != nil {
-			return nil, ErrType
-		}
-		parts = append(parts, s)
-	}
-	return strings.Join(parts, sep), nil
-}
-
-// listAndSep extracts a (list, separator-string) argument pair.
-func listAndSep(args []value.Value) ([]value.Value, string, error) {
-	a, b, err := arg2(args)
-	if err != nil {
-		return nil, "", err
-	}
-	list, lerr := value.AsList(a)
-	sep, serr := value.AsString(b)
-	if lerr != nil || serr != nil {
-		return nil, "", ErrType
-	}
-	return list, sep, nil
-}
-
-// twoStrings extracts two string arguments.
-func twoStrings(args []value.Value) (string, string, error) {
-	a, b, err := arg2(args)
-	if err != nil {
-		return "", "", err
-	}
-	as, aerr := value.AsString(a)
-	bs, berr := value.AsString(b)
-	if aerr != nil || berr != nil {
-		return "", "", ErrType
-	}
-	return as, bs, nil
-}
-
-func biContains(args []value.Value, _ Env) (value.Value, error) {
-	a, b, err := arg2(args)
-	if err != nil {
-		return nil, err
-	}
-	if s, ok := a.(string); ok {
-		sub, serr := value.AsString(b)
-		if serr != nil {
-			return nil, ErrType
-		}
-		return strings.Contains(s, sub), nil
-	}
-	list, lerr := value.AsList(a)
-	if lerr != nil {
-		return nil, ErrType
-	}
-	return listContains(list, b), nil
-}
-
-// listContains reports whether list has an element equal to x.
-func listContains(list []value.Value, x value.Value) bool {
-	for _, item := range list {
-		if value.Equal(item, x) {
-			return true
-		}
-	}
-	return false
-}
-
-func biStartsWith(args []value.Value, _ Env) (value.Value, error) {
-	s, prefix, err := twoStrings(args)
-	if err != nil {
-		return nil, err
-	}
-	return strings.HasPrefix(s, prefix), nil
-}
-
-func biNow(args []value.Value, env Env) (value.Value, error) {
-	if len(args) != 0 {
-		return nil, ErrArity
-	}
-	if env.Now == nil {
-		return int64(0), nil
-	}
-	return env.Now(), nil
-}
-
-func biFlatten(args []value.Value, _ Env) (value.Value, error) {
-	x, err := arg1(args)
-	if err != nil {
-		return nil, err
-	}
-	list, lerr := value.AsList(x)
-	if lerr != nil {
-		return nil, ErrType
-	}
-	return flattenOne(list), nil
-}
-
-// flattenOne flattens one level of nested lists.
-func flattenOne(list []value.Value) []value.Value {
-	out := make([]value.Value, 0, len(list))
-	for _, item := range list {
-		if inner, ok := item.([]value.Value); ok {
-			out = append(out, inner...)
-			continue
-		}
-		out = append(out, item)
-	}
-	return out
-}
-
-func biDistinct(args []value.Value, _ Env) (value.Value, error) {
-	x, err := arg1(args)
-	if err != nil {
-		return nil, err
-	}
-	list, lerr := value.AsList(x)
-	if lerr != nil {
-		return nil, ErrType
-	}
-	return distinctList(list), nil
-}
-
-// distinctList returns the list with duplicate (value-equal) elements removed.
-func distinctList(list []value.Value) []value.Value {
-	out := make([]value.Value, 0, len(list))
-	for _, item := range list {
-		if !listContains(out, item) {
-			out = append(out, item)
-		}
-	}
-	return out
-}
-
-func biCoalesce(args []value.Value, _ Env) (value.Value, error) {
-	if len(args) == 0 {
-		return nil, ErrArity
-	}
-	for _, a := range args {
-		if a != nil {
-			return a, nil
-		}
-	}
-	return nil, nil
 }

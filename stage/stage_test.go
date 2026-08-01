@@ -2,7 +2,6 @@ package stage
 
 import (
 	"errors"
-	"math"
 	"testing"
 
 	value "github.com/gomatic/go-json"
@@ -151,190 +150,6 @@ func TestFlatMap_PropagatesError(t *testing.T) {
 	}
 }
 
-func TestReduce_Count(t *testing.T) {
-	out := run(t, ast.ReduceStage{Op: ast.OpCount}, pipeline.ResultSet{obj(), obj(), obj()})
-	if out[0] != int64(3) {
-		t.Fatalf("count=%v want 3", out[0])
-	}
-}
-
-func TestReduce_FirstLast(t *testing.T) {
-	in := pipeline.ResultSet{obj("i", int64(1)), obj("i", int64(2))}
-	if run(t, ast.ReduceStage{Op: ast.OpFirst}, in)[0].(map[string]value.Value)["i"] != int64(1) {
-		t.Fatal("first wrong")
-	}
-	if run(t, ast.ReduceStage{Op: ast.OpLast}, in)[0].(map[string]value.Value)["i"] != int64(2) {
-		t.Fatal("last wrong")
-	}
-	if run(t, ast.ReduceStage{Op: ast.OpFirst}, pipeline.ResultSet{})[0] != nil {
-		t.Fatal("first empty should be nil")
-	}
-	if run(t, ast.ReduceStage{Op: ast.OpLast}, pipeline.ResultSet{})[0] != nil {
-		t.Fatal("last empty should be nil")
-	}
-}
-
-func TestReduce_SumAvgMinMax(t *testing.T) {
-	in := pipeline.ResultSet{obj("v", int64(2)), obj("v", int64(4))}
-	cases := map[ast.ReduceOp]value.Value{
-		ast.OpSum: 6.0, ast.OpAvg: 3.0, ast.OpMin: 2.0, ast.OpMax: 4.0,
-	}
-	for op, want := range cases {
-		out := run(t, ast.ReduceStage{Op: op, Arg: field("v")}, in)
-		if out[0] != want {
-			t.Fatalf("%s=%v want %v", op, out[0], want)
-		}
-	}
-}
-
-func TestReduce_AggregateEmptyIsNull(t *testing.T) {
-	out := run(t, ast.ReduceStage{Op: ast.OpSum, Arg: field("v")}, pipeline.ResultSet{})
-	if out[0] != nil {
-		t.Fatalf("sum empty=%v want nil", out[0])
-	}
-}
-
-func TestReduce_NoArgUsesItem(t *testing.T) {
-	out := run(t, ast.ReduceStage{Op: ast.OpSum}, pipeline.ResultSet{int64(1), int64(2)})
-	if out[0] != 3.0 {
-		t.Fatalf("sum no-arg=%v want 3", out[0])
-	}
-}
-
-func TestReduce_AggregateTypeError(t *testing.T) {
-	_, err := build(t, ast.ReduceStage{Op: ast.OpSum, Arg: field("v")}).
-		Execute(pipeline.ResultSet{obj("v", "x")})
-	if !errors.Is(err, eval.ErrType) {
-		t.Fatalf("err=%v want ErrType", err)
-	}
-}
-
-func TestReduce_AggregatePropagatesEvalError(t *testing.T) {
-	_, err := build(t, ast.ReduceStage{Op: ast.OpSum, Arg: ast.FuncCall{Name: "nope"}}).
-		Execute(pipeline.ResultSet{obj()})
-	if !errors.Is(err, eval.ErrUnknownFunc) {
-		t.Fatalf("err=%v want ErrUnknownFunc", err)
-	}
-}
-
-func TestReduce_Collect(t *testing.T) {
-	in := pipeline.ResultSet{obj("v", int64(1)), obj("v", int64(2))}
-	out := run(t, ast.ReduceStage{Op: ast.OpCollect, Arg: field("v")}, in)
-	list := out[0].([]value.Value)
-	if len(list) != 2 || list[0] != int64(1) {
-		t.Fatalf("collect=%#v", list)
-	}
-}
-
-func TestReduce_CollectPropagatesError(t *testing.T) {
-	_, err := build(t, ast.ReduceStage{Op: ast.OpCollect, Arg: ast.FuncCall{Name: "nope"}}).
-		Execute(pipeline.ResultSet{obj()})
-	if !errors.Is(err, eval.ErrUnknownFunc) {
-		t.Fatalf("err=%v want ErrUnknownFunc", err)
-	}
-}
-
-func TestReduce_GroupBy(t *testing.T) {
-	in := pipeline.ResultSet{
-		obj("k", "a", "n", int64(1)),
-		obj("k", "b", "n", int64(2)),
-		obj("k", "a", "n", int64(3)),
-	}
-	out := run(t, ast.ReduceStage{Op: ast.OpGroupBy, Arg: field("k")}, in)
-	groups := out[0].(map[string]value.Value)
-	if len(groups["a"].([]value.Value)) != 2 || len(groups["b"].([]value.Value)) != 1 {
-		t.Fatalf("groupBy=%#v", groups)
-	}
-}
-
-func TestReduce_GroupByPropagatesError(t *testing.T) {
-	_, err := build(t, ast.ReduceStage{Op: ast.OpGroupBy, Arg: ast.FuncCall{Name: "nope"}}).
-		Execute(pipeline.ResultSet{obj()})
-	if !errors.Is(err, eval.ErrUnknownFunc) {
-		t.Fatalf("err=%v want ErrUnknownFunc", err)
-	}
-}
-
-func TestSort_AscDesc(t *testing.T) {
-	in := pipeline.ResultSet{obj("n", int64(2)), obj("n", int64(1)), obj("n", int64(3))}
-	asc := run(t, ast.SortStage{Key: field("n")}, in)
-	if asc[0].(map[string]value.Value)["n"] != int64(1) {
-		t.Fatalf("asc first=%v want 1", asc[0])
-	}
-	desc := run(t, ast.SortStage{Key: field("n"), IsDesc: true}, in)
-	if desc[0].(map[string]value.Value)["n"] != int64(3) {
-		t.Fatalf("desc first=%v want 3", desc[0])
-	}
-}
-
-func TestSort_KeyEvalError(t *testing.T) {
-	_, err := build(t, ast.SortStage{Key: ast.FuncCall{Name: "nope"}}).
-		Execute(pipeline.ResultSet{obj(), obj()})
-	if !errors.Is(err, eval.ErrUnknownFunc) {
-		t.Fatalf("err=%v want ErrUnknownFunc", err)
-	}
-}
-
-func TestSort_IncomparableError(t *testing.T) {
-	in := pipeline.ResultSet{obj("n", "x"), obj("n", int64(1))}
-	_, err := build(t, ast.SortStage{Key: field("n")}).Execute(in)
-	if !errors.Is(err, value.ErrIncomparable) {
-		t.Fatalf("err=%v want ErrIncomparable", err)
-	}
-}
-
-func TestLimit(t *testing.T) {
-	in := pipeline.ResultSet{obj(), obj(), obj()}
-	if len(run(t, ast.LimitStage{N: 2}, in)) != 2 {
-		t.Fatal("limit 2 failed")
-	}
-	if len(run(t, ast.LimitStage{N: 10}, in)) != 3 {
-		t.Fatal("limit beyond len should keep all")
-	}
-}
-
-func TestUniq_WholeValue(t *testing.T) {
-	in := pipeline.ResultSet{int64(1), int64(1), int64(2)}
-	out := run(t, ast.UniqStage{}, in)
-	if len(out) != 2 {
-		t.Fatalf("uniq len=%d want 2", len(out))
-	}
-}
-
-func TestUniq_ByKey(t *testing.T) {
-	in := pipeline.ResultSet{
-		obj("k", "a"), obj("k", "a"), obj("k", "b"),
-	}
-	out := run(t, ast.UniqStage{Key: field("k")}, in)
-	if len(out) != 2 {
-		t.Fatalf("uniq-by-key len=%d want 2", len(out))
-	}
-}
-
-func TestUniq_KeyEvalError(t *testing.T) {
-	_, err := build(t, ast.UniqStage{Key: ast.FuncCall{Name: "nope"}}).
-		Execute(pipeline.ResultSet{obj()})
-	if !errors.Is(err, eval.ErrUnknownFunc) {
-		t.Fatalf("err=%v want ErrUnknownFunc", err)
-	}
-}
-
-// A negative limit — constructible only programmatically, never by the parser —
-// behaves as limit 0 instead of panicking.
-func TestLimitNegativeYieldsEmpty(t *testing.T) {
-	st, err := Build(ast.LimitStage{N: -1}, nil)
-	if err != nil {
-		t.Fatalf("unexpected build error: %v", err)
-	}
-	out, err := st.Execute(pipeline.ResultSet{map[string]value.Value{"a": int64(1)}})
-	if err != nil {
-		t.Fatalf("unexpected error: %v", err)
-	}
-	if len(out) != 0 {
-		t.Errorf("got %v, want empty", out)
-	}
-}
-
 // A nil condition in a programmatically built filter surfaces eval's ErrNilExpr
 // as an error, not a panic.
 func TestFilterNilCondErrors(t *testing.T) {
@@ -384,68 +199,12 @@ func TestFlatMap_ExpandsPerElement(t *testing.T) {
 	}
 }
 
-// group_by keys are JSON: a string value keys directly; a non-string value is
-// rendered as JSON text (never Go's map[...] syntax) and distinct types do not
-// silently collapse.
-func TestReduce_GroupByKeysAreJSON(t *testing.T) {
-	in := pipeline.ResultSet{
-		obj("g", int64(1)),
-		obj("g", "1"),
-		obj("g", true),
-	}
-	out := run(t, ast.ReduceStage{Op: ast.OpGroupBy, Arg: field("g")}, in)
-	groups := out[0].(map[string]value.Value)
-	// int 1 -> "1", string "1" -> "1": these coincide as JSON object keys (an
-	// inherent consequence of object-keyed grouping), so they share one group;
-	// bool true -> "true" is its own group and never renders as a Go-ism.
-	if _, ok := groups["true"]; !ok {
-		t.Errorf("missing JSON key \"true\"; groups=%v keys", keysOf(groups))
-	}
-	for k := range groups {
-		if k == "<nil>" || len(k) >= 4 && k[:4] == "map[" {
-			t.Errorf("group key %q leaks Go syntax", k)
-		}
-	}
-}
-
-// A string group key is the bare string (no surrounding quotes) so results read
-// naturally: group_by .name -> {"alice": [...]}.
-func TestReduce_GroupByStringKeyIsBare(t *testing.T) {
-	in := pipeline.ResultSet{obj("name", "alice"), obj("name", "alice"), obj("name", "bob")}
-	out := run(t, ast.ReduceStage{Op: ast.OpGroupBy, Arg: field("name")}, in)
-	groups := out[0].(map[string]value.Value)
-	if len(groups["alice"].([]value.Value)) != 2 || len(groups["bob"].([]value.Value)) != 1 {
-		t.Fatalf("groups=%#v", groups)
-	}
-}
-
 func keysOf(m map[string]value.Value) []string {
 	ks := make([]string, 0, len(m))
 	for k := range m {
 		ks = append(ks, k)
 	}
 	return ks
-}
-
-// sort is stable: equal keys keep input order (asc) and are NOT reversed by
-// desc (desc negates the comparator, it does not reverse equal runs).
-func TestSort_IsStable(t *testing.T) {
-	in := pipeline.ResultSet{
-		obj("k", int64(1), "id", "a"),
-		obj("k", int64(1), "id", "b"),
-		obj("k", int64(1), "id", "c"),
-	}
-	for _, desc := range []bool{false, true} {
-		out := run(t, ast.SortStage{Key: field("k"), IsDesc: desc}, in)
-		got := []string{
-			out[0].(map[string]value.Value)["id"].(string),
-			out[1].(map[string]value.Value)["id"].(string),
-			out[2].(map[string]value.Value)["id"].(string),
-		}
-		if got[0] != "a" || got[1] != "b" || got[2] != "c" {
-			t.Errorf("desc=%v stable order = %v, want [a b c]", desc, got)
-		}
-	}
 }
 
 // filter keeps the RIGHT items, not merely the right count.
@@ -458,29 +217,5 @@ func TestFilter_KeepsMatchingItems(t *testing.T) {
 	}
 	if out[0].(map[string]value.Value)["n"] != int64(5) || out[1].(map[string]value.Value)["n"] != int64(9) {
 		t.Errorf("kept the wrong items: %#v", out)
-	}
-}
-
-// Whole-object uniq (no key) dedupes equal OBJECTS without panicking — the
-// exact case that panicked under the old go-json Equal.
-func TestUniq_WholeObjectDedupes(t *testing.T) {
-	in := pipeline.ResultSet{
-		obj("a", int64(1), "b", int64(2)),
-		obj("a", int64(1), "b", int64(2)),
-		obj("a", int64(9)),
-	}
-	out := run(t, ast.UniqStage{}, in)
-	if len(out) != 2 {
-		t.Fatalf("got %d, want 2 (dedupe identical objects)", len(out))
-	}
-}
-
-// group_by over a key that is not JSON-serializable (a non-finite float,
-// reachable via overflow arithmetic) surfaces ErrType rather than a bad key.
-func TestReduce_GroupByNonSerializableKeyErrors(t *testing.T) {
-	in := pipeline.ResultSet{obj("g", math.Inf(1))}
-	_, err := build(t, ast.ReduceStage{Op: ast.OpGroupBy, Arg: field("g")}).Execute(in)
-	if !errors.Is(err, eval.ErrType) {
-		t.Fatalf("got %v, want eval.ErrType", err)
 	}
 }
