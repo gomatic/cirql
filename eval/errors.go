@@ -16,7 +16,10 @@ const (
 	// ErrType is returned when an operation gets an unsupported value type.
 	ErrType Error = "eval: type error"
 	// ErrNilExpr is returned when Eval is handed a nil expression — a pipeline
-	// assembled programmatically with a missing Cond/Key/Expr, which the parser
-	// never produces.
+	// assembled programmatically with a missing Cond/Key/Expr. A parsed query
+	// never reaches it: every expression the parser builds is non-nil, and the
+	// two slots the grammar lets a query leave empty (a bare uniq's Key, a
+	// count/first/last reduce's Arg) are guarded by their stage executor
+	// before Eval is called.
 	ErrNilExpr Error = "eval: nil expression"
 )

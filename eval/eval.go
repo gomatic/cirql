@@ -17,8 +17,8 @@ type Env struct {
 	Now  func() int64 // epoch seconds; nil falls back to a zero clock
 }
 
-// Eval evaluates e against env. A nil expression — possible only in a
-// programmatically assembled pipeline, never from the parser — reports
+// Eval evaluates e against env. A nil expression — reachable only from a
+// programmatically assembled pipeline, never from a parsed query — reports
 // ErrNilExpr rather than panicking.
 func Eval(e ast.Expr, env Env) (value.Value, error) {
 	if e == nil {

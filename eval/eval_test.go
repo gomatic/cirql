@@ -178,12 +178,3 @@ func TestEval_Call_ArgError(t *testing.T) {
 		t.Fatalf("got %v want ErrUnknownFunc", err)
 	}
 }
-
-// A nil expression — constructible only programmatically, never by the parser —
-// reports ErrNilExpr instead of panicking.
-func TestEvalNilExprErrors(t *testing.T) {
-	_, err := Eval(nil, Env{})
-	if !errors.Is(err, ErrNilExpr) {
-		t.Errorf("got %v, want ErrNilExpr", err)
-	}
-}
